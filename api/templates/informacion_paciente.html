@@ -1,0 +1,250 @@
+{% extends 'estructuraSuap.html' %}
+{% load extras %}
+{% load static %}
+{% block menu %}
+    {% if  user.is_authenticated %}
+        {% for group in user.groups.all %}
+            {% if group.name == 'Paciente' %}
+                <div class="menu__side" id="side">
+                    <div class="name_page">
+                        <i class="fa-solid fa-house-chimney-medical" title="titulo"></i>
+                        <h4 class="titulo_fundacion">Fundacion retorno</h4>
+                    </div>
+                    <div class="menu_option">
+                        <a href="{% url 'perfil' %}" class="selected text-decoration-none">
+                            <div class="option">
+                                <i class="fa-solid fa-user" title="usuario"></i>
+                                <p class="mb-0">usuario</p>
+                            </div>
+                        </a>
+                        <a href="{% url 'caso' user.id %}" class="text-decoration-none">
+                            <div class="option">
+                                <i class="fa-solid fa-file-lines" title="Registrar caso"></i>
+                                <p class="mb-0">Registrar Caso</p>
+                            </div>
+                        </a>
+                        <a href="#" class="text-decoration-none">
+                            <div class="option">
+                                <i class="fa-solid fa-circle-right" title="seguimiento"></i>
+                                <p class="mb-0">Seguimiento</p>
+                            </div>
+                        </a>
+                        <a href="#" class="text-decoration-none">
+                            <div class="option">
+                                <i class="fas fa-history"></i>
+                                <p class="mb-0">Historial</p>
+                            </div>
+                        </a>
+                        <a href="#" class="text-decoration-none">
+                            <div class="option">
+                                <i class="fas fa-bell"></i>
+                                <p class="mb-0">Notificacion</p>
+                            </div>
+                        </a>
+                        <a href="#" class="text-decoration-none">
+                            <div class="option">
+                                <i class="fa-solid fa-chart-column"></i>
+                                <p class="mb-0">Indicadores de gestion</p>
+                            </div>
+                        </a>
+                        <a href="{% url 'log_out' %}" class="text-decoration-none">
+                            <div class="option">
+                                <i class="fa-solid fa-right-from-bracket"></i>
+                                <p class="mb-0">Sign out</p>
+                            </div>
+                        </a>
+
+                    </div>
+                </div>
+            {% elif  group.name == 'Analista' %}
+                <div class="menu__side" id="side">
+                    <div class="name_page">
+                        <i class="fa-solid fa-house-chimney-medical" title="titulo"></i>
+                        <h4 class="titulo_fundacion">Fundacion retorno</h4>
+                    </div>
+                    <div class="menu_option">
+                        <a href="#" class="selected text-decoration-none">
+                            <div class="option">
+                                <i class="fa-solid fa-user" title="usuario"></i>
+                                <p class="mb-0">usuario</p>
+                            </div>
+                        </a>
+                        <a href="#" class="text-decoration-none">
+                            <div class="option">
+                                <i class="fa-solid fa-file-lines" title="Reportes"></i>
+                                <p class="mb-0">Reportes</p>
+                            </div>
+                        </a>
+                        <a href="#" class="text-decoration-none">
+                            <div class="option">
+                                <i class="fa-solid fa-chart-column" title="Indicadores de gestion"></i>
+                                <p class="mb-0">Indicadores de gestion</p>
+                            </div>
+                        </a>
+                        <a href="{% url 'log_out' %}" class="text-decoration-none">
+                            <div class="option">
+                                <i class="fa-solid fa-right-from-bracket" title="Salir"></i>
+                                <p class="mb-0">Sign out</p>
+                            </div>
+                        </a>
+
+                    </div>
+                </div>
+                {% elif  group.name == 'Gestor' %}
+                <div class="menu__side" id="side">
+                    <div class="name_page">
+                        <i class="fa-solid fa-house-chimney-medical" title="titulo"></i>
+                        <h4 class="titulo_fundacion">Fundacion retorno</h4>
+                    </div>
+                    <div class="menu_option">
+                        <a href="#" class="selected text-decoration-none">
+                            <div class="option">
+                                <i class="fa-solid fa-user" title="usuario"></i>
+                                <p class="mb-0">usuario</p>
+                            </div>
+                        </a>
+                        <a href="#" class="text-decoration-none">
+                            <div class="option">
+                                <i class="fa-solid fa-file-lines" title="Reportes"></i>
+                                <p class="mb-0">Reportes</p>
+                            </div>
+                        </a>
+                        <a href="#" class="text-decoration-none">
+                            <div class="option">
+                                <i class="fa-solid fa-chart-column" title="Indicadores de gestion"></i>
+                                <p class="mb-0">Indicadores de gestion</p>
+                            </div>
+                        </a>
+                        <a href="{% url 'log_out' %}" class="text-decoration-none">
+                            <div class="option">
+                                <i class="fa-solid fa-right-from-bracket" title="Salir"></i>
+                                <p class="mb-0">Sign out</p>
+                            </div>
+                        </a>
+
+                    </div>
+                </div>
+            {% else %}
+                <p>no existe</p>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+
+  <main class="caja">
+    <div class="formulario_persona">
+
+        <div class="caja__contenedor__inputs">
+
+            <div class="caja_imagen">
+                <img src="{% static "../static/img/user.png" %}" class="imagen"/>
+
+            </div>
+ 
+            {% if usuario %}
+                {% for user in usuario %}
+                
+                    <div class="caja_informacion">
+                        <p><span><strong>Primer nombre:</strong> {{ user.primer_nombre }} </span></p>
+                    </div>
+                    <div class="caja_informacion">
+                        <span><strong>Primer Apellido:</strong>{{ user.primer_apellido }}</span>
+                    </div>
+                    <div class="caja_informacion">
+                        <span><strong>Correo electronico:</strong>{{ user.login_id.email }}</span>
+                    </div>
+                    <div class="caja_informacion">
+                        <span><strong>Pais:</strong>{{ user.cod_pais.nombrepais }}</span>
+                    </div>
+                    <div class="caja_informacion">
+                        <span><strong>Ocupacion:</strong>{{ user.ocupacion }}</span>
+                    </div>
+                    <div class="caja_informacion">
+                        <span><strong>Canala de notificaciones:</strong>{{ user.tipo_envio.tipoenvio }}</span>
+                    </div>
+                    </div>
+                    <div class="caja__contenedor__inputs">
+                        <h4>Informacion detalle del paciente</h4>
+                        <div class="caja_informacion">
+                            <span><strong>Segundo nombre:</strong>{{ user.segundo_nombre }}</span>
+                        </div>
+                        <div class="caja_informacion">
+                            <span><strong>Segundo apellido:</strong>{{ user.segundo_apellido }}</span>
+                        </div>
+                        <div class="caja_informacion">
+                            <span><strong>Genero:</strong>{{ user.idgenero.nombregenero }}</span>
+                        </div>
+                        <div class="caja_informacion">
+                            <span><strong>Departamento:</strong>{{ user.cod_dep.nombre }}</span>
+                        </div>
+                        <div class="caja_informacion">
+                            <span><strong>Celular:</strong>{{ user.celular }}</span>
+                        </div>
+                        <div class="caja_informacion">
+                            <span><strong>Grupo etnico:</strong>{{ user.id_grupo_etnico.nombreetnico }}</span>
+                        </div>
+                        <div class="caja_informacion">
+                            <span><strong>Tipo de identificacion:</strong>{{ user.tipo_doc.nombredocumento }}</span>
+                        </div>
+                        <div class="caja_informacion">
+                            <span><strong>Identificacion:</strong>{{ user.id_cedula }}</span>
+                        </div>
+                        <div class="caja_informacion">
+                            <span><strong>Direccion de residencia:</strong>{{ user.direccion }}</span>
+                        </div>
+                        <div class="caja_informacion">
+                            <span><strong>Municipio:</strong>{{ user.cod_muni.nombremunicipio }}</span>
+                        </div>
+                        <div class="caja_informacion">
+                            <span><strong>Fecha de nacimiento:</strong>{{ user.fechanaci }}</span>
+                        </div>
+                        <div class="caja_informacion">
+                            <span><strong>Poblacion especial:</strong>{{ user.id_poblacion_especial.nombrepoblacionesp }}</span>
+                        </div>
+                        <div class="contenedor__input">
+                            <input type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                                    onclick="abrir_moda_edicion('{% url 'editarUsuario' user.id_cedula %}')"value='Editar'/>
+                      
+                        </div>
+
+                    </div>
+                
+                {% endfor %}
+            {% else %}
+                <p> No existe registro</p>
+            {% endif %}
+       
+    </div>
+
+
+    </div>
+
+    </div>
+
+  </main>
+
+{% endblock %}
+{% block modal%}
+<div class="modal fade" id="editar" role="dialog"  tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+</div>
+{% endblock%}
+
+{% block js %}
+    <script type="text/javascript">
+        function abrir_moda_edicion(url) {
+           let e;
+ 
+            $('#editar').load(url, function () {
+                $(this).modal('show').trigger('click')
+            })
+        }
+
+    </script>
+{% endblock %}
+
+
+
+

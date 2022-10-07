@@ -1,0 +1,109 @@
+.formulario_persona{
+    display: flex;
+    justify-content: center;
+margin-top: 79px;
+    margin-left: 97px;
+}
+.caja__contenedor__inputs{
+    display: flex;
+    flex-direction: column;
+    margin: 0 12px;
+    height: 500px;
+    width: 400px;
+    border-radius: 10px;
+
+
+-webkit-box-shadow: 4px -2px 12px 0px rgba(0,0,0,0.75);
+-moz-box-shadow: 4px -2px 12px 0px rgba(0,0,0,0.75);
+box-shadow: 4px -2px 12px 0px rgba(0,0,0,0.75);
+    transition: all .3s ease-in-out;
+}
+.caja__contenedor__inputs:hover{
+background: #f3f3f3;
+    /*Su uso requiere establecer las propiedades con sus prefijos
+    para permitir la compatibilidad con todos los navegadores*/
+
+}
+.caja_form{
+    display: flex;
+
+    margin-left: 139px;
+    margin-top: 92px;
+    height: 500px;
+    width: 1000px;
+    border-radius: 10px;
+    justify-content: center;
+    align-items: center;
+
+    transition: all .3s ease-in-out;
+}
+.form_caso{
+    width: 1000px;
+    height: 500px;
+    display: flex;
+    flex-direction: column;
+}
+h4{
+    margin-left: 22px
+}
+.contenedor__input {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+button{
+    margin-top:18px;
+    border: none;
+    width: 125px;
+    height: 25px;
+    background: #0a53be;
+    color: white;
+    border-radius: 5px;
+    margin-left: 5px;
+    margin-bottom: 5px;
+}
+button:hover{
+    background: #0d6efd;
+}
+.caja_imagen{
+    display: flex;
+    justify-content: center;
+}
+.imagen{
+    width: 200px;
+    height: 200px;
+    border: 5px solid #e9ff3f;
+    border-radius: 50%;
+    transition: all .3s ease-in-out;
+}
+.caja_informacion{
+    height: 40px;
+
+    margin-top: 5px;
+    display: flex;
+    flex-direction: column;
+}
+span{
+    font-size: 13px;
+    margin-left: 5px;
+}
+
+
+
+
+.image__grafica{
+    margin:0 5px;
+}
+@media screen and (max-width: 768px) {
+.formulario_persona{
+    flex-wrap: wrap;
+    flex-direction: column;
+}
+    .caja__contenedor__inputs{
+        margin: 5px 0;
+    }
+    .caja_informacion{
+        justify-content: center;
+    }
+}

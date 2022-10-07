@@ -1,0 +1,110 @@
+.centrar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-image: url("../img/imagenFondo.jpg");
+    background-position: center;
+}
+
+.caja_hijo {
+    width: 958px;
+    height: 876px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.caja-titulo {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.formulario-caja-inputs {
+    display: flex;
+    justify-content: space-around;
+    width: 800px;
+}
+
+.formulario-caja-input {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+}
+
+.input-form {
+    width: 296px;
+}
+
+
+.parrafo {
+    font-size: 12px;
+    margin-left: 5px;
+}
+
+.terminos {
+    text-align: center;
+}
+
+.boton-ubicacion {
+    margin-top: 20px;
+    width: 250px;
+}
+select{
+    width: 300px;
+    height: 40px;
+    border-radius:5px;
+   
+}
+#form{
+  flex-direction: column;
+}
+.cuerpo{
+    height: 500px;
+    display: flex;
+    margin-top: 80px;
+    justify-content: space-around;
+    align-items: center;
+}
+.botones-enviar{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 90px;;
+}
+.introimage{
+    width:200px;
+    height:100px;
+}
+.caja-boton{
+    display: flex;
+    justify-content: center;
+}
+@media screen and (max-width: 365px) {
+    #cajas {
+        margin-left: 10px;
+    }
+
+    .logo_tipo {
+        width: 150px;
+        height: 100px;
+    }
+}
+    @media screen and (max-width: 765px) {
+        #cajas {
+            margin: 0 50px;
+            flex-direction: column;
+        }
+
+        .logo_tipo {
+            width: 250px;
+            height: 100px;
+        }
+     #forms{
+         flex-direction: column;
+     }
+    }

@@ -1,0 +1,137 @@
+from tokenize import group
+from api.models import *
+from django.shortcuts import get_object_or_404, render, redirect
+from django.http import HttpResponseRedirect
+from .forms import datosuserForm, userRegister, datosuserFormEdit, CasosForm
+from django.contrib import messages
+from django.urls import reverse_lazy
+from django.contrib.auth.models import User
+from django.views.generic import ListView, CreateView
+
+from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.decorators import login_required
+
+from django.urls import reverse
+from django.core.files.storage import FileSystemStorage
+global usuario
+
+
+@login_required
+def perfilUsuario(request):
+    usuario = DatosUsuario.objects.filter(
+        login_id=request.user.id).select_related('login_id')
+    if request.method == 'GET':
+        usuario = DatosUsuario.objects.filter(
+            login_id=request.user.id).select_related('login_id')
+
+    return render(request, 'informacion_paciente.html', {'usuario': usuario})
+
+
+@login_required
+def editarUser(request, id):
+    try:
+        persona = DatosUsuario.objects.get(pk=id)
+        if request.method == 'GET':
+            persona_form = datosuserFormEdit(instance=persona)
+        else:
+            persona_form = datosuserFormEdit(request.POST, instance=persona)
+
+            if persona_form.is_valid():
+                persona_form.save()
+                return redirect('perfil')
+            else:
+                messages.add_message(
+                    request, messages.ERROR, message='Vuelva a intetarlo')
+    except Exception as e:
+        print(e)
+
+    return render(request, 'editarUser.html', {'persona_form': persona_form, 'persona': persona})
+
+
+class perfilUsuarioRegistro(CreateView):
+    model = DatosUsuario
+    template_name = 'registro.html'
+    form_class = datosuserForm
+    second_form_class = userRegister
+    success_url = reverse_lazy('login')
+
+    def get_context_data(self, **kwargs):
+        context = super(perfilUsuarioRegistro, self).get_context_data(**kwargs)
+        if 'form' not in context:
+            context['form'] = self.form_class(self.request.GET)
+        if 'form2' not in context:
+            context['form2'] = self.second_form_class(self.request.GET)
+            return context
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object
+        form = self.form_class(request.POST)
+        form2 = self.second_form_class(request.POST)
+        if form.is_valid() and form2.is_valid():
+            solicitud = form.save(commit=False)
+            solicitud.login_id = form2.save()
+            solicitud.save()
+            return HttpResponseRedirect(self.get_success_url())
+        else:
+            messages.add_message(request, messages.ERROR,
+                                 message='registro fallido vuelva e intentelo')
+            return redirect('login')
+
+
+def validar_grupo(user):
+    return user.groups.filter(name__in=['Analista', 'Gestor', 'Paciente']).exists()
+
+
+def logear(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+        print(username)
+
+        if not user:
+            messages.add_message(request, messages.ERROR,
+                                 message='contraseña errada o usuario errado')
+            return render(request, 'usuarioPorcorreo.html')
+
+        else:
+            if validar_grupo(user):
+                login(request, user)
+                return redirect('perfil')
+            else:
+                messages.add_message(request, messages.ERROR,
+                                     message='El usuario estara activado pronto')
+            return redirect('login')
+
+    return render(request, 'usuarioPorcorreo.html')
+
+
+def log_out(request):
+    logout(request)
+    messages.add_message(request, messages.SUCCESS, f'ha vuelto al inicio')
+    return redirect(reverse('login'))
+
+
+def perfiluser(request):
+    return render(request, 'estructuraSuap.html')
+
+
+@login_required
+def registrarCaso(request,id):
+    datos_usuario =  DatosUsuario.objects.get(login_id=id)
+    forma_persona = CasosForm(request.POST, request.FILES)
+    if request.method == 'POST':
+        if forma_persona.is_valid():
+            forma_persona.save()
+            return redirect('perfil')
+        else:
+            initial_data = {'id_usuario':datos_usuario.id_cedula}
+            forma_persona = CasosForm(initial=initial_data)
+    return render(request, 'registrarCaso.html', {'forma_persona': forma_persona})
+
+
+def page_not_found(request,exception):
+    return render(request, '404.html')
+    
+def page(request,exception):
+    return render(request,'505.html')

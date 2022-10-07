@@ -1,0 +1,170 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap');
+*{
+    margin:0;
+    padding:0;
+    text-decoration: none;
+    box-sizing: border-box;
+    font-family: 'monserrat',sans-serif;
+}
+header{
+    width: 100%;
+    height: 60px;
+    position: fixed;
+    background: #0a53be;
+    display: flex;
+    top: 0;
+    /*z-index: 200;*/
+   margin-left: 72px;
+
+}
+body{
+    margin-left: 100px;
+    transition: margin-left 300ms cubic-bezier(0.785, 0.135, 0.15, 0.86);
+    margin-top: 80px;
+}
+.caja{
+margin-top: 87px;
+    width: 190vh;
+    height: 85vh;
+}
+.icon_menu{
+    display: flex;
+    flex-direction: row;
+}
+.titulo_fundacion{
+    color: #ffffff;
+    font-size: 15px;
+    margin: 0 5px;
+}
+.icono_despegable_caja{
+    width: 50px;
+      height: 61px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 22px;
+    margin-left: 5px;
+    transform: translateX(10px);
+    cursor: pointer;
+    position: fixed;
+
+}
+.menu__side{
+    background: #0b5ed7;
+    width: 74px;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 300;
+    overflow: hidden;
+    overflow-y: scroll;
+    border: 5px solid #0b5ed7 ;
+    transition: all 300ms cubic-bezier(0.785,0.135,0.15,0.86);
+}
+.menu__side::-webkit-scrollbar{
+    display: none;
+}
+/*para ocultar en explorer scroll*/
+.menu__side{
+    -ms-overflow-style: none;
+    scrollbarr-width:none;
+}
+.name_page{
+    padding: 20px 30px;
+    display: flex;
+    margin-top: 5px;
+
+
+}
+title{
+    font-family: 'monserrat', sans-serif;
+}
+.name_page i{
+    color: white;
+    margin-right: 20px;
+
+}
+
+.menu_option{
+    padding: 20px 30px;
+    position: absolute;
+    top: 80px;
+}
+.menu_option a{
+    color: #ffffffb2;
+    cursor: default;
+    display: block;
+    position: relative;
+    transition: color 300ms;
+}
+.menu_option a:hover{
+    color: white;
+
+}
+.menu_option .option{
+    padding: 13px 0;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+.menu_option .option i{
+    width: 20px;
+    margin-right: 20px;
+     cursor: pointer;
+}
+.menu_option .option p{
+    font-weight: 300;
+    cursor: pointer;
+}
+a.selected{
+    color: #ffffff;
+}
+/*.selected:before{*/
+/*    content:'';*/
+/*    width: 3px;*/
+/*    height: 80%;*/
+/*    background: white;*/
+/*    position: absolute;*/
+/*    top:10%;*/
+/*    left:-30px;*/
+/*}*/
+/*clases para usar con js*/
+.body_move{
+    margin-left: 146px;
+}
+.menu_side_move{
+    width: 224px;
+}
+h4{
+    text-justify: auto;
+}
+.icono_despegable_caja i{
+    color: white;
+}
+p{
+    margin-bottom: 0rem;
+}
+/*.selected:hover{*/
+/* border-left: 1px solid white;*/
+/*    position: relative;*/
+/*    left: -30px;*/
+/*     top:10%;*/
+/*}*/
+
+@media screen and (max-width: 760px){
+    .body_move{
+        margin-left: -76px;
+    }
+    .menu_side_move{
+        width: 90px;
+        left: -90px;
+    }
+    header{
+        width: 800px;
+     position: fixed;
+    }
+    
+
+}
+

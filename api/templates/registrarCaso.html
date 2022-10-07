@@ -1,0 +1,55 @@
+{% extends "informacion_paciente.html" %}
+
+{%block content%}
+<div class="caja_form">
+<form method="POST" class="form_caso" enctype="multipart/form-data" action=''>
+    {% csrf_token %}
+    <div class="caja-titulo">
+        <h3>Registrar Caso</h3>
+    </div>
+    
+   
+<div class="d-flex flex-column w-100">
+    <div class="d-flex  flex-row">
+<div class="w-50">
+
+    <label for="{{forma_persona.name}}">{{forma_persona.enfermedad.label}}</label>
+    {{forma_persona.enfermedad}}
+    <label for="{{forma_persona.name}}">{{forma_persona.id_barrera.label}}</label>
+    {{forma_persona.id_barrera}}
+</div> 
+<div class="w-50 ms-3 date">
+    <label for="{{forma_persona.name}}">{{forma_persona.fechaatencioneps.label}}</label>
+    {{forma_persona.fechaatencioneps}}
+    <label for="{{forma_persona.name}}">{{forma_persona.id_usuario.label}}</label>
+    {{forma_persona.id_usuario}}
+</div>
+</div>
+<div>
+    
+    <div class="">
+        <label for="{{forma_persona.name}}">{{forma_persona.descripcioncaso.label}}</label>
+        {{forma_persona.descripcioncaso}}
+    </div>
+
+
+      
+      
+</div>
+
+<div class="d-flex flex-row align-items-end ">
+    <div>
+    <label for="{{forma_persona.name}}">{{forma_persona.numeroradicado.label}}</label>
+    {{forma_persona.numeroradicado}}
+    </div>
+    <div class='ms-3'>
+    <label for="{{forma_persona.name}}">{{forma_persona.formula_medica.label}}</label>
+    {{forma_persona.formula_medica}}
+    </div>
+    <input type="submit" class="btn btn-primary h-50 ms-3" value="Crear caso">
+   
+</div> 
+</form>
+</div>
+
+{%endblock%}
