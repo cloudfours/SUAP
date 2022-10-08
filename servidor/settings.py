@@ -95,7 +95,7 @@ DATABASES = {
        'ENGINE': 'django.db.backends.mysql',
         'NAME': 'fundacion_retorno',
         'USER': 'root',
-        'PASSWORD': '1007648218',
+        'PASSWORD': '1234',
         'HOST': 'localhost',
         'PORT': '3306',
 
@@ -139,7 +139,7 @@ USE_TZ = True
 STATIC_URL = 'api/static/'
 
 STATICFILES_DIRS=[(os.path.join(BASE_DIR,'static/'))]
-STATIC_ROOT= "/static"
+STATIC_ROOT= "api/static"
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
