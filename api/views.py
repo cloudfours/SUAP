@@ -117,14 +117,21 @@ def perfiluser(request):
 
 
 @login_required
-def registrarCaso(request,id):
-    datos_usuario =  DatosUsuario.objects.get(login_id=id)
+def registrarCaso(request):
+    datos_usuario =  DatosUsuario.objects.get(login_id=request.user.id)
+    caso = Casos.objects.filter(id_usuario = datos_usuario.id_cedula).select_related('estado').filter(estado__nombreestado='abierto').count()
     forma_persona = CasosForm(request.POST, request.FILES)
     if request.method == 'POST':
-        if forma_persona.is_valid():
-            forma_persona.save()
-            return redirect('perfil')
+        if caso>=1:
+               messages.add_message(request, messages.ERROR,message='No puede crear otro caso hasta que este finalice')
+               return redirect('caso')
         else:
+            if forma_persona.is_valid():
+                forma_persona.save()
+                return redirect('perfil')
+         
+ 
+    else:
             initial_data = {'id_usuario':datos_usuario.id_cedula}
             forma_persona = CasosForm(initial=initial_data)
     return render(request, 'registrarCaso.html', {'forma_persona': forma_persona})

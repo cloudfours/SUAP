@@ -21,8 +21,8 @@
 <div class="w-50 ms-3 date">
     <label for="{{forma_persona.name}}">{{forma_persona.fechaatencioneps.label}}</label>
     {{forma_persona.fechaatencioneps}}
-    <label for="{{forma_persona.name}}">{{forma_persona.id_usuario.label}}</label>
-    {{forma_persona.id_usuario}}
+
+    {{forma_persona.id_usuario.as_hidden}}
 </div>
 </div>
 <div>
@@ -51,5 +51,30 @@
 </div> 
 </form>
 </div>
-
+{% if messages %}
+{%for message in messages%}
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Mensaje</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            {{message}}
+        </div>
+        <div class="modal-footer">
+        <button type="button" class="btn-alert-danger" data-bs-dismiss="modal">Aceptar</button>
+        </div>
+    </div>
+    </div>
+</div>
+{%endfor%}
+{%endif%}
+<script type="text/javascript">
+    $(document).ready(function (){
+    $('#exampleModal').modal('show')
+})
+</script>
 {%endblock%}
