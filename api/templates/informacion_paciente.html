@@ -2,7 +2,7 @@
 {% load extras %}
 {% load static %}
 {% block menu %}
-    {% if  user.is_authenticated %}
+ {% if  user.is_authenticated %}
         {% for group in user.groups.all %}
             {% if group.name == 'Paciente' %}
                 <div class="menu__side" id="side">
@@ -29,7 +29,7 @@
                                 <p class="mb-0">Seguimiento</p>
                             </div>
                         </a>
-                        <a href="#" class="text-decoration-none">
+                        <a href="{% url 'historial' %}" class="text-decoration-none">
                             <div class="option">
                                 <i class="fas fa-history"></i>
                                 <p class="mb-0">Historial</p>
@@ -152,6 +152,7 @@
 {% block content %}
 
   <main class="caja">
+  
     <div class="formulario_persona">
 
         <div class="caja__contenedor__inputs">
@@ -248,6 +249,30 @@
 <div class="modal fade" id="editar" role="dialog"  tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 
 </div>
+{% if messages %}
+{%for message in messages%}
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel1" aria-hidden="true">
+    <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Mensaje</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            {{message}}
+        </div>
+        <div class="modal-footer">
+        <button type="button" class="btn-alert-danger" data-bs-dismiss="modal">Aceptar</button>
+        </div>
+    </div>
+    </div>
+</div>
+{%endfor%}
+{%endif%}
+
+   
+
 {% endblock%}
 
 {% block js %}
@@ -261,6 +286,13 @@
         }
 
     </script>
+    <script type="text/javascript">
+        $(document).ready(function (){
+        $('#exampleModal').modal('show')
+        
+    })
+    </script>
+ 
 {% endblock %}
 
 

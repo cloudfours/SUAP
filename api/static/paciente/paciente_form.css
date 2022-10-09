@@ -37,6 +37,18 @@ background: #f3f3f3;
 
     transition: all .3s ease-in-out;
 }
+.caja_historial{
+    display: flex;
+
+    margin-left: 139px;
+    margin-top: 92px;
+    height: 500px;
+    width: 1000px;
+    border-radius: 10px;
+
+    transition: all .3s ease-in-out; 
+}
+
 .form_caso{
     width: 1000px;
     height: 500px;

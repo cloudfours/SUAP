@@ -1,4 +1,4 @@
-from tokenize import group
+
 from api.models import *
 from django.shortcuts import get_object_or_404, render, redirect
 from django.http import HttpResponseRedirect
@@ -7,11 +7,12 @@ from django.contrib import messages
 from django.urls import reverse_lazy
 from django.contrib.auth.models import User
 from django.views.generic import ListView, CreateView
-
+from django.db.models import When,Case,Value
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
-from django.core.files.storage import FileSystemStorage
+import datetime
+from django.core.exceptions import ObjectDoesNotExist
 global usuario
 
 
@@ -118,14 +119,7 @@ def perfiluser(request):
 @login_required
 def registrarCaso(request):
     datos_usuario =  DatosUsuario.objects.get(login_id=request.user.id)
-    estados ={
-       1:'abierto',
-       2:'proceso',
-       3:'finalizadoo',
-   }
-   
-
-    caso = Casos.objects.filter(id_usuario = datos_usuario.id_cedula).select_related('estado').filter(estado__idestado=1).count()
+    caso = Casos.objects.filter(id_usuario = datos_usuario.id_cedula).select_related('estado').filter(estado__idestado=Case(When(estado__nombreestado='abierto',then=Value(1)),When(estado__nombreestado='proceso',then=Value(2)))).count()
     print(caso)
     forma_persona = CasosForm(request.POST, request.FILES)
     if request.method == 'POST':
@@ -151,6 +145,16 @@ def page(request,exception):
 def seguimiento(request):
     datos_usuario=DatosUsuario.objects.get(login_id=request.user.id)
     casos=Casos.objects.values('estado').filter(id_usuario= datos_usuario.id_cedula)
-    num = Casos.objects.get(id_usuario=datos_usuario.id_cedula)
-    print(casos)
+    try:
+         num = Casos.objects.get(id_usuario=datos_usuario.id_cedula)
+    except Casos.DoesNotExist:
+        messages.add_message(request, messages.ERROR,message='no existe caso')
+        return redirect('perfil')
+
     return render(request,'seguimiento.html',{'casos':casos,'num':num})
+@login_required
+def historial_casos(request):
+    datos_usuario=DatosUsuario.objects.get(login_id=request.user.id)
+    casoshistorial = Casos.objects.filter(id_usuario=datos_usuario.id_cedula)
+
+    return render(request,'historialcasos.html',{'casoshistorial': casoshistorial})

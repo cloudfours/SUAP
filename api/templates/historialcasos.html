@@ -1,0 +1,40 @@
+{% extends 'informacion_paciente.html' %}
+{% block content %}
+<div class='caja_historial'>
+    <div id="accordion" class='w-100'>
+      {% if casoshistorial %}
+        {% for caso in casoshistorial%}
+          {% if caso.estado.nombreestado == 'finalizado'%}
+        <div class="card">
+          <div class="card-header">
+            <a class="btn" data-bs-toggle="collapse" href="#collapseOne">
+             <strong>Caso</strong>    {{caso.id_caso}}
+            </a>
+                
+          </div>
+          <div id="collapseOne" class="collapse show" data-bs-parent="#accordion">
+            <div class="card-body">
+              Lorem ipsum..
+            </div>
+          </div>
+        </div>
+         {% elif caso.estado.nombreestado == 'abierto' or 'proceso' %}
+         <div class="card">
+            <div class="card-header">
+              <a class="btn" data-bs-toggle="collapse" href="#collapseOne">
+               <strong>Caso</strong>  {{caso.id_caso}} 
+              </a>
+                  
+            </div>
+            <div id="collapseOne" class="collapse hidden" data-bs-parent="#accordion">
+              <div class="card-body">
+                Lorem ipsum..
+              </div>
+            </div>
+          </div>
+                  {% endif %}
+        {% endfor %}
+    {% endif %}
+      
+</div>
+{% endblock %}
