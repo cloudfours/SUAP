@@ -90,7 +90,16 @@ span{
 }
 
 
-
+.caja_seguimiento{
+    display:flex;
+    align-items: center;
+    flex-direction: column;
+    width: 1000px;
+    height: 400px;
+    margin-left: 177px;
+    margin-top: 83px;
+   justify-content: space-between;
+}
 
 .image__grafica{
     margin:0 5px;

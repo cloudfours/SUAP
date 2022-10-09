@@ -17,7 +17,7 @@ class CasosForm(forms.ModelForm):
     class Meta:
         model=Casos
         fields =['id_usuario','numeroradicado','descripcioncaso'
-                 ,'enfermedad','fechaatencioneps','formula_medica'
+                 ,'enfermedad','fechaatencioneps','formula_medica','estado'
                 ,'id_barrera']
         labels={
             # 'id_caso':'Caso',
@@ -32,6 +32,7 @@ class CasosForm(forms.ModelForm):
         widgets={
             # 'id_caso':forms.NumberInput(attrs={'class':'form-control'}),
             'id_usuario':forms.Select(attrs={'class':'form-control'}),
+            'estado':forms.Select(attrs={'class':'form-control'}),
             'numeroradicado':forms.NumberInput(attrs={'class':'form-control '}),
             'fechaatencioneps':forms.DateTimeInput(attrs={'class':'form-control datetimepicker-input','type':'datetime-local','placeholder':'ingrese fecha'},format='%Y-%m-%d %H:%M:%S'),
             'descripcioncaso':forms.Textarea(attrs={'class':'form-control '}),
@@ -47,11 +48,11 @@ class datosuserFormEdit(forms.ModelForm):
     #         self.fields['tipo_doc'].widget.disabled_select = disabled_select;
     def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
-            self.fields['tipo_doc'].disabled = True
-            if self.fields['id_eps'] is None:
-                self.fields['id_eps'].disabled = False
-            else:
-                self.fields['id_eps'].disabled = True
+            # self.fields['tipo_doc'].disabled = True
+            # if self.fields['id_eps'] is None:
+            #     self.fields['id_eps'].disabled = False
+            # else:
+            #     self.fields['id_eps'].disabled = True
       
     
     class Meta:

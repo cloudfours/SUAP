@@ -23,7 +23,7 @@
                                 <p class="mb-0">Registrar Caso</p>
                             </div>
                         </a>
-                        <a href="#" class="text-decoration-none">
+                        <a href="{% url 'seguimiento' %}" class="text-decoration-none">
                             <div class="option">
                                 <i class="fa-solid fa-circle-right" title="seguimiento"></i>
                                 <p class="mb-0">Seguimiento</p>
@@ -97,27 +97,45 @@
                         <h4 class="titulo_fundacion">Fundacion retorno</h4>
                     </div>
                     <div class="menu_option">
-                        <a href="#" class="selected text-decoration-none">
+                        <a href="{% url 'perfil' %}" class="selected text-decoration-none">
                             <div class="option">
                                 <i class="fa-solid fa-user" title="usuario"></i>
                                 <p class="mb-0">usuario</p>
                             </div>
                         </a>
+                        <a href="{% url 'caso' %}" class="text-decoration-none">
+                            <div class="option">
+                                <i class="fa-solid fa-square-pen"></i>
+                                <p class="mb-0">Registrar Caso</p>
+                            </div>
+                        </a>
+                        <a href="{% url 'seguimiento' %}" class="text-decoration-none">
+                            <div class="option">
+                                <i class="fa-solid fa-table-list"></i>
+                                <p class="mb-0">Casos</p>
+                            </div>
+                        </a>
                         <a href="#" class="text-decoration-none">
                             <div class="option">
-                                <i class="fa-solid fa-file-lines" title="Reportes"></i>
+                                <i class="fas fa-bell"></i>
+                                <p class="mb-0">Notificacion</p>
+                            </div>
+                        </a>
+                        <a href="#" class="text-decoration-none">
+                            <div class="option">
+                                <i class="fa-solid fa-file-circle-plus"></i>
                                 <p class="mb-0">Reportes</p>
                             </div>
                         </a>
                         <a href="#" class="text-decoration-none">
                             <div class="option">
-                                <i class="fa-solid fa-chart-column" title="Indicadores de gestion"></i>
+                                <i class="fa-solid fa-chart-column"></i>
                                 <p class="mb-0">Indicadores de gestion</p>
                             </div>
                         </a>
                         <a href="{% url 'log_out' %}" class="text-decoration-none">
                             <div class="option">
-                                <i class="fa-solid fa-right-from-bracket" title="Salir"></i>
+                                <i class="fa-solid fa-right-from-bracket"></i>
                                 <p class="mb-0">Sign out</p>
                             </div>
                         </a>

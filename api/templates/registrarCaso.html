@@ -5,7 +5,7 @@
 <form method="POST" class="form_caso" enctype="multipart/form-data" action=''>
     {% csrf_token %}
     <div class="caja-titulo">
-        <h3>Registrar Caso</h3>
+        <h3 class='h3'>Registrar Caso</h3>
     </div>
     
    
@@ -23,6 +23,7 @@
     {{forma_persona.fechaatencioneps}}
 
     {{forma_persona.id_usuario.as_hidden}}
+    {{forma_persona.estado.as_hidden}}
 </div>
 </div>
 <div>

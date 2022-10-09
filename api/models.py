@@ -128,6 +128,9 @@ class Enuesta(models.Model):
 class EnvioAlertas(models.Model):
     tipoenvio = models.CharField(db_column='tipoEnvio', max_length=40)  # Field name made lowercase.
     id_envio = models.SmallAutoField(primary_key=True)
+    
+    def __str__(self):
+        return f'{self.tipoenvio}'
 
  
 

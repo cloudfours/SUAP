@@ -1,1 +1,36 @@
 {% extends 'informacion_paciente.html' %}
+{% block content %}
+<div class='caja_seguimiento'>
+    {% for caso in casos %}
+        {% if caso.estado == 1 %}
+    <div class='h-25'>
+    <h2><stronge>Progeso del Caso</stronge></h2>
+    
+    </div>
+    <div class="container mt-3">
+        <div class="progress">
+            <div class="progress-bar progress-bar-striped progress-bar-animated" style="width:10%"></div>
+            <p>10%</p>
+          </div>
+      </div>
+      <div class='h-25 d-flex justify-content-center align-content-center'>
+      <p class='h3'>Caso creado #{{num.id_caso}}</p>
+      </div>
+        {% elif caso.estado == 2 %}
+        <div class='h-25'>
+            <h2>Basic Progress Bar</h2>
+            
+            </div>
+            <div class="container mt-3">
+                <div class="progress">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated" style="width:40%"></div>
+                    <p>20%</p>
+                  </div>
+              </div>
+              <div class='h-25 d-flex justify-content-center align-content-center'>
+              <p class='h3'>Esta en progreso y asigando a un gestor</p>
+              </div>
+        {% endif %}
+      {% endfor %}
+</div>
+{% endblock %}
