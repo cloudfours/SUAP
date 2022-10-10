@@ -131,7 +131,7 @@ def registrarCaso(request):
                 forma_persona.save()
                 return redirect('perfil')
     else:
-            initial_data = {'id_usuario':datos_usuario.id_cedula,'estado':1}
+            initial_data = {'id_usuario':datos_usuario.id_cedula,'estado':1,'fecharesgistrocaso':datetime.datetime.now()}
             forma_persona = CasosForm(initial=initial_data)
     return render(request, 'registrarCaso.html', {'forma_persona': forma_persona})
 
@@ -144,12 +144,14 @@ def page(request,exception):
 @login_required
 def seguimiento(request):
     datos_usuario=DatosUsuario.objects.get(login_id=request.user.id)
-    casos=Casos.objects.values('estado').filter(id_usuario= datos_usuario.id_cedula)
+    casos=Casos.objects.values('id_caso','estado','fecharesgistrocaso').filter(id_usuario= datos_usuario.id_cedula)
     try:
-         num = Casos.objects.get(id_usuario=datos_usuario.id_cedula)
+         num = Casos.objects.filter(id_usuario=datos_usuario.id_cedula).select_related('estado').filter(estado__idestado=Case(When(estado__nombreestado='abierto',then=Value(1)),When(estado__nombreestado='proceso',then=Value(2))))
+         
     except Casos.DoesNotExist:
         messages.add_message(request, messages.ERROR,message='no existe caso')
         return redirect('perfil')
+        
 
     return render(request,'seguimiento.html',{'casos':casos,'num':num})
 @login_required
