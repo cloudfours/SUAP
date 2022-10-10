@@ -6,13 +6,15 @@
           
     <div class="dropdown w-75 ">
         <button type="button" class="btn btn-primary dropdown-toggle w-100 h-100 bg-transparent border-0 d-flex flex-row justify-content-between align-items-center ms-sm-2" data-bs-toggle="dropdown">
-            <i class="fa-regular fa-circle-user"></i> usuario
+          {% if user.is_authenticated %}
+            <i class="fa-regular fa-circle-user"></i> {{user.username}}
+            {% endif %}
         </button>
-        <ul class="dropdown-menu">
-          <li><a class="dropdown-item" href="#">Perfil</a></li>
-          <li><a class="dropdown-item" href="#">Salir</a></li>
-          
-        </ul>
+        <ul class="dropdown-menu dropdown-menu-dark">
+            <li><a class="dropdown-item" href="#">Action</a></li>
+            <li><a class="dropdown-item" href="#">Another action</a></li>
+            <li><a class="dropdown-item" href="#">Something else here</a></li>
+          </ul>
       </div>
     </div>
     
@@ -21,6 +23,7 @@
 {% endblock %}
 {% block menu %}
  {% if  user.is_authenticated %}
+
         {% for group in user.groups.all %}
             {% if group.name == 'Paciente' %}
                 <div class="menu__side" id="side">
