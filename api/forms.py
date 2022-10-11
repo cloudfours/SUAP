@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from .models import *
+import re
 # class DateTimePickerInput(forms.DateTimeInput):
 #         input_type = 'datetime'
 class CasosForm(forms.ModelForm):
@@ -138,9 +139,9 @@ class userRegister(UserCreationForm):
     email = forms.EmailField(label=_('Correo'), max_length=50, help_text='Required. Correo invalido.',
                              widget=(forms.TextInput(attrs={'class': 'form-control is-valid'})))
     password1 = forms.CharField(label=_('Contraseña'),
-                                widget=(forms.PasswordInput(attrs={'class': 'form-control is-valid'})),
+                                widget=(forms.PasswordInput(attrs={'class': 'form-control is-valid','id':'contrasena'})),
                                 help_text=password_validation.password_validators_help_text_html())
-    password2 = forms.CharField(label=_('Contraseña  confirmation'),
+    password2 = forms.CharField(label=_('Contraseña  confirmar'),
                                 widget=forms.PasswordInput(attrs={'class': 'form-control is-valid'}),
                                 help_text=_('Confirme contraseña'))
     username = forms.CharField(
@@ -149,9 +150,14 @@ class userRegister(UserCreationForm):
         help_text=_('Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.'),
         validators=[username_validator],
         error_messages={'unique': _("A user with that username already exists.")},
-        widget=forms.TextInput(attrs={'class': 'form-control is-valid'})
+        widget=forms.TextInput(attrs={'class': 'form-control is-valid','id':'username'})
     )
 
     class Meta:
         model = User
         fields = ('username', 'email', 'password1', 'password2',)
+    def clean(self,*args,**kwargs):
+        clean_data=super(userRegister,self).clean(*args,**kwargs)
+        contrasena = clean_data.get('Contraseña',None)
+        if contrasena ==' ':
+            self.add_error('contraseña','invalida')

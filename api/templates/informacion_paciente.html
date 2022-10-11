@@ -11,9 +11,9 @@
             {% endif %}
         </button>
         <ul class="dropdown-menu dropdown-menu-dark">
-            <li><a class="dropdown-item" href="#">Action</a></li>
-            <li><a class="dropdown-item" href="#">Another action</a></li>
-            <li><a class="dropdown-item" href="#">Something else here</a></li>
+            <li><a class="dropdown-item" href="{% url 'perfil' %}">Perfil</a></li>
+            <li><a class="dropdown-item" href="{% url 'log_out' %}">Salir</a></li>
+            
           </ul>
       </div>
     </div>
@@ -270,27 +270,6 @@
 <div class="modal fade" id="editar" role="dialog"  tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 
 </div>
-{% if messages %}
-{%for message in messages%}
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel1" aria-hidden="true">
-    <div class="modal-dialog">
-    <div class="modal-content">
-        <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Mensaje</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-            {{message}}
-        </div>
-        <div class="modal-footer">
-        <button type="button" class="btn-alert-danger" data-bs-dismiss="modal">Aceptar</button>
-        </div>
-    </div>
-    </div>
-</div>
-{%endfor%}
-{%endif%}
 
    
 
@@ -307,12 +286,7 @@
         }
 
     </script>
-    <script type="text/javascript">
-        $('#exampleModalLabel1').ready(function (){
-        $('#exampleModal').modal('show')
-        
-    })
-    </script>
+  
  
 {% endblock %}
 

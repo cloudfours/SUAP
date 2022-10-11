@@ -144,9 +144,9 @@ def page(request,exception):
 @login_required
 def seguimiento(request):
     datos_usuario=DatosUsuario.objects.get(login_id=request.user.id)
-    casos=Casos.objects.values('id_caso','estado','fecharesgistrocaso').filter(id_usuario= datos_usuario.id_cedula)
+    casos=Casos.objects.values('id_caso','estado','fecharesgistrocaso').filter(id_usuario= datos_usuario.id_cedula)  
     try:
-         num = Casos.objects.filter(id_usuario=datos_usuario.id_cedula).select_related('estado').filter(estado__idestado=Case(When(estado__nombreestado='abierto',then=Value(1)),When(estado__nombreestado='proceso',then=Value(2))))
+        num = Casos.objects.filter(id_usuario = datos_usuario.id_cedula).select_related('estado').filter(estado__idestado=Case(When(estado__nombreestado='abierto',then=Value(1)),When(estado__nombreestado='proceso',then=Value(2)))).count()
          
     except Casos.DoesNotExist:
         messages.add_message(request, messages.ERROR,message='no existe caso')
@@ -157,6 +157,11 @@ def seguimiento(request):
 @login_required
 def historial_casos(request):
     datos_usuario=DatosUsuario.objects.get(login_id=request.user.id)
-    casoshistorial = Casos.objects.filter(id_usuario=datos_usuario.id_cedula)
+    
+    try:
+        casoshistorial = Casos.objects.filter(id_usuario=datos_usuario.id_cedula)
+  
+    except Casos.DoesNotExist:
+        messages.add_message(request,messages.ERROR,message='No existe a un caso creado')
 
     return render(request,'historialcasos.html',{'casoshistorial': casoshistorial})

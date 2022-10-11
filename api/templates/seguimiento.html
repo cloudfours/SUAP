@@ -30,6 +30,19 @@
               <div class='h-25 d-flex justify-content-center align-content-center'>
               <p class='h3'>Esta en progreso y asigando a un gestor</p>
               </div>
+            {% elif caso.estado == None %}
+                {% if messages %}
+                        {% for message in messages %}
+                        <!-- Modal -->
+                        <div class="card">
+                        <div class="alert alert-warning alert-dismissible fade show">
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            <strong>Warning!</strong>{{message}}
+                        </div>
+                    </card>
+                        {% endfor %}
+                        {% endif %}
+
         {% endif %}
       {% endfor %}
 </div>
