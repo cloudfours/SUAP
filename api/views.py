@@ -7,7 +7,7 @@ from django.contrib import messages
 from django.urls import reverse_lazy
 from django.contrib.auth.models import User
 from django.views.generic import ListView, CreateView
-from django.db.models import When,Case,Value
+from django.db.models import When,Case,Value,F,Count
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
@@ -144,19 +144,26 @@ def page(request,exception):
 @login_required
 def seguimiento(request):
     datos_usuario=DatosUsuario.objects.get(login_id=request.user.id)
-    casos=Casos.objects.values('id_caso','estado','fecharesgistrocaso').filter(id_usuario= datos_usuario.id_cedula)
-    try:
-         num = Casos.objects.filter(id_usuario=datos_usuario.id_cedula).select_related('estado').filter(estado__idestado=Case(When(estado__nombreestado='abierto',then=Value(1)),When(estado__nombreestado='proceso',then=Value(2))))
-         
-    except Casos.DoesNotExist:
-        messages.add_message(request, messages.ERROR,message='no existe caso')
-        return redirect('perfil')
-        
 
-    return render(request,'seguimiento.html',{'casos':casos,'num':num})
+    
+    casos=Casos.objects.filter(id_usuario= datos_usuario.id_cedula).last()
+    
+   
+    return render(request,'seguimiento.html',{'casos':casos})
 @login_required
 def historial_casos(request):
     datos_usuario=DatosUsuario.objects.get(login_id=request.user.id)
-    casoshistorial = Casos.objects.filter(id_usuario=datos_usuario.id_cedula)
+    
+    try:
+        casoshistorial = Casos.objects.filter(id_usuario=datos_usuario.id_cedula)
+        fechafinal = Casos.objects.values('fechaatenfinalizado','fecharesgistrocaso').filter(id_usuario= datos_usuario.id_cedula).annotate(duration=F('fechaatenfinalizado') - F('fecharesgistrocaso'))
 
-    return render(request,'historialcasos.html',{'casoshistorial': casoshistorial})
+          
+        
+     
+        
+        
+    except Casos.DoesNotExist:
+        messages.add_message(request,messages.ERROR,message='No existe a un caso creado')
+
+    return render(request,'historialcasos.html',{'casoshistorial': casoshistorial,'dic_fecha':fechafinal})

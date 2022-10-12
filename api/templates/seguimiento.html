@@ -1,8 +1,9 @@
 {% extends 'informacion_paciente.html' %}
 {% block content %}
 <div class='caja_seguimiento'>
-    {% for caso in casos %}
-        {% if caso.estado == 1 %}
+  {% if casos %}
+ 
+        {% if casos.estado.nombreestado == 'abierto'%}
     <div class='h-25'>
     <h2><stronge>Progeso del Caso</stronge></h2>
     
@@ -14,9 +15,11 @@
           </div>
       </div>
       <div class='h-25 d-flex justify-content-center align-content-center'>
-      <p class='h3'>Caso creado #{{caso.id_caso}} hora: {{caso.fecharesgistrocaso}}</p>
+      <p class='h3'>Caso creado #{{casos.id_caso}} hora: {{casos.fecharesgistrocaso}}</p>
+   
       </div>
-        {% elif caso.estado == 2 %}
+
+        {% elif casos.estado.nombreestado == 'proceso' %}
         <div class='h-25'>
             <h2><stronge>Progreso del Caso</stronge></h2>
             
@@ -30,7 +33,36 @@
               <div class='h-25 d-flex justify-content-center align-content-center'>
               <p class='h3'>Esta en progreso y asigando a un gestor</p>
               </div>
+              
+              {% elif casos.estado.nombreestado == 'finalizado'  %}
+              <div class='h-25'>
+                  <h2><stronge>Progreso del Caso</stronge></h2>
+                  
+                  </div>
+                  <div class="container mt-3">
+                      <div class="progress">
+                          <div class="progress-bar progress-bar-striped progress-bar-animated" style="width:100%"></div>
+                          <p>100%</p>
+                        </div>
+                    </div>
+                    <div class='h-25 d-flex justify-content-center align-content-center'>
+                    <p class='h3'>esta terminado</p>
+                    </div>
+          
+        
+        
         {% endif %}
-      {% endfor %}
+  
+  {% else %}
+   
+      <!-- Modal -->
+     
+      <div class="alert alert-warning">
+          <strong>Atencion!</strong>El caso no se ha creado a un.
+      </div>
+  
+
+      
+         {% endif %}
 </div>
 {% endblock %}

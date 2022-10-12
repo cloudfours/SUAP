@@ -129,6 +129,11 @@ span{
 .image__grafica{
     margin:0 5px;
 }
+#respo{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
 @media screen and (max-width: 768px) {
 .formulario_persona{
     flex-wrap: wrap;
@@ -142,5 +147,11 @@ span{
     }
     .icono_caja_menu{
         left: 767px;
+    }
+    #respo{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
     }
 }

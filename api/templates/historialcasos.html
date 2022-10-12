@@ -2,7 +2,7 @@
 {% block content %}
 <div class='caja_historial'>
     <h1>Historial de casos</h1>
-    <div id="accordion" class='w-100'>
+    <div id="accordion fixed" class='w-100'>
       {% if casoshistorial %}
         {% for caso in casoshistorial%}
           {% if caso.estado.nombreestado == 'finalizado'%}
@@ -22,40 +22,17 @@
                <div class='d-flex flex-row'>
                 <p>Fecha de registro:  <p>{{caso.fecharesgistrocaso}}</p></p>
                </div>
-               <div class='d-flex flex-row'>
-                <p>Fecha de finalizacion: <p>{{caso.fechaatenfinalizado}}</p></p>
-               </div>
-                <div class='d-flex flex-row'> 
-                <p>Nombre de la eps: <p>{{caso.id_usuario.id_eps.nombre}}</P></p>
-                </div>
-                <div class='d-flex flex-row'>
-                <p>Barrera: <p>{{caso.id_barrera.nombre}}</p></p>
-                </div>
-                <div class='d-flex flex-row'>
-                <p>Gestor: <p>{{caso.id_gest.id_usuario}}</p></p>
-                </div>
-              </div>
-            </div>
-          </div>
-         {% elif caso.estado.nombreestado == 'abierto' or 'proceso' %}
-         <div class="card">
-            <div class="card-header">
-              <a class="btn d-flex justify-content-between" data-bs-toggle="collapse" href="#collapseOne">
-               <strong>Caso {{caso.id_caso}}</strong> <p>{{caso.fecharesgistrocaso}}</p> <p>{{caso.id_usuario}}</p>  <p>{{caso.estado.nombreestado}}</p>
-              </a>
             
-            </div>
-            <div id="collapseOne" class="collapse hidden" data-bs-parent="#accordion">
-              <div class="card-body">
-                <div class='d-flex flex-row'>
-                <p>Caso: </p><p>{{caso.id_caso}}</p>
-               </div>
+                  
                <div class='d-flex flex-row'>
-                <p>Fecha de registro:  <p>{{caso.fecharesgistrocaso}}</p></p>
+                {% for value in dic_fecha.values %}
+                {% if value.id_caso == caso.id_caso %}
+                <p>Fecha de finalizacion: <p>{{value.duration}}</p></p>
+                 {% endif %}
+                 {% endfor %}
                </div>
-               <div class='d-flex flex-row'>
-                <p>Fecha de finalizacion: <p>{{caso.fechaatenfinalizado}}</p></p>
-               </div>
+            
+            
                 <div class='d-flex flex-row'> 
                 <p>Nombre de la eps: <p>{{caso.id_usuario.id_eps.nombre}}</P></p>
                 </div>
@@ -68,8 +45,21 @@
               </div>
             </div>
           </div>
-                  {% endif %}
+         {% elif  caso.estado.nombreestado == 'abierto' or 'proceso' %}
+         
+         <div class="alert alert-warning">
+          <h2><strong>Atencion!</strong></h2><h2>El caso no se ha finalizado a un.</h2>
+      </div>
+        {% endif %}
         {% endfor %}
+        {% else %}
+     
+        
+          <div class="alert alert-warning">
+            <h2><strong>Atencion!</strong></h2><h2>El caso no se ha creado a un.</h2>
+        </div>
+      
+      
     {% endif %}
       
 </div>
