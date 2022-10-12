@@ -125,7 +125,17 @@ span{
     margin-top: 83px;
    justify-content: space-between;
 }
-
+.caja_tabla_busqueda{
+    display:flex;
+    flex-direction: column;
+    width: 1000px;
+    height: 400px;
+    margin-left: 177px;
+    margin-top: 83px;
+   justify-content: space-between;
+   position:absolute;
+   top: 172px;
+}
 .image__grafica{
     margin:0 5px;
 }
