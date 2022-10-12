@@ -156,14 +156,12 @@ def historial_casos(request):
     
     try:
         casoshistorial = Casos.objects.filter(id_usuario=datos_usuario.id_cedula)
-        fechafinal = Casos.objects.values('fechaatenfinalizado','fecharesgistrocaso').filter(id_usuario= datos_usuario.id_cedula).annotate(duration=F('fechaatenfinalizado') - F('fecharesgistrocaso'))
-
-          
-        
-     
-        
-        
+        fechafinal = Casos.objects.values('fechaatenfinalizado','fecharesgistrocaso').filter(id_usuario= datos_usuario.id_cedula).annotate(duration=F('fechaatenfinalizado') - F('fecharesgistrocaso'))               
     except Casos.DoesNotExist:
         messages.add_message(request,messages.ERROR,message='No existe a un caso creado')
 
     return render(request,'historialcasos.html',{'casoshistorial': casoshistorial,'dic_fecha':fechafinal})
+@login_required
+def getorcrud(request):
+    return render(request,'./admin/gestorcrud.html')
+    
