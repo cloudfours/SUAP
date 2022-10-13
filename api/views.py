@@ -162,6 +162,6 @@ def historial_casos(request):
 
     return render(request,'historialcasos.html',{'casoshistorial': casoshistorial,'dic_fecha':fechafinal})
 @login_required
-def getorcrud(request):
-    return render(request,'./admin/gestorcrud.html')
+def gestorcrud(request):
+    return render(request,'admin/gestorcrud.html')
     
