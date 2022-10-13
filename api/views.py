@@ -71,6 +71,9 @@ class perfilUsuarioRegistro(CreateView):
             solicitud = form.save(commit=False)
             solicitud.login_id = form2.save()
             solicitud.save()
+            messages.add_message(request, messages.SUCESS,
+                                 message='Registro exitoso')
+            
             return HttpResponseRedirect(self.get_success_url())
         else:
             messages.add_message(request, messages.ERROR,
@@ -163,5 +166,6 @@ def historial_casos(request):
     return render(request,'historialcasos.html',{'casoshistorial': casoshistorial,'dic_fecha':fechafinal})
 @login_required
 def gestorcrud(request):
-    return render(request,'admin/gestorcrud.html')
+    casos = Casos.objects.all()
+    return render(request,'admin/gestorcrud.html',{'casos':casos})
     

@@ -100,7 +100,7 @@ class DatosUsuario(models.Model):
     login_id = models.OneToOneField(User, on_delete=models.CASCADE,db_column='login_id')
 
     def __str__(self):
-        return f'{self.id_cedula}  {self.primer_nombre} {self.segundo_nombre} {self.primer_apellido}'
+        return f'{self.id_cedula}'
 
 
 class Departamento(models.Model):

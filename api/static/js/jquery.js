@@ -10,4 +10,7 @@ $(document).ready(function () {
     $('#estado').click(function(){
         table.column($(this).data('index')).search(this.value).draw();
     })
+    $('#identificacion').keyup(function(){
+        table.column($(this).data('index')).search(this.value).draw();
+    })
 })
