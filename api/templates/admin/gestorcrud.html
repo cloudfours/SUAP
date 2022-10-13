@@ -2,64 +2,130 @@
 
 {% block content %}
 <div class='caja_tabla_busqueda'>
-    <div class='busquedas'>
-    <div>
-        <select class='form-control'>
-            <option>no</option>
+    <div class='tabla_busqueda'>
+    <div class='col-sm-5 ms-2'>
+        <div class='form-floating'>
+        <select class='form-control' data-index='8' id='estado'>
+            <option value=''>seleccionar</option>
+            <option value='abierto'>abierto</option>
+            <option value='proceso'>proceso</option>
+            <option value='finalizado'>finalizado</option>
         </select>
-        <input type='text' placeholder='nombre completo' class='form-control'/>
+        <label>Estado del caso</label>
     </div>
-    <div>
-        <input type='number' placeholder='identificacion' class='form-control'/>
-        <input type='number' placeholder='numero caso' class='form-control'/>
+        <div class='form-floating'>
+        <input type='text' placeholder='nombre completo' class='form-control' id='nombrecompleto' data-index='2'/>
+        <label for='nombrecompleto'>nombre completo</label>
+        </div>
+    </div>
+    <div class='col-sm-5 ms-2'>
+        <div class='form-floating'>
+        <input type='number' placeholder='identificacion' class='form-control' id='identificacion' data-index='1'/>
+        <label for='identificacion'>identificacion</label>
+        </div>
+        <div class='form-floating'>
+        <input type='number' placeholder='numero caso' class='form-control' id='caso' data-index='0'/>
+        <label for='caso'>caso</label>
+        </div>
     </div>
     </div>
     <table id="example" class="table table-striped" style="width:100%">
-    <thead>
+    <thead class='bg-info'>
         <tr>
-            <th>Name</th>
-            <th>Position</th>
-            <th>Office</th>
-            <th>Age</th>
-            <th>Start date</th>
-            <th>Salary</th>
+            <th>ID caso</th>
+            <th>Numero de identificacion</th>
+            <th>Nombres</th>
+            <th>Apellidos</th>
+            <th>Telefono</th>
+            <th>Correos</th>
+            <th>Enfermedad</th>
+            <th>EPS</th>
+            <th>Estado actual</th>
+            <th>Detalle caso</th>
+            <th>Seguimiento</th>
+            <th>Reporte</th>
+            <th>Opciones</th>
         </tr>
     </thead>
     <tbody>
         <tr>
+            <td>1</td>
+            <td>System Architect</td>
+            <td>Edinburgh</td>
+            <td>61</td>
+            <td>2011-04-25</td>
+            <td>$320,800</td>
+            <td>Tiger Nixon</td>
+            <td>System Architect</td>
+            <td>abierto</td>
+            <td>abierto</td>
+            <td>2011-04-25</td>
+            <td>$320,800</td>
+            <td>$320,800</td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>System Architect</td>
+            <td>Edinburgh</td>
+            <td>61</td>
+            <td>2011-04-25</td>
+            <td>$320,800</td>
             <td>Tiger Nixon</td>
             <td>System Architect</td>
             <td>Edinburgh</td>
             <td>61</td>
             <td>2011-04-25</td>
             <td>$320,800</td>
+            <td>$320,800</td>
         </tr>
         <tr>
-            <td>Garrett Winters</td>
-            <td>Accountant</td>
-            <td>Tokyo</td>
-            <td>63</td>
-            <td>2011-07-25</td>
-            <td>$170,750</td>
+            <td>3</td>
+            <td>System Architect</td>
+            <td>Edinburgh</td>
+            <td>61</td>
+            <td>2011-04-25</td>
+            <td>$320,800</td>
+            <td>Tiger Nixon</td>
+            <td>System Architect</td>
+            <td>Edinburgh</td>
+            <td>61</td>
+            <td>2011-04-25</td>
+            <td>$320,800</td>
+            <td>$320,800</td>
         </tr>
         <tr>
-            <td>Ashton Cox</td>
-            <td>Junior Technical Author</td>
-            <td>San Francisco</td>
-            <td>66</td>
-            <td>2009-01-12</td>
-            <td>$86,000</td>
+            <td>4</td>
+            <td>System Architect</td>
+            <td>Edinburgh</td>
+            <td>61</td>
+            <td>2011-04-25</td>
+            <td>$320,800</td>
+            <td>Tiger Nixon</td>
+            <td>System Architect</td>
+            <td>Edinburgh</td>
+            <td>61</td>
+            <td>2011-04-25</td>
+            <td>$320,800</td>
+            <td>$320,800</td>
         </tr>
+   
       
     </tbody>
     <tfoot>
         <tr>
-            <th>Name</th>
-            <th>Position</th>
-            <th>Office</th>
-            <th>Age</th>
-            <th>Start date</th>
-            <th>Salary</th>
+            <th>ID caso</th>
+            <th>Numero de identificacion</th>
+            <th>Nombres</th>
+            <th>Apellidos</th>
+            <th>Telefono</th>
+            <th>Correos</th>
+            <th>Enfermedad</th>
+            <th>EPS</th>
+            <th>Estado actual</th>
+            <th>Detalle caso</th>
+            <th>Seguimiento</th>
+            <th>Reporte</th>
+            <th>Opciones</th>
         </tr>
     </tfoot>
 </table>

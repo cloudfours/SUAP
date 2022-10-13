@@ -13,7 +13,7 @@ header{
     background: #0a53be;
     display: flex;
     top: 0;
-    /*z-index: 200;*/
+    z-index: 200;
    margin-left: 72px;
 
 }
@@ -56,7 +56,7 @@ margin-top: 87px;
     position: fixed;
     top: 0;
     left: 0;
-    z-index: 300;
+    z-index: 400;
     overflow: hidden;
     overflow-y: scroll;
     border: 5px solid #0b5ed7 ;
