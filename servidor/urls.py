@@ -14,7 +14,7 @@ urlpatterns = [
     path('',logear,name='login'),
     path('log_out/',log_out,name='log_out'),
     path('api/',include('api.urls')),
-    path('administrador/',include('administrador.urls')),
+
     path('registrar/',perfilUsuarioRegistro.as_view(),name='registrar'),
     path('estruc/',perfiluser,name='estruc')
 ]
