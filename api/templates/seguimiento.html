@@ -1,0 +1,45 @@
+{% extends 'informacion_paciente.html' %}
+{% block content %}
+
+ {% if casos.estado.nombreestado == 'abierto' %}
+<div class='caja_seguimiento'>
+    <div class="container mt-3">
+        <h2>Seguimiento al caso {{casos.id_caso}}</h2>
+        <p>caso creado {{casos.fecharesgistrocaso}}</p> 
+        <div class="progress">
+          <div id='abierto' class="progress-bar progress-bar-striped progress-bar-animated inicio" ></div>
+        </div>
+      </div>
+</div>
+{% elif casos.estado.nombreestado == 'proceso' %}
+<div class='caja_seguimiento'>
+    <div class="container mt-3">
+        <h2>Seguimiento al caso {{caso.id_caso}}</h2>
+        <p>caso creado {{caso.fecharesgistrocaso}}</p> 
+        <div class="progress">
+          <div id='proceso' class="progress-bar progress-bar-striped progress-bar-animated proceso"></div>
+        </div>
+      </div>
+</div>
+{% elif casos.estado.nombreestado == 'finalizado' %}
+<div class='caja_seguimiento'>
+    <div class="container mt-3">
+        <h2>Seguimiento al caso {{caso.id_caso}}</h2>
+        <p>caso finalizado</p><p> {{caso.fechaatenfinalizado}}</p> 
+        <div class="progress">
+          <div  class="progress-bar progress-bar-striped progress-bar-animated finalizado" ></div>
+        </div>
+      </div>
+</div>
+    {% endif %}
+
+{% endblock %}
+{% block js %}
+<script type="text/javascript">
+$(document).ready(function(){
+    $('#proceso').animate({
+        transition: all 5s ease .5s;
+    })
+})
+</script>
+{% endblock %}

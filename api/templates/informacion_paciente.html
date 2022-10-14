@@ -1,7 +1,26 @@
 {% extends 'estructuraSuap.html' %}
 {% load extras %}
 {% load static %}
+
+{% block menu_icono %}
+<dv class='icono_caja'>
+<div class="btn-group">
+    <button class="btn btn-primary dropdown-toggle h-100 w-100 border-0  bg-transparent" type="button" data-bs-toggle="dropdown" data-bs-auto-close="inside" aria-expanded="false">
+      {% if user.is_authenticated %}
+      <i class="fa-solid fa-user ms-2"></i>  {{user.username}}
+      {% endif %}
+    </button>
+    <ul class="dropdown-menu w-75">
+      <li><a class="dropdown-item w-75" href="#">Perfil</a></li>
+      <li><a class="dropdown-item w-75" href="#">Salir</a></li>
+      
+    </ul>
+  </div>
+</div>
+  {% endblock %}
+
 {% block menu %}
+
     {% if  user.is_authenticated %}
         {% for group in user.groups.all %}
             {% if group.name == 'Paciente' %}
@@ -17,19 +36,19 @@
                                 <p class="mb-0">usuario</p>
                             </div>
                         </a>
-                        <a href="{% url 'caso' user.id %}" class="text-decoration-none">
+                        <a href="{% url 'caso' %}" class="text-decoration-none">
                             <div class="option">
                                 <i class="fa-solid fa-file-lines" title="Registrar caso"></i>
                                 <p class="mb-0">Registrar Caso</p>
                             </div>
                         </a>
-                        <a href="#" class="text-decoration-none">
+                        <a href="{% url 'seguimiento' %}" class="text-decoration-none">
                             <div class="option">
                                 <i class="fa-solid fa-circle-right" title="seguimiento"></i>
                                 <p class="mb-0">Seguimiento</p>
                             </div>
                         </a>
-                        <a href="#" class="text-decoration-none">
+                        <a href="{% url 'historial' %}" class="text-decoration-none">
                             <div class="option">
                                 <i class="fas fa-history"></i>
                                 <p class="mb-0">Historial</p>
