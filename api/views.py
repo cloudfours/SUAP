@@ -71,6 +71,9 @@ class perfilUsuarioRegistro(CreateView):
             solicitud = form.save(commit=False)
             solicitud.login_id = form2.save()
             solicitud.save()
+            messages.add_message(request, messages.SUCESS,
+                                 message='Registro exitoso')
+            
             return HttpResponseRedirect(self.get_success_url())
         else:
             messages.add_message(request, messages.ERROR,
@@ -135,3 +138,45 @@ def page_not_found(request,exception):
     
 def page(request,exception):
     return render(request,'505.html')
+
+    return render(request,'505.html')
+@login_required
+def seguimiento(request):
+    datos_usuario=DatosUsuario.objects.get(login_id=request.user.id)
+
+    
+    casos=Casos.objects.filter(id_usuario= datos_usuario.id_cedula).last()
+    
+   
+    return render(request,'seguimiento.html',{'casos':casos})
+@login_required
+def historial_casos(request):
+    datos_usuario=DatosUsuario.objects.get(login_id=request.user.id)
+    
+    try:
+        casoshistorial = Casos.objects.filter(id_usuario=datos_usuario.id_cedula)
+        fechafinal = Casos.objects.values('fechaatenfinalizado','fecharesgistrocaso').filter(id_usuario= datos_usuario.id_cedula).annotate(duration=F('fechaatenfinalizado') - F('fecharesgistrocaso'))               
+    except Casos.DoesNotExist:
+        messages.add_message(request,messages.ERROR,message='No existe a un caso creado')
+
+    return render(request,'historialcasos.html',{'casoshistorial': casoshistorial,'dic_fecha':fechafinal})
+@login_required
+def gestorcrud(request):
+    casos = Casos.objects.all()
+  
+    return render(request,'admin/gestorcrud.html',{'casos':casos})
+
+@login_required
+def gestorCrudDelete(request,id):
+    casos = Casos.objects.all()
+   
+    if  Casos.objects.filter(pk=id).update(estado_pendiente=False):
+        #  messages.add_messages(request,messages.WARNING,message='¿Esta seguro de eliminar?')
+         return redirect('busqueda')   
+ 
+
+    return render(request,'admin/advertencia.html',{'casos':casos})
+
+
+    
+

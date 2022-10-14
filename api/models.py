@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
-
+from django.utils.translation import gettext_lazy as _
 
 # se emigra todas las tablas y se convierten en modelos de clase como una plantilla
 class Analista(models.Model):
@@ -56,6 +56,11 @@ class Casos(models.Model):
                                        null=True)
     id_seguimiento = models.ForeignKey('Seguimiento', models.DO_NOTHING, db_column='id_seguimiento')
     id_barrera = models.ForeignKey(BarreraAcceso, models.DO_NOTHING, db_column='id_barrera')
+    class Estado_activo(models.TextChoices):
+        activo=True,_('True')
+        inactivo=False,_('False')
+    estado_pendiente=models.CharField(max_length=8,choices=Estado_activo.choices,default=Estado_activo.activo)
+    
 
 
 
