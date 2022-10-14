@@ -4,7 +4,9 @@
     
     <div id="accordion">
        <h2> Historial de casos</h2>
+      {% if casoshistorial %}
         {% for casos_historial in casoshistorial %}
+      
         {% if casos_historial.estado.nombreestado == 'finalizado' %}
         <div class="card">
           <div class="card-header">
@@ -42,7 +44,11 @@
       </div> 
         {% endif %}
       {% endfor %}
-        
+    {% else %}
+    <div class="alert alert-warning">
+      <strong>Atencion!</strong><a href="#" class="alert-link">No se ha creado aun el caso</a>.
+    </div> 
+     {% endif %}   
       
 </div>
 {% endblock %}

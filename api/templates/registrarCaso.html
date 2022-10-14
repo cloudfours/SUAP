@@ -21,9 +21,9 @@
 <div class="caja_caso_inputs">
     <label for="{{forma_persona.name}}">{{forma_persona.fechaatencioneps.label}}</label>
     {{forma_persona.fechaatencioneps}}
-    
     {{forma_persona.id_usuario.as_hidden}}
     {{forma_persona.fecharesgistrocaso.as_hidden}}
+    {{forma_persona.estado.as_hidden}}
 </div>
 </div>
 <div>
@@ -52,5 +52,32 @@
 </div> 
 </form>
 </div>
-
+{% if messages %}
+{%for message in messages%}
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Mensaje</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            {{message}}
+        </div>
+        <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Aceptar</button>
+        </div>
+    </div>
+    </div>
+</div>
+{%endfor%}
+{%endif%}
 {%endblock%}
+{% block js %}
+<script type="text/javascript">
+    $(document).ready(function (){
+    $('#exampleModal').modal('show')
+})
+</script>
+{% endblock %}
