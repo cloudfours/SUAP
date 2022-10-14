@@ -71,6 +71,9 @@ class perfilUsuarioRegistro(CreateView):
             solicitud = form.save(commit=False)
             solicitud.login_id = form2.save()
             solicitud.save()
+            messages.add_message(request, messages.SUCESS,
+                                 message='Registro exitoso')
+            
             return HttpResponseRedirect(self.get_success_url())
         else:
             messages.add_message(request, messages.ERROR,
@@ -163,5 +166,20 @@ def historial_casos(request):
     return render(request,'historialcasos.html',{'casoshistorial': casoshistorial,'dic_fecha':fechafinal})
 @login_required
 def gestorcrud(request):
-    return render(request,'admin/gestorcrud.html')
+    casos = Casos.objects.all()
+  
+    return render(request,'admin/gestorcrud.html',{'casos':casos})
+
+@login_required
+def gestorCrudDelete(request,id):
+    casos = Casos.objects.all()
+   
+    if  Casos.objects.filter(pk=id).update(estado_pendiente=False):
+        #  messages.add_messages(request,messages.WARNING,message='¿Esta seguro de eliminar?')
+         return redirect('busqueda')   
+ 
+
+    return render(request,'admin/advertencia.html',{'casos':casos})
+
+
     

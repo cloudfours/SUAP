@@ -136,6 +136,14 @@ span{
    position:absolute;
    top: 172px;
 }
+.icons_tabla{
+    font-size:25px;
+    color:#2365ea;
+}
+.icons_tabla:hover{
+color:#184193;
+}
+
 .image__grafica{
     margin:0 5px;
 }
@@ -149,6 +157,10 @@ span{
     flex-direction:row;
     margin: 5px 5px;
     align-items:center;
+    margin-left: 62px;
+    /* position: relative; */
+    justify-content: flex-end;
+    align-items: center;
     
 }
 @media screen and (max-width: 768px) {

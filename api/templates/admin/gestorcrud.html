@@ -29,85 +29,44 @@
         </div>
     </div>
     </div>
-    <table id="example" class="table table-striped" style="width:100%">
-    <thead class='bg-info'>
+    <table id="example" class="table table-hover table-responsive table-striped" style="width:100%">
+    <thead class='bg-primary bg-gradient'>
         <tr>
-            <th>ID caso</th>
-            <th>Numero de identificacion</th>
-            <th>Nombres</th>
-            <th>Apellidos</th>
-            <th>Telefono</th>
-            <th>Correos</th>
-            <th>Enfermedad</th>
-            <th>EPS</th>
-            <th>Estado actual</th>
-            <th>Detalle caso</th>
-            <th>Seguimiento</th>
-            <th>Reporte</th>
-            <th>Opciones</th>
+            <th class='text-light'>ID caso</th>
+            <th class='text-light'>Numero de identificacion</th>
+            <th class='text-light'>Nombres</th>
+            <th class='text-light'>Apellidos</th>
+            <th class='text-light'>Telefono</th>
+            <th class='text-light'>Correos</th>
+            <th class='text-light'>Enfermedad</th>
+            <th class='text-light'>EPS</th>
+            <th class='text-light'>Estado actual</th>
+            <th class='text-light'>Detalle caso</th>
+            <th class='text-light'>Seguimiento</th>
+            <th class='text-light'>Reporte</th>
+            <th class='text-light'>Opciones</th>
         </tr>
     </thead>
     <tbody>
-        <tr>
-            <td>1</td>
-            <td>System Architect</td>
-            <td>Edinburgh</td>
-            <td>61</td>
-            <td>2011-04-25</td>
-            <td>$320,800</td>
-            <td>Tiger Nixon</td>
-            <td>System Architect</td>
-            <td>abierto</td>
-            <td>abierto</td>
-            <td>2011-04-25</td>
-            <td>$320,800</td>
-            <td>$320,800</td>
+        {% for caso in casos%}
+         {% if caso.estado_pendiente != 'False' %}
+        <tr class='shadow-sm p-3 mb-5 bg-body rounded'>
+            <td>{{caso.id_caso}}</td>
+            <td>{{caso.id_usuario}}</td>
+            <td>{{caso.id_usuario.primer_nombre}} {{caso.id_usuario.segundo_nombre}}</td>
+            <td>{{caso.id_usuario.primer_apellido}} {{caso.id_usuario.segundo_apellido}}</td>
+            <td>{{caso.id_usuario.celular}}</td>
+            <td>{{caso.id_usuario.login_id.email}}</td>
+            <td>{{caso.enfermedad.nombreenfermedad}}</td>
+            <td>{{caso.id_usuario.id_eps.nombre}}</td>
+            <td>{{caso.estado.nombreestado}}</td>
+            <td><a><i class="fa-solid fa-file icons_tabla"></i></a></td>
+            <td><a><i class="fa-solid fa-right-to-bracket icons_tabla"></i></a></td>
+            <td><a><i class="fa-solid fa-file-pdf  icons_tabla"></i></a></td>
+            <td><a><i class="fa-solid fa-square-pen  icons_tabla"></i></a><a  href='{% url 'eliminar' caso.id_caso%}'><i class="fa-solid fa-trash-can  icons_tabla"></i></a></td>
         </tr>
-        <tr>
-            <td>2</td>
-            <td>System Architect</td>
-            <td>Edinburgh</td>
-            <td>61</td>
-            <td>2011-04-25</td>
-            <td>$320,800</td>
-            <td>Tiger Nixon</td>
-            <td>System Architect</td>
-            <td>Edinburgh</td>
-            <td>61</td>
-            <td>2011-04-25</td>
-            <td>$320,800</td>
-            <td>$320,800</td>
-        </tr>
-        <tr>
-            <td>3</td>
-            <td>System Architect</td>
-            <td>Edinburgh</td>
-            <td>61</td>
-            <td>2011-04-25</td>
-            <td>$320,800</td>
-            <td>Tiger Nixon</td>
-            <td>System Architect</td>
-            <td>Edinburgh</td>
-            <td>61</td>
-            <td>2011-04-25</td>
-            <td>$320,800</td>
-            <td>$320,800</td>
-        </tr>
-        <tr>
-            <td>4</td>
-            <td>System Architect</td>
-            <td>Edinburgh</td>
-            <td>61</td>
-            <td>2011-04-25</td>
-            <td>$320,800</td>
-            <td>Tiger Nixon</td>
-            <td>System Architect</td>
-            <td>Edinburgh</td>
-            <td>61</td>
-            <td>2011-04-25</td>
-            <td>$320,800</td>
-            <td>$320,800</td>
-        </tr>
+        {% endif %}
+     {% endfor %}
    
       
     </tbody>
@@ -131,3 +90,34 @@
 </table>
 </div>
 {% endblock %}
+{% comment %} {% block modal %}
+{% if messages %}
+{%for message in messages%}
+<!-- Modal -->
+<div class="modal fade" id="exampleModals" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Mensaje</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            {{message}}
+        </div>
+        <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Aceptar</button>
+        </div>
+    </div>
+    </div>
+</div>
+{%endfor%}
+{%endif%}
+{% endblock %}
+{% block js %}
+    <script type="text/javascript">
+        $(document).ready(function (){
+        $('#exampleModals').modal('show')
+    })
+</script>
+ 
+{% endblock %} {% endcomment %}
