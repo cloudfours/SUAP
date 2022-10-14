@@ -1,5 +1,5 @@
 
-<div class="modal-dialog modal-xl">
+<div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Persona</h5>
@@ -7,48 +7,14 @@
       </div>
       <form method="POST" action="{% url 'editarUsuario' persona.id_cedula %}" class='form-floating'>
          {% csrf_token %}
-      <div class="modal-body" id='respo'>
-        <div class="modal-lg d-flex flex-wrap flex-row w-50">
-          <label for="{{persona_form.name}}">{{persona_form.id_cedula.label}}</label>
-          {{persona_form.id_cedula}}
-          <label for="{{persona_form.name}}">{{persona_form.primer_nombre.label}}</label>
-          {{persona_form.primer_nombre}}
-          <label for="{{persona_form.name}}">{{persona_form.segundo_nombre.label}}</label>
-          {{persona_form.segundo_nombre}}
-          <label for="{{persona_form.name}}">{{persona_form.primer_apellido.label}}</label>
-          {{persona_form.primer_apellido}}
-          <label for="{{persona_form.name}}">{{persona_form.segundo_apellido.label}}</label>
-          {{persona_form.segundo_apellido}}
-          <label for="{{persona_form.name}}">{{persona_form.tipo_doc.label}}</label>
-          {{persona_form.tipo_doc}}
-          <label for="{{persona_form.name}}">{{persona_form.tipo_envio.label}}</label>
-          {{persona_form.tipo_envio}}
-          <label for="{{persona_form.name}}">{{persona_form.id_eps.label}}</label>
-          {{persona_form.id_eps}}
-          <label for="{{persona_form.name}}">{{persona_form.idtiporegimen.label}}</label>
-          {{persona_form.idtiporegimen}}
-</div>
-<div class="modal-lg d-flex flex-wrap flex-row w-50 m-sm-4">
-  <label for="{{persona_form.name}}">{{persona_form.idgenero.label}}</label>
-  {{persona_form.idgenero}}
-  <label for="{{persona_form.name}}">{{persona_form.cod_pais.label}}</label>
-  {{persona_form.cod_pais}}
-  <label for="{{persona_form.name}}">{{persona_form.cod_dep.label}}</label>
-  {{persona_form.cod_dep}}
-  <label for="{{persona_form.name}}">{{persona_form.cod_muni.label}}</label>
-  {{persona_form.cod_muni}}
-  <label for="{{persona_form.name}}">{{persona_form.fechanaci.label}}</label>
-  {{persona_form.fechanaci}}
-  <label for="{{persona_form.name}}">{{persona_form.ocupacion.label}}</label>
-  {{persona_form.ocupacion}}
-  <label for="{{persona_form.name}}">{{persona_form.id_grupo_etnico.label}}</label>
-  {{persona_form.id_grupo_etnico}}
-  <label for="{{persona_form.name}}">{{persona_form.id_poblacion_especial.label}}</label>
-  {{persona_form.id_poblacion_especial}}
-  <label for="{{persona_form.name}}">{{persona_form.direccion.label}}</label>
-  {{persona_form.direccion}}
-  <label for="{{persona_form.name}}">{{persona_form.celular.label}}</label>
-  {{persona_form.celular}}
+      <div class="modal-body">
+        <div class="modal-lg d-flex flex-wrap flex-row">
+          {% for field in persona_form %}
+        
+        <label  for="{{ field.name }}">{{ field.label }}</label>
+        {{ field }}
+ 
+          {% endfor %}
 </div>
       </div>
       <div class="modal-footer">

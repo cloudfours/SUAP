@@ -7,18 +7,69 @@ from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from .models import *
-import re
 # class DateTimePickerInput(forms.DateTimeInput):
 #         input_type = 'datetime'
+
+class CasosFormGestor(forms.ModelForm):
+    def __init__(self,*args,**kwargs):
+        super().__init__(*args,**kwargs)
+       
+    class Meta:
+        model=Casos
+        fields =['id_usuario','id_gest','estado','fecharesgistrocaso','fechaatenproceso','fechaatenfinalizado','fechaatenabierto','numeroradicado','descripcioncaso',
+                 'enfermedad','fechaatencioneps','formula_medica','adjunto_pri','adjunto_seg','adjunto_terc','id_comple_info','id_seguimiento'
+                ,'id_barrera']
+        labels={
+            # 'id_caso':'Caso',
+            'id_gest':'Gestor',
+            'estado':'Estado',
+            'fecharesgistrocaso':'Fecha registro',
+            'fechaatenproceso':'Fecha Proceso',
+            'fechaatenfinalizado':'Fecha Finalizado',
+            'fechaatenabierto':'Fecha Abierto',
+            'id_usuario':'Usuario',
+            'numeroradicado':'Numero de radicado',
+            'fechaatencioneps':'Fecha de atencion de EPS',
+            'descripcioncaso':'Descripcion del caso',
+            'enfermedad':'Enfermedad',
+            'formula_medica':'Agregar Formula medico',
+            'adjunto_pri':'Adjunto Primero',
+            'adjunto_seg':'Adjunto Segundo',
+            'adjunto_terc':'Adjunto Tercero',
+            'id_comple_info':'Información Complementaria',
+            'id_seguimiento':'Seguimiento',
+            'id_barrera':'Barrera',
+        }
+        widgets={
+            # 'id_caso':forms.NumberInput(attrs={'class':'form-control'}),
+            'id_usuario':forms.Select(attrs={'class':'form-control'}),
+            'id_gest': forms.Select(attrs={'class':'form-control'}),
+            'id_estado': forms.Select(attrs={'class':'form-control'}),
+            'fecharesgistrocaso':forms.DateTimeInput(attrs={'class':'form-control datetimepicker-input','type':'datetime-local','placeholder':'ingrese fecha'},format='%Y-%m-%d %H:%M:%S'),
+            'fechaatenproceso':forms.DateTimeInput(attrs={'class':'form-control datetimepicker-input','type':'datetime-local','placeholder':'ingrese fecha'},format='%Y-%m-%d %H:%M:%S'),
+            'fechaatenfinalizado':forms.DateTimeInput(attrs={'class':'form-control datetimepicker-input','type':'datetime-local','placeholder':'ingrese fecha'},format='%Y-%m-%d %H:%M:%S'),
+            'fechaatenabierto':forms.DateTimeInput(attrs={'class':'form-control datetimepicker-input','type':'datetime-local','placeholder':'ingrese fecha'},format='%Y-%m-%d %H:%M:%S'),
+            'numeroradicado':forms.NumberInput(attrs={'class':'form-control '}),
+            'fechaatencioneps':forms.DateTimeInput(attrs={'class':'form-control datetimepicker-input','type':'datetime-local','placeholder':'ingrese fecha'},format='%Y-%m-%d %H:%M:%S'),
+            'descripcioncaso':forms.Textarea(attrs={'class':'form-control '}),
+            'enfermedad':forms.Select(attrs={'class':'form-control '}),
+            'formula_medica':forms.FileInput(attrs={'class':'form-control'}),
+            'adjunto_pri':forms.FileInput(attrs={'class':'form-control'}),
+            'adjunto_seg':forms.FileInput(attrs={'class':'form-control'}),
+            'adjunto_terc':forms.FileInput(attrs={'class':'form-control'}),
+            'id_comple_info':forms.Select(attrs={'class':'form-control'}),
+            'id_seguimiento':forms.Select(attrs={'class':'form-control'}),
+            'id_barrera':forms.Select(attrs={'class':'form-control'}),
+        }
+
 class CasosForm(forms.ModelForm):
     def __init__(self,*args,**kwargs):
         super().__init__(*args,**kwargs)
-        
        
     class Meta:
         model=Casos
         fields =['id_usuario','numeroradicado','descripcioncaso'
-                 ,'enfermedad','fechaatencioneps','formula_medica','estado','fecharesgistrocaso'
+                 ,'enfermedad','fechaatencioneps','formula_medica'
                 ,'id_barrera']
         labels={
             # 'id_caso':'Caso',
@@ -33,10 +84,8 @@ class CasosForm(forms.ModelForm):
         widgets={
             # 'id_caso':forms.NumberInput(attrs={'class':'form-control'}),
             'id_usuario':forms.Select(attrs={'class':'form-control'}),
-            'estado':forms.Select(attrs={'class':'form-control'}),
             'numeroradicado':forms.NumberInput(attrs={'class':'form-control '}),
             'fechaatencioneps':forms.DateTimeInput(attrs={'class':'form-control datetimepicker-input','type':'datetime-local','placeholder':'ingrese fecha'},format='%Y-%m-%d %H:%M:%S'),
-            'fecharesgistrocaso':forms.DateTimeInput(attrs={'class':'form-control datetimepicker-input','type':'datetime-local','placeholder':'ingrese fecha'},format='%Y-%m-%d %H:%M:%S'),
             'descripcioncaso':forms.Textarea(attrs={'class':'form-control '}),
             'enfermedad':forms.Select(attrs={'class':'form-control '}),
             'formula_medica':forms.FileInput(attrs={'class':'form-control'}),
@@ -50,11 +99,11 @@ class datosuserFormEdit(forms.ModelForm):
     #         self.fields['tipo_doc'].widget.disabled_select = disabled_select;
     def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
-            # self.fields['tipo_doc'].disabled = True
-            # if self.fields['id_eps'] is None:
-            #     self.fields['id_eps'].disabled = False
-            # else:
-            #     self.fields['id_eps'].disabled = True
+            self.fields['tipo_doc'].disabled = True
+            if self.fields['id_eps'] is None:
+                self.fields['id_eps'].disabled = False
+            else:
+                self.fields['id_eps'].disabled = True
       
     
     class Meta:
@@ -139,9 +188,9 @@ class userRegister(UserCreationForm):
     email = forms.EmailField(label=_('Correo'), max_length=50, help_text='Required. Correo invalido.',
                              widget=(forms.TextInput(attrs={'class': 'form-control is-valid'})))
     password1 = forms.CharField(label=_('Contraseña'),
-                                widget=(forms.PasswordInput(attrs={'class': 'form-control is-valid','id':'contrasena'})),
+                                widget=(forms.PasswordInput(attrs={'class': 'form-control is-valid'})),
                                 help_text=password_validation.password_validators_help_text_html())
-    password2 = forms.CharField(label=_('Contraseña  confirmar'),
+    password2 = forms.CharField(label=_('Contraseña  confirmation'),
                                 widget=forms.PasswordInput(attrs={'class': 'form-control is-valid'}),
                                 help_text=_('Confirme contraseña'))
     username = forms.CharField(
@@ -150,14 +199,9 @@ class userRegister(UserCreationForm):
         help_text=_('Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.'),
         validators=[username_validator],
         error_messages={'unique': _("A user with that username already exists.")},
-        widget=forms.TextInput(attrs={'class': 'form-control is-valid','id':'username'})
+        widget=forms.TextInput(attrs={'class': 'form-control is-valid'})
     )
 
     class Meta:
         model = User
         fields = ('username', 'email', 'password1', 'password2',)
-    def clean(self,*args,**kwargs):
-        clean_data=super(userRegister,self).clean(*args,**kwargs)
-        contrasena = clean_data.get('Contraseña',None)
-        if contrasena ==' ':
-            self.add_error('contraseña','invalida')
