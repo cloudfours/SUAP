@@ -167,5 +167,19 @@ def historial_casos(request):
 @login_required
 def gestorcrud(request):
     casos = Casos.objects.all()
+  
     return render(request,'admin/gestorcrud.html',{'casos':casos})
+
+@login_required
+def gestorCrudDelete(request,id):
+    casos = Casos.objects.all()
+   
+    if  Casos.objects.filter(pk=id).update(estado_pendiente=False):
+        #  messages.add_messages(request,messages.WARNING,message='¿Esta seguro de eliminar?')
+         return redirect('busqueda')   
+ 
+
+    return render(request,'admin/advertencia.html',{'casos':casos})
+
+
     

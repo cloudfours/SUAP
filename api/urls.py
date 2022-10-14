@@ -7,5 +7,6 @@ urlpatterns = [
  path('editarUsuario/<int:id>',editarUser,name='editarUsuario'),
  path('seguimiento/',seguimiento,name='seguimiento'),
  path('historial',historial_casos,name='historial'),
- path('gestorbusqueda',gestorcrud,name='busqueda')
+ path('gestorbusqueda/',gestorcrud,name='busqueda'),
+ path('gestorbusqueda-eliminar/<int:id>',gestorCrudDelete,name='eliminar')
 ]

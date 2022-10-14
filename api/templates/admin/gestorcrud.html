@@ -49,6 +49,7 @@
     </thead>
     <tbody>
         {% for caso in casos%}
+         {% if caso.estado_pendiente != 'False' %}
         <tr class='shadow-sm p-3 mb-5 bg-body rounded'>
             <td>{{caso.id_caso}}</td>
             <td>{{caso.id_usuario}}</td>
@@ -60,10 +61,11 @@
             <td>{{caso.id_usuario.id_eps.nombre}}</td>
             <td>{{caso.estado.nombreestado}}</td>
             <td><a><i class="fa-solid fa-file icons_tabla"></i></a></td>
-            <td><a><i class="fa-solid fa-right-to-bracket icons_tabla"></i></a</td>
+            <td><a><i class="fa-solid fa-right-to-bracket icons_tabla"></i></a></td>
             <td><a><i class="fa-solid fa-file-pdf  icons_tabla"></i></a></td>
-            <td><a><i class="fa-solid fa-square-pen  icons_tabla"></i></a><a><i class="fa-solid fa-trash-can  icons_tabla"></i></a></td>
+            <td><a><i class="fa-solid fa-square-pen  icons_tabla"></i></a><a  href='{% url 'eliminar' caso.id_caso%}'><i class="fa-solid fa-trash-can  icons_tabla"></i></a></td>
         </tr>
+        {% endif %}
      {% endfor %}
    
       
@@ -88,3 +90,34 @@
 </table>
 </div>
 {% endblock %}
+{% comment %} {% block modal %}
+{% if messages %}
+{%for message in messages%}
+<!-- Modal -->
+<div class="modal fade" id="exampleModals" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Mensaje</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            {{message}}
+        </div>
+        <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Aceptar</button>
+        </div>
+    </div>
+    </div>
+</div>
+{%endfor%}
+{%endif%}
+{% endblock %}
+{% block js %}
+    <script type="text/javascript">
+        $(document).ready(function (){
+        $('#exampleModals').modal('show')
+    })
+</script>
+ 
+{% endblock %} {% endcomment %}
