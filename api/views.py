@@ -177,6 +177,10 @@ def gestorCrudDelete(request,id):
 
     return render(request,'admin/advertencia.html',{'casos':casos})
 
+@login_required
+def gestorcaso(request):
+    pass
+
 
     
 
