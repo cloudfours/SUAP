@@ -1,0 +1,48 @@
+{% extends 'informacion_paciente.html' %}
+{% block content %}
+<div class='caja_historial'>
+    
+    <div id="accordion">
+       <h2> Historial de casos</h2>
+        {% for casos_historial in casoshistorial %}
+        {% if casos_historial.estado.nombreestado == 'finalizado' %}
+        <div class="card">
+          <div class="card-header">
+            <a class="btn" data-bs-toggle="collapse" href="#collapseOne" data-target="#collapseOne">
+              #<strong>{{casos_historial.id_caso}}</strong>  {{casos_historial.fecharesgistrocaso}} {{casos_historial.id_usuario}} {{casos_historial.id_usuario.primer_nombre}} {{casos_historial.id_usuario.primer_apellido}} {{casos_historial.estado.nombreestado}}
+            </a>
+          </div>
+          <div id="collapseOne" class="collapse show">
+            <div class="card-body">
+                <div class='d-flex flex-row'>
+
+              <strong>Caso:</strong><strong>{{casos_historial.id_caso}}</strong>
+                </div>
+                <div class='d-flex flex-row'>
+                    <strong>Fecha de registro:</strong><strong>{{casos_historial.fecharesgistrocaso}}</strong>
+                </div>
+                <div class='d-flex flex-row'>
+                    <strong>Fecha de finalizacion:</strong><strong>{{casos_historial.fechaatenfinalizado}}</strong>
+                </div>
+                <div class='d-flex flex-row'>
+                    <strong>EPS:</strong><strong>{{casos_historial.id_usuario.id_eps.nombreeps}}</strong>
+                </div>
+                <div class='d-flex flex-row'>
+                    <strong>Barrera:</strong><strong>{{casos_historial.id_barrera.nombre}}</strong>
+                </div>
+                <div class='d-flex flex-row'>
+                    <strong>Cantidad de tiempo:</strong><strong>{{dic_fecha.fecha}}</strong>
+                </div>
+            </div>
+          </div>
+        </div>
+      {% else %}
+     <div class="alert alert-warning">
+        <strong>Atencion!</strong><a href="#" class="alert-link">No se ha finalizado</a>.
+      </div> 
+        {% endif %}
+      {% endfor %}
+        
+      
+</div>
+{% endblock %}

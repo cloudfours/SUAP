@@ -10,15 +10,15 @@
     
    
 <div class="d-flex flex-column w-100">
-    <div class="d-flex  flex-row">
-<div class="w-50">
+    <div class="caja_caso">
+<div class="caja_inputs">
 
     <label for="{{forma_persona.name}}">{{forma_persona.enfermedad.label}}</label>
     {{forma_persona.enfermedad}}
     <label for="{{forma_persona.name}}">{{forma_persona.id_barrera.label}}</label>
     {{forma_persona.id_barrera}}
 </div> 
-<div class="w-50 ms-3 date">
+<div class="caja_caso_inputs">
     <label for="{{forma_persona.name}}">{{forma_persona.fechaatencioneps.label}}</label>
     {{forma_persona.fechaatencioneps}}
     
@@ -28,7 +28,7 @@
 </div>
 <div>
     
-    <div class="">
+    <div class="caja_desc">
         <label for="{{forma_persona.name}}">{{forma_persona.descripcioncaso.label}}</label>
         {{forma_persona.descripcioncaso}}
     </div>
@@ -38,16 +38,16 @@
       
 </div>
 
-<div class="d-flex flex-row align-items-end ">
+<div class="files">
     <div>
     <label for="{{forma_persona.name}}">{{forma_persona.numeroradicado.label}}</label>
     {{forma_persona.numeroradicado}}
     </div>
-    <div class='ms-3'>
+    <div class='boton_caso'>
     <label for="{{forma_persona.name}}">{{forma_persona.formula_medica.label}}</label>
     {{forma_persona.formula_medica}}
     </div>
-    <input type="submit" class="btn btn-primary h-50 ms-3" value="Crear caso">
+    <input type="submit" class="btn btn-primary  boton_submit" value="Crear caso">
    
 </div> 
 </form>

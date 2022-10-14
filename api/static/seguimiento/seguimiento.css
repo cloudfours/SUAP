@@ -20,8 +20,8 @@ width: 100%;
 }
 @media screen and (max-width: 768px){
 .icono_caja{
-    right: 0;
-    position: absolute;
+    left: 458px;
+
 }
 .caja_seguimiento{
     margin-left: 70px;
