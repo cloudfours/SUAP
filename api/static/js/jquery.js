@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    let table =$('#example').DataTable()
+    let table =$('#example').DataTable({'bFilter':false})
     $('#example').DataTable();
     $('#caso').keyup(function(){
         table.column($(this).data('index')).search(this.value).draw();

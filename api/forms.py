@@ -69,7 +69,7 @@ class CasosForm(forms.ModelForm):
     class Meta:
         model=Casos
         fields =['id_usuario','numeroradicado','descripcioncaso'
-                 ,'enfermedad','fechaatencioneps','formula_medica'
+                 ,'enfermedad','fechaatencioneps','formula_medica','estado','fecharesgistrocaso'
                 ,'id_barrera']
         labels={
             # 'id_caso':'Caso',
@@ -86,10 +86,12 @@ class CasosForm(forms.ModelForm):
             'id_usuario':forms.Select(attrs={'class':'form-control'}),
             'numeroradicado':forms.NumberInput(attrs={'class':'form-control '}),
             'fechaatencioneps':forms.DateTimeInput(attrs={'class':'form-control datetimepicker-input','type':'datetime-local','placeholder':'ingrese fecha'},format='%Y-%m-%d %H:%M:%S'),
+            'fecharesgistrocaso':forms.DateTimeInput(attrs={'class':'form-control datetimepicker-input','type':'datetime-local','placeholder':'ingrese fecha'},format='%Y-%m-%d %H:%M:%S'),
             'descripcioncaso':forms.Textarea(attrs={'class':'form-control '}),
             'enfermedad':forms.Select(attrs={'class':'form-control '}),
             'formula_medica':forms.FileInput(attrs={'class':'form-control'}),
             'id_barrera':forms.Select(attrs={'class':'form-control'}),
+             'estado':forms.Select(attrs={'class':'form-control'}),
         }
    
 class datosuserFormEdit(forms.ModelForm):

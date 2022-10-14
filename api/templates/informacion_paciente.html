@@ -7,12 +7,12 @@
 <div class="btn-group">
     <button class="btn btn-primary dropdown-toggle h-100 w-100 border-0  bg-transparent" type="button" data-bs-toggle="dropdown" data-bs-auto-close="inside" aria-expanded="false">
       {% if user.is_authenticated %}
-      <i class="fa-solid fa-user ms-2"></i>  {{user.username}}
+      <i class="fa-solid fa-user"></i>  {{user.username}}
       {% endif %}
     </button>
     <ul class="dropdown-menu w-75">
-      <li><a class="dropdown-item w-75" href="#">Perfil</a></li>
-      <li><a class="dropdown-item w-75" href="#">Salir</a></li>
+      <li><a class="dropdown-item " href="#">Perfil</a></li>
+      <li><a class="dropdown-item s" href="#">Salir</a></li>
       
     </ul>
   </div>
@@ -30,7 +30,7 @@
                         <h4 class="titulo_fundacion">Fundacion retorno</h4>
                     </div>
                     <div class="menu_option">
-                        <a href="{% url 'perfil' %}" class="selected text-decoration-none">
+                        <a href="{% url 'perfil' %}" class="text-decoration-none">
                             <div class="option">
                                 <i class="fa-solid fa-user" title="usuario"></i>
                                 <p class="mb-0">usuario</p>
@@ -150,9 +150,6 @@
                         </a>
                         <a href="#" class="text-decoration-none">
                             <div class="option">
-
-                                <i class="fa-solid fa-chart-column" title="Indicadores de gestion"></i>
-
                                 <i class="fa-sharp fa-solid fa-list-check"></i>
                                 <p class="mb-0">Actividades</p>
                             </div>

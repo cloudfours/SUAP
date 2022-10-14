@@ -1,10 +1,11 @@
-.formulario_persona{
+.formulario_persona {
     display: flex;
     justify-content: center;
-margin-top: 79px;
+    margin-top: 79px;
     margin-left: 97px;
 }
-.caja__contenedor__inputs{
+
+.caja__contenedor__inputs {
     display: flex;
     flex-direction: column;
     margin: 0 12px;
@@ -13,18 +14,20 @@ margin-top: 79px;
     border-radius: 10px;
 
 
--webkit-box-shadow: 4px -2px 12px 0px rgba(0,0,0,0.75);
--moz-box-shadow: 4px -2px 12px 0px rgba(0,0,0,0.75);
-box-shadow: 4px -2px 12px 0px rgba(0,0,0,0.75);
+    -webkit-box-shadow: 4px -2px 12px 0px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 4px -2px 12px 0px rgba(0, 0, 0, 0.75);
+    box-shadow: 4px -2px 12px 0px rgba(0, 0, 0, 0.75);
     transition: all .3s ease-in-out;
 }
-.caja__contenedor__inputs:hover{
-background: #f3f3f3;
+
+.caja__contenedor__inputs:hover {
+    background: #f3f3f3;
     /*Su uso requiere establecer las propiedades con sus prefijos
     para permitir la compatibilidad con todos los navegadores*/
 
 }
-.caja_form{
+
+.caja_form {
     display: flex;
 
     margin-left: 139px;
@@ -37,23 +40,27 @@ background: #f3f3f3;
 
     transition: all .3s ease-in-out;
 }
-.form_caso{
+
+.form_caso {
     width: 1000px;
     height: 500px;
     display: flex;
     flex-direction: column;
 }
-h4{
+
+h4 {
     margin-left: 22px
 }
+
 .contenedor__input {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 }
-button{
-    margin-top:18px;
+
+button {
+    margin-top: 18px;
     border: none;
     width: 125px;
     height: 25px;
@@ -63,28 +70,33 @@ button{
     margin-left: 5px;
     margin-bottom: 5px;
 }
-button:hover{
+
+button:hover {
     background: #0d6efd;
 }
-.caja_imagen{
+
+.caja_imagen {
     display: flex;
     justify-content: center;
 }
-.imagen{
+
+.imagen {
     width: 200px;
     height: 200px;
     border: 5px solid #e9ff3f;
     border-radius: 50%;
     transition: all .3s ease-in-out;
 }
-.caja_informacion{
+
+.caja_informacion {
     height: 40px;
 
     margin-top: 5px;
     display: flex;
     flex-direction: column;
 }
-span{
+
+span {
     font-size: 13px;
     margin-left: 5px;
 }
@@ -93,67 +105,145 @@ span{
 
 
 
-.caja_seguimiento{
-    display:flex;
+.caja_seguimiento {
+    display: flex;
     align-items: center;
     flex-direction: column;
     width: 1000px;
     height: 400px;
     margin-left: 177px;
     margin-top: 83px;
-   justify-content: space-between;
+    justify-content: space-between;
 }
-.caja_tabla_busqueda{
-    display:flex;
+
+.caja_tabla_busqueda {
+    display: flex;
     flex-direction: column;
     width: 1000px;
     height: 400px;
     margin-left: 177px;
     margin-top: 83px;
-   justify-content: space-between;
-   position:absolute;
-   top: 172px;
-}
-.icons_tabla{
-    font-size:25px;
-    color:#2365ea;
-}
-.icons_tabla:hover{
-color:#184193;
+    justify-content: space-between;
+    position: absolute;
+    top: 172px;
 }
 
+.icons_tabla {
+    font-size: 25px;
+    color: #2365ea;
+}
 
-.image__grafica{
-    margin:0 5px;
+.icons_tabla:hover {
+    color: #184193;
 }
 
 
-#respo{
+.image__grafica {
+    margin: 0 5px;
+}
+
+
+#respo {
     display: flex;
     flex-direction: row;
     justify-content: center;
 }
-.tabla_busqueda{
-    display:flex;
-    flex-direction:row;
+
+.tabla_busqueda {
+    display: flex;
+    flex-direction: row;
     margin: 5px 5px;
-    align-items:center;
+    align-items: center;
     margin-left: 62px;
     /* position: relative; */
     justify-content: flex-end;
     align-items: center;
-    
+
 }
 
-@media screen and (max-width: 768px) {
-.formulario_persona{
-    flex-wrap: wrap;
+.caja_historial {
+    display: flex;
     flex-direction: column;
+    width: 1000px;
+    height: 400px;
+    margin-left: 177px;
+    margin-top: 83px;
+    justify-content: space-between;
 }
-    .caja__contenedor__inputs{
+
+.caja_caso {
+    display: flex;
+    flex-direction: row;
+}
+
+.caja_caso_inputs {
+    width: 50%;
+    margin-left: 5px;
+}
+
+.files {
+    display: flex;
+    flex-direction: row;
+    align-items: end;
+}
+.boton_caso{
+    margin-left: 5px;
+}
+.boton_submit{
+    margin-right: 5px;
+}
+.caja_inputs{
+    width: 50%;
+}
+@media screen and (max-width: 768px) {
+    .formulario_persona {
+        flex-wrap: wrap;
+        flex-direction: column;
+    }
+
+    .caja__contenedor__inputs {
         margin: 5px 0;
     }
-    .caja_informacion{
+
+    .caja_informacion {
         justify-content: center;
+    }
+
+    .caja_historial {
+        width: 408px;
+        margin-left: 150px;
+    }
+
+    .caja_caso {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .caja_caso_inputs {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    .caja_desc {
+        width: 100%;
+    }
+
+    .files {
+        flex-direction: column;
+        align-items: start;
+    }
+    .boton_caso{
+        margin-left: 0;
+        margin-bottom: 12px;
+    }
+    .boton_submit{
+        margin-left: 0;
+    }
+    .caja_form{
+        width: 413px;
+     
+    }
+    .caja_inputs{
+        width: 100%;
     }
 }
