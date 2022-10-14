@@ -1,4 +1,4 @@
-from tokenize import group
+
 from api.models import *
 from django.shortcuts import get_object_or_404, render, redirect
 from django.http import HttpResponseRedirect
@@ -7,12 +7,12 @@ from django.contrib import messages
 from django.urls import reverse_lazy
 from django.contrib.auth.models import User
 from django.views.generic import ListView, CreateView
-
+from django.db.models import When,Case,Value,F,Count
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
-
 from django.urls import reverse
-from django.core.files.storage import FileSystemStorage
+import datetime
+from django.core.exceptions import ObjectDoesNotExist
 global usuario
 
 
@@ -120,15 +120,21 @@ def perfiluser(request):
 
 
 @login_required
-def registrarCaso(request,id):
-    datos_usuario =  DatosUsuario.objects.get(login_id=id)
+def registrarCaso(request):
+    datos_usuario =  DatosUsuario.objects.get(login_id=request.user.id)
+    caso = Casos.objects.filter(id_usuario = datos_usuario.id_cedula).select_related('estado').filter(estado__idestado=Case(When(estado__nombreestado='abierto',then=Value(1)),When(estado__nombreestado='proceso',then=Value(2)))).count()
+    print(caso)
     forma_persona = CasosForm(request.POST, request.FILES)
     if request.method == 'POST':
-        if forma_persona.is_valid():
-            forma_persona.save()
-            return redirect('perfil')
+        if caso>=1:
+               messages.add_message(request, messages.ERROR,message='No puede crear otro caso hasta que este finalice')
+               return redirect('caso') 
         else:
-            initial_data = {'id_usuario':datos_usuario.id_cedula}
+            if forma_persona.is_valid():
+                forma_persona.save()
+                return redirect('perfil')
+    else:
+            initial_data = {'id_usuario':datos_usuario.id_cedula,'estado':1,'fecharesgistrocaso':datetime.datetime.now()}
             forma_persona = CasosForm(initial=initial_data)
     return render(request, 'registrarCaso.html', {'forma_persona': forma_persona})
 
@@ -137,8 +143,6 @@ def page_not_found(request,exception):
     return render(request, '404.html')
     
 def page(request,exception):
-    return render(request,'505.html')
-
     return render(request,'505.html')
 @login_required
 def seguimiento(request):
@@ -164,7 +168,7 @@ def historial_casos(request):
 def gestorcrud(request):
     casos = Casos.objects.all()
   
-    return render(request,'admin/gestorcrud.html',{'casos':casos})
+    return render(request,'Gestor/gestorcrud.html',{'casos':casos})
 
 @login_required
 def gestorCrudDelete(request,id):
@@ -175,12 +179,7 @@ def gestorCrudDelete(request,id):
          return redirect('busqueda')   
  
 
-    return render(request,'admin/advertencia.html',{'casos':casos})
-
-@login_required
-def gestorcaso(request):
-    pass
+    return render(request,'Gestor/advertencia.html',{'casos':casos})
 
 
     
-

@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-4d_&^1msw37wh7dc(98*^5p32pj)9y7r-z-k%3&t=xf9lf3zd+'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'api',
-    
+    'administrador',
   
    
 ]
@@ -95,7 +95,7 @@ DATABASES = {
        'ENGINE': 'django.db.backends.mysql',
         'NAME': 'fundacion_retorno',
         'USER': 'root',
-        'PASSWORD': '1234',
+        'PASSWORD': '1007648218',
         'HOST': 'localhost',
         'PORT': '3306',
 
@@ -136,10 +136,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
-STATIC_URL = 'api/static/'
+STATIC_URL = '/static/'
 
 STATICFILES_DIRS=[(os.path.join(BASE_DIR,'static/'))]
-STATIC_ROOT= "api/static"
+STATIC_ROOT= "/static"
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
