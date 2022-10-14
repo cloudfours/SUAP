@@ -1,0 +1,30 @@
+.inicio{
+
+width:0%;
+}
+.proceso{
+width: 40%;
+}
+.finalizado{
+width: 100%;
+}
+.animacion{
+    transition: all 2s ease .5s;
+}
+.icono_caja{
+    position: fixed;
+    left: 1139px;
+    width: 100px;
+    height: 53px;
+    top: 13px;
+}
+@media screen and (max-width: 768px){
+.icono_caja{
+    right: 0;
+    position: absolute;
+}
+.caja_seguimiento{
+    margin-left: 70px;
+    width: auto;
+}
+}
