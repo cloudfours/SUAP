@@ -13,16 +13,20 @@ from .models import *
 class CasosFormGestor(forms.ModelForm):
     def __init__(self,*args,**kwargs):
         super().__init__(*args,**kwargs)
+        # self.fields['id_comple_info'].required=False
+        # self.fields['id_seguimiento'].required=False
        
     class Meta:
         model=Casos
         fields =['id_usuario','id_gest','estado','fecharesgistrocaso','fechaatenproceso','fechaatenfinalizado','fechaatenabierto','numeroradicado','descripcioncaso',
-                 'enfermedad','fechaatencioneps','formula_medica','adjunto_pri','adjunto_seg','adjunto_terc','id_comple_info','id_seguimiento'
+                 'enfermedad','fechaatencioneps','formula_medica','adjunto_pri','adjunto_seg','adjunto_terc','hora'
                 ,'id_barrera']
+        #'id_comple_info','id_seguimiento'
         labels={
             # 'id_caso':'Caso',
             'id_gest':'Gestor',
             'estado':'Estado',
+            'hora':'Hora',
             'fecharesgistrocaso':'Fecha registro',
             'fechaatenproceso':'Fecha Proceso',
             'fechaatenfinalizado':'Fecha Finalizado',
@@ -44,7 +48,7 @@ class CasosFormGestor(forms.ModelForm):
             # 'id_caso':forms.NumberInput(attrs={'class':'form-control'}),
             'id_usuario':forms.Select(attrs={'class':'form-control'}),
             'id_gest': forms.Select(attrs={'class':'form-control'}),
-            'id_estado': forms.Select(attrs={'class':'form-control'}),
+            'estado': forms.Select(attrs={'class':'form-control'}),
             'fecharesgistrocaso':forms.DateTimeInput(attrs={'class':'form-control datetimepicker-input','type':'datetime-local','placeholder':'ingrese fecha'},format='%Y-%m-%d %H:%M:%S'),
             'fechaatenproceso':forms.DateTimeInput(attrs={'class':'form-control datetimepicker-input','type':'datetime-local','placeholder':'ingrese fecha'},format='%Y-%m-%d %H:%M:%S'),
             'fechaatenfinalizado':forms.DateTimeInput(attrs={'class':'form-control datetimepicker-input','type':'datetime-local','placeholder':'ingrese fecha'},format='%Y-%m-%d %H:%M:%S'),
@@ -58,8 +62,9 @@ class CasosFormGestor(forms.ModelForm):
             'adjunto_seg':forms.FileInput(attrs={'class':'form-control'}),
             'adjunto_terc':forms.FileInput(attrs={'class':'form-control'}),
             'id_comple_info':forms.Select(attrs={'class':'form-control'}),
-            'id_seguimiento':forms.Select(attrs={'class':'form-control'}),
+            'id_seguimiento':forms.Select(attrs={'class':'form-control','default':'0'}),
             'id_barrera':forms.Select(attrs={'class':'form-control'}),
+            'hora':forms.TimeInput(attrs={'class':'form-control','type':'time'}),
         }
 
 class CasosForm(forms.ModelForm):

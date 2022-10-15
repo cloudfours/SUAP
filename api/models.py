@@ -49,9 +49,9 @@ class Casos(models.Model):
                                             null=True)  # Field name made lowercase.
     hora = models.TimeField( null=True)
     formula_medica = models.FileField(upload_to='specs')
-    adjunto_pri = models.FileField(upload_to='uploads/% Y/% m/% d/')
-    adjunto_seg = models.FileField(upload_to='uploads/% Y/% m/% d/')
-    adjunto_terc = models.FileField(upload_to='uploads/% Y/% m/% d/')
+    adjunto_pri = models.FileField(upload_to='specs')
+    adjunto_seg = models.FileField(upload_to='specs')
+    adjunto_terc = models.FileField(upload_to='specs')
     id_comple_info = models.ForeignKey('InfoComplementaria', models.DO_NOTHING, db_column='id_comple_info', blank=True,
                                        null=True)
     id_seguimiento = models.ForeignKey('Seguimiento', models.DO_NOTHING, db_column='id_seguimiento')
@@ -156,6 +156,9 @@ class EspecialidadMed(models.Model):
 class Estado(models.Model):
     idestado = models.AutoField(db_column='idEstado', primary_key=True)  # Field name made lowercase.
     nombreestado = models.CharField(db_column='nombreEstado', max_length=15)  # Field name made lowercase.
+    
+    def __str__(self):
+        return f'{self.nombreestado}'
 
    
 
@@ -175,7 +178,8 @@ class GestorCaso(models.Model):
     id_datos_us = models.ForeignKey(DatosUsuario, models.DO_NOTHING, db_column='id_datos_us', blank=True, null=True)
     id_correo = models.ForeignKey('MensajesCorreo', models.DO_NOTHING, db_column='id_correo', blank=True, null=True)
 
-
+    def __str__(self):
+        return f'{self.id_datos_us.primer_nombre}'
 
 class GestorFarmacia(models.Model):
     id_far = models.PositiveSmallIntegerField(primary_key=True)

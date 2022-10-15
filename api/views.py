@@ -2,7 +2,7 @@
 from api.models import *
 from django.shortcuts import get_object_or_404, render, redirect
 from django.http import HttpResponseRedirect
-from .forms import datosuserForm, userRegister, datosuserFormEdit, CasosForm
+from .forms import datosuserForm, userRegister, datosuserFormEdit, CasosForm,CasosFormGestor
 from django.contrib import messages
 from django.urls import reverse_lazy
 from django.contrib.auth.models import User
@@ -13,6 +13,7 @@ from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 import datetime
 from django.core.exceptions import ObjectDoesNotExist
+
 global usuario
 
 
@@ -182,5 +183,34 @@ def gestorCrudDelete(request,id):
 
     return render(request,'Gestor/advertencia.html',{'casos':casos})
 
+@login_required
+def editarCrudGestor(request,id):
+    caso=Casos.objects.get(pk=id)
+    print(request.POST)
+    if request.method == 'GET':
+            forma_persona = CasosFormGestor(instance=caso)
+    else:
+            forma_persona = CasosFormGestor(request.POST, request.FILES,instance=caso)
+            file=request.FILES['file']
+            Casos.objects.create
+            if forma_persona.is_valid():
+                forma_persona.save()
+                return redirect('busqueda')
+     
+    return render(request,'Gestor/editarCasoGestor.html',{'forma_persona':forma_persona,'caso':'caso'})
 
-    
+
+#  try:
+#         persona = DatosUsuario.objects.get(pk=id)
+#         if request.method == 'GET':
+#             persona_form = datosuserFormEdit(instance=persona)
+#         else:
+#             persona_form = datosuserFormEdit(request.POST, instance=persona)
+
+#             if persona_form.is_valid():
+#                 persona_form.save()
+#                 return redirect('perfil')
+#             else:
+#                 messages.add_message(
+#                     request, messages.ERROR, message='Vuelva a intetarlo')
+#     except Exceptio
