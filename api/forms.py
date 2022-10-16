@@ -20,7 +20,7 @@ class EditarFormGestor(forms.ModelForm):
         model=Casos
        
         fields =['id_usuario','id_gest','estado','fecharesgistrocaso','fechaatenproceso','fechaatenfinalizado','fechaatenabierto','numeroradicado','descripcioncaso',
-                 'enfermedad','fechaatencioneps','hora','id_comple_info','id_seguimiento'
+                 'enfermedad','fechaatencioneps','hora','id_comple_info','id_seguimiento','formula_medica','adjunto_seg','adjunto_terc'
                 ,'id_barrera']
         #'id_comple_info','id_seguimiento','formula_medica','adjunto_pri'
         labels={
