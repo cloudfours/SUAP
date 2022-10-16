@@ -1,5 +1,8 @@
 from django.urls import path,include
+
+from servidor import settings
 from .views import *
+from django.conf.urls.static import static
 from django.contrib.auth.decorators import login_required
 urlpatterns = [
  path('listMostrarInfo/',perfilUsuario,name='perfil'),
@@ -14,3 +17,8 @@ urlpatterns = [
  path('gestorbusqueda-editar/<int:id>',editarCrudGestor,name='editarGestor')
 
 ]
+if settings.DEBUG: 
+    urlpatterns += static(
+        settings.MEDIA_URL, 
+        document_root = settings.MEDIA_ROOT
+    )

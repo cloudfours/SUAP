@@ -2,7 +2,7 @@
 
 {% block content %}
 <div class="caja_form">
-    <form method="POST" class="form_caso" enctype="multipart/form-data" action=''>
+    <form method="POST" class="form_caso" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="caja-titulo">
             <h3>Registrar Caso</h3>
@@ -82,14 +82,14 @@
         {{forma_persona.adjunto_terc}}
             </div>
         </div>
-        <input type="submit" class="btn btn-primary  boton_submit" value="Crear caso">
+        <input type="submit" class="btn btn-primary  boton_submit" value="Editar caso">
        
     </div> 
     </form>
     </div>
 
 {% endblock %}
-{% if messages %}
+{% comment %} {% if messages %}
 {% for message in messages %}
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -119,4 +119,4 @@
 </script>
 {% endblock %}
 
-     
+      {% endcomment %}
