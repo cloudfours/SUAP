@@ -2,7 +2,7 @@
 from api.models import *
 from django.shortcuts import get_object_or_404, render, redirect
 from django.http import HttpResponseRedirect
-from .forms import datosuserForm, userRegister, datosuserFormEdit, CasosForm,CasosFormGestor
+from .forms import datosuserForm, userRegister, datosuserFormEdit, CasosForm,EditarFormGestor
 from django.contrib import messages
 from django.urls import reverse_lazy
 from django.contrib.auth.models import User
@@ -185,20 +185,21 @@ def gestorCrudDelete(request,id):
 
 @login_required
 def editarCrudGestor(request,id):
-    try:
+   
         caso=Casos.objects.get(pk=id)
         if request.method == 'GET':
-                forma_persona = CasosFormGestor(instance=caso)
+                forma_persona = EditarFormGestor(instance=caso)
         else:
-                forma_persona = CasosFormGestor(request.POST,instance=caso)
+                forma_persona = EditarFormGestor(request.POST,instance=caso)
+                print(forma_persona)
                 # files=request.FILES.getlist('formula_medica')
-                if forma_persona.is_valid():     
+                if forma_persona.is_valid(): 
                     forma_persona.save()
-                    return redirect('busqueda')
-    except AttributeError as e:
-        print(e)
+                    
+                return redirect('busqueda')
+    
      
-    return render(request,'Gestor/editarCasoGestor.html',{'forma_persona':forma_persona})
+        return render(request,'Gestor/editarCasoGestor.html',{'forma_persona':forma_persona,'caso':caso})
 
 
 #  try:

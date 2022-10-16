@@ -36,7 +36,7 @@ class Casos(models.Model):
     numeroradicado = models.PositiveIntegerField(db_column='numeroRadicado')  # Field name made lowercase.
     fechaatencioneps = models.DateTimeField(db_column='fechaAtencionEps')  # Field name made lowercase.
     descripcioncaso = models.TextField(db_column='descripcionCaso')  # Field name made lowercase.
-    agregardocum = models.FileField(upload_to='uploads/% Y/% m/% d/')  # Field name made lowercase.
+  
     estado = models.ForeignKey('Estado', models.DO_NOTHING, db_column='estado')
     fecharesgistrocaso = models.DateTimeField(db_column='fechaResgistroCaso', blank=True,
                                               null=True)  # Field name made lowercase.
@@ -49,7 +49,7 @@ class Casos(models.Model):
                                             null=True)  # Field name made lowercase.
     hora = models.TimeField( null=True)
     formula_medica = models.FileField(upload_to='media/')
-    adjunto_pri = models.FileField(upload_to='media/')
+
     adjunto_seg = models.FileField(upload_to='media/')
     adjunto_terc = models.FileField(upload_to='media/')
     id_comple_info = models.ForeignKey('InfoComplementaria', models.DO_NOTHING, db_column='id_comple_info', blank=True,

@@ -60,10 +60,11 @@
             <td>{{caso.enfermedad.nombreenfermedad}}</td>
             <td>{{caso.id_usuario.id_eps.nombre}}</td>
             <td>{{caso.estado.nombreestado}}</td>
+            
             <td><a><i class="fa-solid fa-file icons_tabla"></i></a></td>
             <td><a><i class="fa-solid fa-right-to-bracket icons_tabla"></i></a></td>
             <td><a><i class="fa-solid fa-file-pdf  icons_tabla"></i></a></td>
-            <td><a href='{% url 'editarGestor' caso.id_caso %}'><i class="fa-solid fa-square-pen  icons_tabla"></i></a><a  href='{% url 'eliminar' caso.id_caso%}'><i class="fa-solid fa-trash-can  icons_tabla"></i></a></td>
+            <td><a href='{% url 'editarGestor' caso.id_caso%}'><i class="fa-solid fa-square-pen  icons_tabla"></i></a><a  href='{% url 'eliminar' caso.id_caso%}'><i class="fa-solid fa-trash-can  icons_tabla"></i></a></td>
         </tr>
         {% endif %}
      {% endfor %}

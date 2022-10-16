@@ -10,19 +10,19 @@ from .models import *
 # class DateTimePickerInput(forms.DateTimeInput):
 #         input_type = 'datetime'
 
-class CasosFormGestor(forms.ModelForm):
+class EditarFormGestor(forms.ModelForm):
     def __init__(self,*args,**kwargs):
         super().__init__(*args,**kwargs)
-        # self.fields['id_comple_info'].required=False
-        # self.fields['id_seguimiento'].required=False
+        self.fields['id_comple_info'].required=False
+        self.fields['id_seguimiento'].required=False
        
     class Meta:
         model=Casos
-        fields =['id_usuario']
-        # fields =['id_usuario','id_gest','estado','fecharesgistrocaso','fechaatenproceso','fechaatenfinalizado','fechaatenabierto','numeroradicado','descripcioncaso',
-        #          'enfermedad','fechaatencioneps','hora','id_comple_info','id_seguimiento'
-        #         ,'id_barrera']
-        #'id_comple_info','id_seguimiento','formula_medica','adjunto_pri','adjunto_seg','adjunto_terc'
+       
+        fields =['id_usuario','id_gest','estado','fecharesgistrocaso','fechaatenproceso','fechaatenfinalizado','fechaatenabierto','numeroradicado','descripcioncaso',
+                 'enfermedad','fechaatencioneps','hora','id_comple_info','id_seguimiento'
+                ,'id_barrera']
+        #'id_comple_info','id_seguimiento','formula_medica','adjunto_pri'
         labels={
             # 'id_caso':'Caso',
             'id_gest':'Gestor',
@@ -38,7 +38,7 @@ class CasosFormGestor(forms.ModelForm):
             'descripcioncaso':'Descripcion del caso',
             'enfermedad':'Enfermedad',
             'formula_medica':'Agregar Formula medico',
-            'adjunto_pri':'Adjunto Primero',
+        
             'adjunto_seg':'Adjunto Segundo',
             'adjunto_terc':'Adjunto Tercero',
             'id_comple_info':'Información Complementaria',
@@ -59,7 +59,7 @@ class CasosFormGestor(forms.ModelForm):
             'descripcioncaso':forms.Textarea(attrs={'class':'form-control '}),
             'enfermedad':forms.Select(attrs={'class':'form-control '}),
             'formula_medica':forms.FileInput(attrs={'class':'form-control','multiple':True}),
-            'adjunto_pri':forms.ClearableFileInput(attrs={'class':'form-control','multiple':True}),
+          
             'adjunto_seg':forms.FileInput(attrs={'class':'form-control','multiple':True}),
             'adjunto_terc':forms.FileInput(attrs={'class':'form-control','multiple':True}),
             'id_comple_info':forms.Select(attrs={'class':'form-control'}),
