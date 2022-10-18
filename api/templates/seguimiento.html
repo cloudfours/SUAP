@@ -3,17 +3,15 @@
 
 <div class='caja_seguimiento'>
 
- {% if casos.estado.nombreestado == 'abierto' %}
+{% if casos.estado.nombreestado == 'abierto' %}
         <h2>Seguimiento al caso {{casos.id_caso}}</h2>
-        <p>caso creado {{casos.fecharesgistrocaso}}</p> 
+        <p>caso creado {{casos.fechaatenabierto}}</p> 
         <div id='abierto' class="container mt-3">
      
           <div class="progress">
             <div id='abierto' class="progress-bar inicio animacion" >10%</div>
           </div>
         </div>
-        
-
 {% elif casos.estado.nombreestado == 'proceso' %}
 
    
@@ -34,7 +32,7 @@
         <p>caso finalizado</p><p> {{caso.fechaatenfinalizado}}</p> 
         <div class="container mt-3">
           <div class="progress  finalizado animacion">
-            <div   id='fanilizado'class="progress-bar" style="width:70%">70%</div>
+            <div   id='fanilizado'class="progress-bar" style="width:100%">100%</div>
           </div>
         </div>
         

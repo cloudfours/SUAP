@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    let table =$('#example').DataTable({'bFilter':false,'language': espanol})
+    let table =$('#example').DataTable()
     $('#example').DataTable();
     $('#caso').keyup(function(){
         table.column($(this).data('index')).search(this.value).draw();

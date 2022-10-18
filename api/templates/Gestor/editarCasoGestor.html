@@ -1,11 +1,122 @@
 {% extends 'informacion_paciente.html' %}
 
 {% block content %}
+<div class="caja_form">
+    <form method="POST" class="form_caso" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="caja-titulo">
+            <h3>Editar  Caso</h3>
+        </div>
+        
+       
+    <div class="d-flex flex-column w-100">
+        <div class="caja_caso">
+    <div class="caja_inputs">
     
-<h1>
-Editar caso    
-</h1>
+        <label for="{{forma_persona.name}}">{{forma_persona.enfermedad.label}}</label>
+        {{forma_persona.enfermedad}}
+        <label for="{{forma_persona.name}}">{{forma_persona.id_barrera.label}}</label>
+        {{forma_persona.id_barrera}}
+        <label for="{{forma_persona.name}}">{{forma_persona.estado.label}}</label>
+        {{forma_persona.estado}}
+        <label for="{{forma_persona.name}}">{{forma_persona.fechaatenfinalizado.label}}</label>
+        {{forma_persona.fechaatenfinalizado}}
+        <label for="{{forma_persona.name}}">{{forma_persona.id_gest.label}}</label>
+        {{forma_persona.id_gest}}
+        <label for="{{forma_persona.name}}">{{forma_persona.hora.label}}</label>
+        {{forma_persona.hora}}
+        <label for="{{forma_persona.name}}">{{forma_persona.id_comple_info.label}}</label>
+        {{forma_persona.id_comple_info}}
+        
+        
+
+        
+    </div> 
+    <div class="caja_caso_inputs">
+        <label for="{{forma_persona.name}}">{{forma_persona.fechaatencioneps.label}}</label>
+        {{forma_persona.fechaatencioneps}}
+        <label for="{{forma_persona.name}}">{{forma_persona.id_usuario.label}}</label>
+        {{forma_persona.id_usuario}}
+        <label for="{{forma_persona.name}}">{{forma_persona.fecharesgistrocaso.label}}</label>
+        {{forma_persona.fecharesgistrocaso}}
+        <label for="{{forma_persona.name}}">{{forma_persona.fechaatenabierto.label}}</label>
+        {{forma_persona.fechaatenabierto}}
+        <label for="{{forma_persona.name}}">{{forma_persona.fechaatenproceso.label}}</label>
+        {{forma_persona.fechaatenproceso}}
+        <label for="{{forma_persona.name}}">{{forma_persona.id_seguimiento.label}}</label>
+        {{forma_persona.id_seguimiento}}
+    </div>
+    </div>
+    <div>
+        
+        <div class="caja_desc">
+            <label for="{{forma_persona.name}}">{{forma_persona.descripcioncaso.label}}</label>
+            {{forma_persona.descripcioncaso}}
+        </div>
+    
+    
+          
+          
+    </div>
+    
+    <div class="files-editar">
+        <div>
+        <label for="{{forma_persona.name}}">{{forma_persona.numeroradicado.label}}</label>
+        {{forma_persona.numeroradicado}}
+        </div>
+        <div class='boton_caso'>
+            <div>
+        <label for="{{forma_persona.name}}">{{forma_persona.formula_medica.label}}</label>
+        {{forma_persona.formula_medica}}
+            </div>
+            <div>
+        <label for="{{forma_persona.name}}">{{forma_persona.adjunto_pri.label}}</label>
+        {{forma_persona.adjunto_pri}}
+            </div>
+            <div>
+        <label for="{{forma_persona.name}}">{{forma_persona.adjunto_seg.label}}</label>
+        {{forma_persona.adjunto_seg}}
+            </div>
+            <div>
+        <label for="{{forma_persona.name}}">{{forma_persona.adjunto_terc.label}}</label>
+        {{forma_persona.adjunto_terc}}
+            </div>
+        </div>
+        <input type="submit" class="btn btn-primary  boton_submit" value="Editar caso">
+       
+    </div> 
+    </form>
+    </div>
 
 {% endblock %}
+{% comment %} {% if messages %}
+{% for message in messages %}
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Mensaje</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            {{message}}
+        </div>
+        <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Aceptar</button>
+        </div>
+    </div>
+    </div>
+</div>
+{% endfor %}
+{% endif %}
 
-     
+{% block js %}
+<script type="text/javascript">
+    $(document).ready(function (){
+    $('#exampleModal').modal('show')
+})
+</script>
+{% endblock %}
+
+      {% endcomment %}

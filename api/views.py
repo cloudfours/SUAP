@@ -1,8 +1,11 @@
 
+import math
+import random
+
 from api.models import *
 from django.shortcuts import get_object_or_404, render, redirect
 from django.http import HttpResponseRedirect
-from .forms import datosuserForm, userRegister, datosuserFormEdit, CasosForm
+from .forms import datosuserForm, userRegister, datosuserFormEdit, CasosForm,EditarFormGestor
 from django.contrib import messages
 from django.urls import reverse_lazy
 from django.contrib.auth.models import User
@@ -13,6 +16,7 @@ from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 import datetime
 from django.core.exceptions import ObjectDoesNotExist
+
 global usuario
 
 
@@ -124,6 +128,7 @@ def registrarCaso(request):
     datos_usuario =  DatosUsuario.objects.get(login_id=request.user.id)
     caso = Casos.objects.filter(id_usuario = datos_usuario.id_cedula).select_related('estado').filter(estado__idestado=Case(When(estado__nombreestado='abierto',then=Value(1)),When(estado__nombreestado='proceso',then=Value(2)))).count()
     print(caso)
+    numeroradicado = math.floor(random.random()* 1000)
     forma_persona = CasosForm(request.POST, request.FILES)
     if request.method == 'POST':
         if caso>=1:
@@ -134,7 +139,7 @@ def registrarCaso(request):
                 forma_persona.save()
                 return redirect('perfil')
     else:
-            initial_data = {'id_usuario':datos_usuario.id_cedula,'estado':1,'fecharesgistrocaso':datetime.datetime.now()}
+            initial_data = {'id_usuario':datos_usuario.id_cedula,'estado':1,'fecharesgistrocaso':datetime.datetime.now(),'numeroradicado':numeroradicado}
             forma_persona = CasosForm(initial=initial_data)
     return render(request, 'registrarCaso.html', {'forma_persona': forma_persona})
 
@@ -160,7 +165,7 @@ def historial_casos(request):
     try:
         casoshistorial = Casos.objects.filter(id_usuario=datos_usuario.id_cedula)
        
-        fechafinal = Casos.objects.values('fechaatenfinalizado','fecharesgistrocaso').filter(id_usuario= datos_usuario.id_cedula).annotate(duration=F('fechaatenfinalizado') - F('fecharesgistrocaso'))               
+        fechafinal = Casos.objects.values('id_caso','fechaatenfinalizado','fecharesgistrocaso').filter(id_usuario= datos_usuario.id_cedula).annotate(duration=F('fechaatenfinalizado') - F('fecharesgistrocaso'))        
     except Casos.DoesNotExist:
         messages.add_message(request,messages.ERROR,message='No existe a un caso creado')
 
@@ -182,5 +187,39 @@ def gestorCrudDelete(request,id):
 
     return render(request,'Gestor/advertencia.html',{'casos':casos})
 
+@login_required
+def editarCrudGestor(request,id):
+   try:
+        caso=Casos.objects.get(pk=id)
+        if request.method == 'GET':
+                forma_persona = EditarFormGestor(instance=caso)
+        else:
+                forma_persona = EditarFormGestor(request.POST,request.FILES,instance=caso)
+                
+                # files=request.FILES.getlist('formula_medica')
+                if forma_persona.is_valid(): 
+                    forma_persona.save()
+                    return redirect('busqueda')
+                else:
+                   messages.add_message(request, messages.ERROR, message='LLENE LOS CAMPOS FALTANTES')
+   except AttributeError as e:
+                    print(e)
+               
+     
+   return render(request,'Gestor/editarCasoGestor.html',{'forma_persona':forma_persona,'caso':caso})
 
-    
+
+#  try:
+#         persona = DatosUsuario.objects.get(pk=id)
+#         if request.method == 'GET':
+#             persona_form = datosuserFormEdit(instance=persona)
+#         else:
+#             persona_form = datosuserFormEdit(request.POST, instance=persona)
+
+#             if persona_form.is_valid():
+#                 persona_form.save()
+#                 return redirect('perfil')
+#             else:
+#                 messages.add_message(
+#                     request, messages.ERROR, message='Vuelva a intetarlo')
+#     except Exceptio

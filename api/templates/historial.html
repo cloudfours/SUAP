@@ -27,14 +27,21 @@
                     <strong>Fecha de finalizacion:</strong><strong>{{casos_historial.fechaatenfinalizado}}</strong>
                 </div>
                 <div class='d-flex flex-row'>
-                    <strong>EPS:</strong><strong>{{casos_historial.id_usuario.id_eps.nombreeps}}</strong>
+                    <strong>EPS:</strong><strong>{{casos_historial.id_usuario.id_eps.nombre}}</strong>
                 </div>
                 <div class='d-flex flex-row'>
                     <strong>Barrera:</strong><strong>{{casos_historial.id_barrera.nombre}}</strong>
                 </div>
+                {% for fecha in dic_fecha %}
+                   {% if casos_historial.id_caso == fecha.id_caso  %}
                 <div class='d-flex flex-row'>
-                    <strong>Cantidad de tiempo:</strong><strong>{{dic_fecha.fecha}}</strong>
+                
+                    <strong>Cantidad de tiempo:</strong><strong>{{fecha.duration}}</strong>
+                   
                 </div>
+              
+                {% endif %}
+                {% endfor %}
             </div>
           </div>
         </div>
