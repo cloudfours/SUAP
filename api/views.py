@@ -185,21 +185,24 @@ def gestorCrudDelete(request,id):
 
 @login_required
 def editarCrudGestor(request,id):
-   
+   try:
         caso=Casos.objects.get(pk=id)
         if request.method == 'GET':
                 forma_persona = EditarFormGestor(instance=caso)
         else:
-                forma_persona = EditarFormGestor(request.POST,instance=caso)
-                print(forma_persona)
+                forma_persona = EditarFormGestor(request.POST,request.FILES,instance=caso)
+                
                 # files=request.FILES.getlist('formula_medica')
                 if forma_persona.is_valid(): 
                     forma_persona.save()
-                    
-                return redirect('busqueda')
-    
+                    return redirect('busqueda')
+                else:
+                   messages.add_message(request, messages.ERROR, message='LLENE LOS CAMPOS FALTANTES')
+   except AttributeError as e:
+                    print(e)
+               
      
-        return render(request,'Gestor/editarCasoGestor.html',{'forma_persona':forma_persona,'caso':caso})
+   return render(request,'Gestor/editarCasoGestor.html',{'forma_persona':forma_persona,'caso':caso})
 
 
 #  try:

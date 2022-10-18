@@ -2,7 +2,7 @@
 
 {% block content %}
 <div class="caja_form">
-    <form method="POST" class="form_caso" enctype="multipart/form-data" action='{% url 'editarGestor' caso.id_caso %}'>
+    <form method="POST" class="form_caso" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="caja-titulo">
             <h3>Editar  Caso</h3>
