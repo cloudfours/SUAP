@@ -71,7 +71,7 @@ class EditarFormGestor(forms.ModelForm):
 class CasosForm(forms.ModelForm):
     def __init__(self,*args,**kwargs):
         super().__init__(*args,**kwargs)
-       
+     
     class Meta:
         model=Casos
         fields =['id_usuario','numeroradicado','descripcioncaso'
@@ -90,7 +90,7 @@ class CasosForm(forms.ModelForm):
         widgets={
             # 'id_caso':forms.NumberInput(attrs={'class':'form-control'}),
             'id_usuario':forms.Select(attrs={'class':'form-control'}),
-            'numeroradicado':forms.NumberInput(attrs={'class':'form-control '}),
+            'numeroradicado':forms.NumberInput(attrs={'class':'form-control ','readonly':'readonly'}),
             'fechaatencioneps':forms.DateTimeInput(attrs={'class':'form-control datetimepicker-input','type':'datetime-local','placeholder':'ingrese fecha'},format='%Y-%m-%d %H:%M'),
             'fecharesgistrocaso':forms.DateTimeInput(attrs={'class':'form-control datetimepicker-input','type':'datetime-local','placeholder':'ingrese fecha'},format='%Y-%m-%d %H:%M'),
             'descripcioncaso':forms.Textarea(attrs={'class':'form-control '}),

@@ -1,4 +1,7 @@
 
+import math
+import random
+
 from api.models import *
 from django.shortcuts import get_object_or_404, render, redirect
 from django.http import HttpResponseRedirect
@@ -125,6 +128,7 @@ def registrarCaso(request):
     datos_usuario =  DatosUsuario.objects.get(login_id=request.user.id)
     caso = Casos.objects.filter(id_usuario = datos_usuario.id_cedula).select_related('estado').filter(estado__idestado=Case(When(estado__nombreestado='abierto',then=Value(1)),When(estado__nombreestado='proceso',then=Value(2)))).count()
     print(caso)
+    numeroradicado = math.floor(random.random()* 1000)
     forma_persona = CasosForm(request.POST, request.FILES)
     if request.method == 'POST':
         if caso>=1:
@@ -135,7 +139,7 @@ def registrarCaso(request):
                 forma_persona.save()
                 return redirect('perfil')
     else:
-            initial_data = {'id_usuario':datos_usuario.id_cedula,'estado':1,'fecharesgistrocaso':datetime.datetime.now()}
+            initial_data = {'id_usuario':datos_usuario.id_cedula,'estado':1,'fecharesgistrocaso':datetime.datetime.now(),'numeroradicado':numeroradicado}
             forma_persona = CasosForm(initial=initial_data)
     return render(request, 'registrarCaso.html', {'forma_persona': forma_persona})
 
@@ -161,7 +165,7 @@ def historial_casos(request):
     try:
         casoshistorial = Casos.objects.filter(id_usuario=datos_usuario.id_cedula)
        
-        fechafinal = Casos.objects.values('fechaatenfinalizado','fecharesgistrocaso').filter(id_usuario= datos_usuario.id_cedula).annotate(duration=F('fechaatenfinalizado') - F('fecharesgistrocaso'))               
+        fechafinal = Casos.objects.values('id_caso','fechaatenfinalizado','fecharesgistrocaso').filter(id_usuario= datos_usuario.id_cedula).annotate(duration=F('fechaatenfinalizado') - F('fecharesgistrocaso'))        
     except Casos.DoesNotExist:
         messages.add_message(request,messages.ERROR,message='No existe a un caso creado')
 

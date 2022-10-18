@@ -33,12 +33,13 @@
                     <strong>Barrera:</strong><strong>{{casos_historial.id_barrera.nombre}}</strong>
                 </div>
                 {% for fecha in dic_fecha %}
-                   {% if fecha.duration != casos.id_caso %}
+                   {% if casos_historial.id_caso == fecha.id_caso  %}
                 <div class='d-flex flex-row'>
-                  
+                
                     <strong>Cantidad de tiempo:</strong><strong>{{fecha.duration}}</strong>
                    
                 </div>
+              
                 {% endif %}
                 {% endfor %}
             </div>
