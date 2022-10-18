@@ -227,7 +227,7 @@ def registrarCasoGestor(request):
     else:
             initial_data = {'id_usuario':datos_usuario.id_cedula,'estado':1,'fecharesgistrocaso':datetime.datetime.now(),'numeroradicado':numeroradicado}
             forma_persona = EditarFormGestor(initial=initial_data)
-    return render(request, 'registrarCaso.html', {'forma_persona': forma_persona})
+    return render(request, 'Gestor/registroCasoGestor.html', {'forma_persona': forma_persona})
 
 #  try:
 #         persona = DatosUsuario.objects.get(pk=id)

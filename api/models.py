@@ -216,7 +216,6 @@ class InfoComplementaria(models.Model):
     medico_trat = models.CharField(max_length=40)
     especialidad_med = models.ForeignKey(EspecialidadMed, models.DO_NOTHING, db_column='especialidad_med')
     segunda_barrera = models.CharField(max_length=40)
-    barrera_acceso = models.CharField(max_length=40)
     fech_rad_for_eps = models.DateTimeField(db_column='fech_rad_for_EPS')  # Field name made lowercase.
     fecha_for_medi = models.DateTimeField()
     fecha_aut = models.DateTimeField()

@@ -1,3 +1,4 @@
+from pyexpat import model
 from django import forms
 from .models import *
 from django.contrib.auth.models import User
@@ -9,7 +10,48 @@ from django.contrib.auth.validators import UnicodeUsernameValidator
 from .models import *
 # class DateTimePickerInput(forms.DateTimeInput):
 #         input_type = 'datetime'
-
+class informacionComplementaria(forms.ModelForm):
+    class Meta:
+        model = InfoComplementaria
+        fields = ['id_comple','gestor_farma','terapia','otra_terapia','tipo_req','clasificacion_pbs','medico_trat','especialidad_med','segunda_barrera','fech_rad_for_eps','fecha_for_medi','fecha_aut','fech_rad_aut_farm','fecha_entrega','origen_soli','ips_id_terapia']
+        labels={
+            'id_comple':'Complementario',
+            'gestor_farma':'Gestor farmaceutico',
+            'terapia':'Terapia',
+            'otra_terapia':'Otra terapia',
+            'tipo_req':'Tipo de requerimiento',
+            'clasificacion_pbs':'Clasificacion pbs',
+            'medico_trat':'Medico tratante',
+            'especialidad_med':'Especialidad Medica',
+            'segunda_barrera':'Segunda barrera',
+            'fech_rad_for_eps':'Fecha de radicacion de la  EPS',
+            'fecha_for_medi':'fecha de la formula médica',
+            'fecha_aut':'Fecha de autorizacion',
+            'fech_rad_aut_farm':'Fecha de radicacion formula medica',
+            'fecha_entrega':'Fecha de entrega',
+            'origen_soli':'Origen de solicituda',
+            'ips_id_terapia':'IPS'
+            
+        }
+        widgets={
+            # 'id_caso':forms.NumberInput(attrs={'class':'form-control'}),
+            'id_comple':forms.NumberInput(attrs={'class':'form-control'}),
+            'gestor_farma': forms.TextInput(attrs={'class':'form-control'}),
+            'terapia': forms.TextInput(attrs={'class':'form-control'}),
+            'otra_terapia':forms.TextInput(attrs={'class':'form-control'}),
+            'tipo_req':forms.Select(attrs={'class':'form-control'}),
+            'clasificacion_pbs':forms.Select(attrs={'class':'form-control'}),
+            'medico_trat':forms.TextInput(attrs={'class':'form-control'}),
+            'especialidad_med':forms.Select(attrs={'class':'form-control '}),
+            'segunda_barrera':forms.TextInput(attrs={'class':'form-control'}),
+            'fech_rad_for_eps':forms.DateInput(attrs={'class':'form-control datetimepicker-input','type':'datetime-local','placeholder':'ingrese fecha'},format='%Y-%m-%d %H:%M'),
+            'fecha_for_medi':forms.DateInput(attrs={'class':'form-control datetimepicker-input','type':'datetime-local','placeholder':'ingrese fecha'},format='%Y-%m-%d %H:%M'),
+            'fecha_aut':forms.DateInput(attrs={'class':'form-control datetimepicker-input','type':'datetime-local','placeholder':'ingrese fecha'},format='%Y-%m-%d %H:%M'),
+            'fech_rad_aut_farm':forms.DateInput(attrs={'class':'form-control datetimepicker-input','type':'datetime-local','placeholder':'ingrese fecha'},format='%Y-%m-%d %H:%M'),
+            'fecha_entrega':forms.DateInput(attrs={'class':'form-control datetimepicker-input','type':'datetime-local','placeholder':'ingrese fecha'},format='%Y-%m-%d %H:%M'),
+            'origen_soli':forms.TextInput(attrs={'class':'form-control'}),
+            'ips_id_terapia':forms.Select(attrs={'class':'form-control'}),
+        }
 class EditarFormGestor(forms.ModelForm):
     def __init__(self,*args,**kwargs):
         super().__init__(*args,**kwargs)
@@ -107,11 +149,11 @@ class datosuserFormEdit(forms.ModelForm):
     #         self.fields['tipo_doc'].widget.disabled_select = disabled_select;
     def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
-            self.fields['tipo_doc'].disabled = True
-            if self.fields['id_eps'] is None:
-                self.fields['id_eps'].disabled = False
-            else:
-                self.fields['id_eps'].disabled = True
+            # self.fields['tipo_doc'].disabled = True
+            # if self.fields['id_eps'] is None:
+            #     self.fields['id_eps'].disabled = False
+            # else:
+            #     self.fields['id_eps'].disabled = True
       
     
     class Meta:

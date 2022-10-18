@@ -12,6 +12,7 @@ urlpatterns = [
  path('historial',historial_casos,name='historial'),
  path('gestorbusqueda/',gestorcrud,name='busqueda'),
  path('gestor-eliminar/<int:id>',gestorCrudDelete,name='eliminar'),
- path('gestor-editar/<int:id>',editarCrudGestor,name='editarGestor')
+ path('gestor-editar/<int:id>',editarCrudGestor,name='editarGestor'),
+ path('gestorRegristocaso',registrarCasoGestor,name='registrarCasoGestor'),
 
 ]
