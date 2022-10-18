@@ -199,15 +199,35 @@ def editarCrudGestor(request,id):
                 # files=request.FILES.getlist('formula_medica')
                 if forma_persona.is_valid(): 
                     forma_persona.save()
+                    messages.add_message(request, messages.SUCCESS, message='Se ha editado con exito')
                     return redirect('busqueda')
                 else:
                    messages.add_message(request, messages.ERROR, message='LLENE LOS CAMPOS FALTANTES')
    except AttributeError as e:
-                    print(e)
+                   print(e)
                
      
    return render(request,'Gestor/editarCasoGestor.html',{'forma_persona':forma_persona,'caso':caso})
 
+@login_required
+def registrarCasoGestor(request):
+    datos_usuario =  DatosUsuario.objects.get(login_id=request.user.id)
+    caso = Casos.objects.filter(id_usuario = datos_usuario.id_cedula).select_related('estado').filter(estado__idestado=Case(When(estado__nombreestado='abierto',then=Value(1)),When(estado__nombreestado='proceso',then=Value(2)))).count()
+    print(caso)
+    numeroradicado = math.floor(random.random()* 1000)
+    forma_persona = EditarFormGestor(request.POST, request.FILES)
+    if request.method == 'POST':
+        if caso>=1:
+               messages.add_message(request, messages.ERROR,message='No puede crear otro caso hasta que este finalice')
+               return redirect('caso') 
+        else:
+            if forma_persona.is_valid():
+                forma_persona.save()
+                return redirect('perfil')
+    else:
+            initial_data = {'id_usuario':datos_usuario.id_cedula,'estado':1,'fecharesgistrocaso':datetime.datetime.now(),'numeroradicado':numeroradicado}
+            forma_persona = EditarFormGestor(initial=initial_data)
+    return render(request, 'registrarCaso.html', {'forma_persona': forma_persona})
 
 #  try:
 #         persona = DatosUsuario.objects.get(pk=id)
