@@ -57,8 +57,8 @@ class Casos(models.Model):
     id_seguimiento = models.ForeignKey('Seguimiento', models.DO_NOTHING, db_column='id_seguimiento')
     id_barrera = models.ForeignKey(BarreraAcceso, models.DO_NOTHING, db_column='id_barrera')
     class Estado_activo(models.TextChoices):
-        activo=True,_('True')
-        inactivo=False,_('False')
+        activo='1',_('activo')
+        inactivo='0',_('inactivo')
     estado_pendiente=models.CharField(max_length=8,choices=Estado_activo.choices,default=Estado_activo.activo)
     
 
@@ -66,8 +66,10 @@ class Casos(models.Model):
 
 
 class ClasificacionPbs(models.Model):
-    id_pbs = models.IntegerField(primary_key=True)
-    nombrepbs = models.CharField(db_column='nombrePbs', max_length=5)  # Field name made lowercase.
+    id_pbs = models.AutoField(primary_key=True)
+    nombrepbs = models.CharField(db_column='nombrePbs', max_length=60)  # Field name made lowercase.
+    def __str__(self):
+        return f'{self.nombrepbs}'
 
 
 
@@ -133,6 +135,8 @@ class Enuesta(models.Model):
 class EnvioAlertas(models.Model):
     tipoenvio = models.CharField(db_column='tipoEnvio', max_length=40)  # Field name made lowercase.
     id_envio = models.SmallAutoField(primary_key=True)
+    def __str__(self):
+        return f'{self.tipoenvio}'
 
  
 
@@ -149,6 +153,8 @@ class Eps(models.Model):
 class EspecialidadMed(models.Model):
     id_esp = models.SmallAutoField(primary_key=True)
     nombre = models.CharField(max_length=40)
+    def __str__(self):
+        return f'{self.nombre}'
 
 
 
@@ -182,8 +188,10 @@ class GestorCaso(models.Model):
         return f'{self.id_datos_us.primer_nombre}'
 
 class GestorFarmacia(models.Model):
-    id_far = models.PositiveSmallIntegerField(primary_key=True)
+    id_far = models.AutoField(primary_key=True)
     nombrefarmacia = models.CharField(db_column='nombreFarmacia', max_length=40)  # Field name made lowercase.
+    def __str__(self):
+        return f'{self.nombrefarmacia}'
 
 
 
@@ -212,11 +220,10 @@ class InfoComplementaria(models.Model):
     terapia = models.ForeignKey('Terapia', models.DO_NOTHING, db_column='terapia')
     otra_terapia = models.CharField(max_length=50, blank=True, null=True)
     tipo_req = models.ForeignKey('TipReq', models.DO_NOTHING, db_column='tipo_req', blank=True, null=True)
-    clasificacion_pbs = models.SmallIntegerField(unique=True, blank=True, null=True)
+    clasificacion_pbs = models.ForeignKey(ClasificacionPbs, models.DO_NOTHING ,blank=True, null=True)
     medico_trat = models.CharField(max_length=40)
     especialidad_med = models.ForeignKey(EspecialidadMed, models.DO_NOTHING, db_column='especialidad_med')
     segunda_barrera = models.CharField(max_length=40)
-    barrera_acceso = models.CharField(max_length=40)
     fech_rad_for_eps = models.DateTimeField(db_column='fech_rad_for_EPS')  # Field name made lowercase.
     fecha_for_medi = models.DateTimeField()
     fecha_aut = models.DateTimeField()
@@ -224,6 +231,8 @@ class InfoComplementaria(models.Model):
     fecha_entrega = models.DateTimeField()
     origen_soli = models.CharField(max_length=40)
     ips_id_terapia = models.ForeignKey('Ips', models.DO_NOTHING, db_column='ips_id_terapia')
+    def __str__(self):
+        return f'{self.id_comple}'
 
     
 
@@ -231,6 +240,8 @@ class InfoComplementaria(models.Model):
 class Ips(models.Model):
     id_terapia = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=40)
+    def __str__(self):
+        return f'{self.nombre}'
 
   
 
@@ -323,15 +334,19 @@ class Seguimiento(models.Model):
 
 
 class Terapia(models.Model):
-    id_terapia = models.PositiveSmallIntegerField(primary_key=True)
+    id_terapia = models.AutoField(primary_key=True)
     nombreterapia = models.CharField(db_column='nombreTerapia', max_length=40)  # Field name made lowercase.
+    def __str__(self):
+        return f'{self.nombreterapia}'
 
 
 
 
 class TipReq(models.Model):
-    id_req = models.PositiveSmallIntegerField(primary_key=True)
+    id_req = models.AutoField(primary_key=True)
     nombrerequerimiento = models.CharField(db_column='nombreRequerimiento', max_length=40)  # Field name made lowercase.
+    def __str__(self):
+        return f'{self.nombrerequerimiento}'
 
 
 

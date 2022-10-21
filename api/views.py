@@ -5,7 +5,7 @@ import random
 from api.models import *
 from django.shortcuts import get_object_or_404, render, redirect
 from django.http import HttpResponseRedirect
-from .forms import datosuserForm, userRegister, datosuserFormEdit, CasosForm,EditarFormGestor
+from .forms import datosuserForm, userRegister, datosuserFormEdit, CasosForm,EditarFormGestor,informacionComplementaria
 from django.contrib import messages
 from django.urls import reverse_lazy
 from django.contrib.auth.models import User
@@ -15,7 +15,7 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 import datetime
-from django.core.exceptions import ObjectDoesNotExist
+from django.http import JsonResponse
 
 global usuario
 
@@ -177,15 +177,18 @@ def gestorcrud(request):
     return render(request,'Gestor/gestorcrud.html',{'casos':casos})
 
 @login_required
-def gestorCrudDelete(request,id):
-    casos = Casos.objects.all()
-   
-    if  Casos.objects.filter(pk=id).update(estado_pendiente=False):
-        #  messages.add_messages(request,messages.WARNING,message='¿Esta seguro de eliminar?')
-         return redirect('busqueda')   
- 
-
-    return render(request,'Gestor/advertencia.html',{'casos':casos})
+def gestorCrudDelete(request):
+    try :
+        
+        id_caso = request.POST.get('caso.id_caso')
+    #   casos = Casos.objects.get(pk=request.POST['caso.id_caso'])
+        Casos.objects.filter(id_caso=id_caso).update(estado_pendiente='0')
+        response={
+            
+        }
+    except Casos.DoesNotExist as e:
+     print(e)
+    return JsonResponse(response)
 
 @login_required
 def editarCrudGestor(request,id):
@@ -199,15 +202,55 @@ def editarCrudGestor(request,id):
                 # files=request.FILES.getlist('formula_medica')
                 if forma_persona.is_valid(): 
                     forma_persona.save()
+                    messages.add_message(request, messages.SUCCESS, message='Se ha editado con exito')
                     return redirect('busqueda')
                 else:
                    messages.add_message(request, messages.ERROR, message='LLENE LOS CAMPOS FALTANTES')
    except AttributeError as e:
-                    print(e)
+                   print(e)
                
      
    return render(request,'Gestor/editarCasoGestor.html',{'forma_persona':forma_persona,'caso':caso})
 
+@login_required
+def registrarCasoGestor(request):
+    datos_usuario =  DatosUsuario.objects.get(login_id=request.user.id)
+    caso = Casos.objects.filter(id_usuario = datos_usuario.id_cedula).select_related('estado').filter(estado__idestado=Case(When(estado__nombreestado='abierto',then=Value(1)),When(estado__nombreestado='proceso',then=Value(2)))).count()
+    infocom = InfoComplementaria.objects.all().last()
+    numeroradicado = math.floor(random.random()* 1000)
+    forma_persona = EditarFormGestor(request.POST, request.FILES)
+    if request.method == 'POST':
+        if caso>=1:
+               messages.add_message(request, messages.ERROR,message='No puede crear otro caso hasta que este finalice')
+               return redirect('caso') 
+        else:
+            if forma_persona.is_valid():
+                key='prueba'
+                file=request.FILES.getlist('formula_medica,adjunto_seg,adjunto_terc')
+                
+                forma_persona.save()
+                return redirect('perfil')
+    else:
+            initial_data = {'estado':1,'fecharesgistrocaso':datetime.datetime.now(),'numeroradicado':numeroradicado,'id_comple_info':infocom}
+            forma_persona = EditarFormGestor(initial=initial_data)
+    return render(request, 'Gestor/registroCasoGestor.html', {'forma_persona': forma_persona})
+
+
+@login_required
+def informacionComplementarias(request):
+
+    if request.method == 'POST':
+        forma_persona = informacionComplementaria(request.POST)
+        
+        if forma_persona.is_valid():
+            forma_persona = forma_persona.save()
+            messages.add_message(request,messages.ERROR,message='Se aguardo con exito')
+            return redirect('registrarCasoGestor')
+    else:
+        forma_persona=informacionComplementaria()
+    return render(request,'Gestor/informacionComplementaria.html',{'forma_persona':forma_persona})
+            
+            
 
 #  try:
 #         persona = DatosUsuario.objects.get(pk=id)
