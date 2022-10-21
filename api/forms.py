@@ -36,15 +36,15 @@ class informacionComplementaria(forms.ModelForm):
         widgets={
             # 'id_caso':forms.NumberInput(attrs={'class':'form-control'}),
             'id_comple':forms.NumberInput(attrs={'class':'form-control'}),
-            'gestor_farma': forms.TextInput(attrs={'class':'form-control'}),
-            'terapia': forms.TextInput(attrs={'class':'form-control'}),
+            'gestor_farma': forms.Select(attrs={'class':'form-control'}),
+            'terapia': forms.Select(attrs={'class':'form-control'}),
             'otra_terapia':forms.TextInput(attrs={'class':'form-control'}),
             'tipo_req':forms.Select(attrs={'class':'form-control'}),
             'clasificacion_pbs':forms.Select(attrs={'class':'form-control'}),
             'medico_trat':forms.TextInput(attrs={'class':'form-control'}),
             'especialidad_med':forms.Select(attrs={'class':'form-control '}),
             'segunda_barrera':forms.TextInput(attrs={'class':'form-control'}),
-            'fech_rad_for_eps':forms.DateInput(attrs={'class':'form-control datetimepicker-input','type':'datetime-local','placeholder':'ingrese fecha'},format='%Y-%m-%d %H:%M'),
+            'fech_rad_for_eps':forms.DateInput(attrs={'class':'form-control datetimepicker-input','type':'datetime-local','placeholder':'ingrese fecha','required':False},format='%Y-%m-%d %H:%M'),
             'fecha_for_medi':forms.DateInput(attrs={'class':'form-control datetimepicker-input','type':'datetime-local','placeholder':'ingrese fecha'},format='%Y-%m-%d %H:%M'),
             'fecha_aut':forms.DateInput(attrs={'class':'form-control datetimepicker-input','type':'datetime-local','placeholder':'ingrese fecha'},format='%Y-%m-%d %H:%M'),
             'fech_rad_aut_farm':forms.DateInput(attrs={'class':'form-control datetimepicker-input','type':'datetime-local','placeholder':'ingrese fecha'},format='%Y-%m-%d %H:%M'),
@@ -57,6 +57,9 @@ class EditarFormGestor(forms.ModelForm):
         super().__init__(*args,**kwargs)
         self.fields['id_comple_info'].required=False
         self.fields['id_seguimiento'].required=False
+        self.fields['fechaatenfinalizado'].required=False
+        self.fields['fechaatenabierto'].required=False
+        self.fields['fechaatenproceso'].required=False
        
     class Meta:
         model=Casos
@@ -93,9 +96,9 @@ class EditarFormGestor(forms.ModelForm):
             'id_gest': forms.Select(attrs={'class':'form-control'}),
             'estado': forms.Select(attrs={'class':'form-control'}),
             'fecharesgistrocaso':forms.DateTimeInput(attrs={'class':'form-control datetimepicker-input','type':'datetime-local','placeholder':'ingrese fecha'},format='%Y-%m-%d %H:%M'),
-            'fechaatenproceso':forms.DateTimeInput(attrs={'class':'form-control datetimepicker-input','type':'datetime-local','placeholder':'ingrese fecha'},format='%Y-%m-%d %H:%M'),
-            'fechaatenfinalizado':forms.DateTimeInput(attrs={'class':'form-control datetimepicker-input','type':'datetime-local','placeholder':'ingrese fecha'},format='%Y-%m-%d %H:%M'),
-            'fechaatenabierto':forms.DateTimeInput(attrs={'class':'form-control datetimepicker-input','type':'datetime-local','placeholder':'ingrese fecha'},format='%Y-%m-%d %H:%M'),
+            'fechaatenproceso':forms.DateTimeInput(attrs={'class':'form-control datetimepicker-input','type':'datetime-local','placeholder':'ingrese fecha','required':False},format='%Y-%m-%d %H:%M'),
+            'fechaatenfinalizado':forms.DateTimeInput(attrs={'class':'form-control datetimepicker-input','type':'datetime-local','placeholder':'ingrese fecha','required':False},format='%Y-%m-%d %H:%M'),
+            'fechaatenabierto':forms.DateTimeInput(attrs={'class':'form-control datetimepicker-input','type':'datetime-local','placeholder':'ingrese fecha','required':False},format='%Y-%m-%d %H:%M'),
             'numeroradicado':forms.NumberInput(attrs={'class':'form-control '}),
             'fechaatencioneps':forms.DateTimeInput(attrs={'class':'form-control datetimepicker-input','type':'datetime-local','placeholder':'ingrese fecha'},format='%Y-%m-%d %H:%M'),
             'descripcioncaso':forms.Textarea(attrs={'class':'form-control '}),

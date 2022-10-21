@@ -45,11 +45,12 @@
             <th class='text-light'>Seguimiento</th>
             <th class='text-light'>Reporte</th>
             <th class='text-light'>Opciones</th>
+            <th class='text-light'>Estado</th>
         </tr>
     </thead>
     <tbody>
         {% for caso in casos%}
-         {% if caso.estado_pendiente != 'False' %}
+         {% if caso.estado_pendiente != '0' %}
         <tr class='shadow-sm p-3 mb-5 bg-body rounded'>
             <td>{{caso.id_caso}}</td>
             <td>{{caso.id_usuario}}</td>
@@ -60,11 +61,40 @@
             <td>{{caso.enfermedad.nombreenfermedad}}</td>
             <td>{{caso.id_usuario.id_eps.nombre}}</td>
             <td>{{caso.estado.nombreestado}}</td>
-            
+    
             <td><a><i class="fa-solid fa-file icons_tabla"></i></a></td>
             <td><a><i class="fa-solid fa-right-to-bracket icons_tabla"></i></a></td>
             <td><a><i class="fa-solid fa-file-pdf  icons_tabla"></i></a></td>
-            <td><a href='{% url 'editarGestor' caso.id_caso%}'><i class="fa-solid fa-square-pen  icons_tabla"></i></a><a  href='{% url 'eliminar' caso.id_caso%}'><i class="fa-solid fa-trash-can  icons_tabla"></i></a></td>
+            <td><a href='{% url 'editarGestor' caso.id_caso %}'><i class="fa-solid fa-square-pen  icons_tabla"></i></a>
+           
+               
+                <button class='btn btn-block w-auto h-auto p-0'    onclick="abrir_moda_delete('{% url 'eliminar'%}')"><i class="fa-solid fa-trash-can  icons_tabla"></i></button>
+                <div class="modal fade" id="eliminar" role="dialog"  tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" name='eliminar'>
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Persona</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">
+                            <form class="mb-0" method="POST" name='eliminar'>
+                                {% csrf_token %}
+                                <h3>¿Estas seguro de eliminarlo?</h3>
+                               
+                            
+                                <input type="hidden" name="modal-pk" value="{{caso.id_caso}}"/>
+                            
+                             
+                              
+                                <div class="modal-footer pt-3">
+                                    <input type="button" class="btn btn-danger" data-bs-dismiss="modal" value='Cancelar'/>
+                                    <input type="button" class="btn btn-danger" data-bs-dismiss="modal" value='Eliminar'/>
+                                </div>
+                            </form>
+                        </div>
+                      </div>
+            </td>
+            <td>{{caso.estado_pendiente}}</td>
         </tr>
         {% endif %}
      {% endfor %}
@@ -109,34 +139,55 @@
 
 
 {% endblock %}
-{% if messages %}
-{% for message in messages %}
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+{% comment %} {% block modal %} {% endcomment %}
+{% comment %} <div class="modal fade" id="eliminar" role="dialog"  tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" name='eliminar'>
     <div class="modal-dialog">
-    <div class="modal-content">
-        <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Mensaje</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Persona</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form class="mb-0" method="POST" name='eliminar'>
+                {% csrf_token %}
+                <h3>¿Estas seguro de eliminarlo?</h3>
+               
+            
+                <input type="hidden" name="modal-pk" value="{{casos.id_caso}}"/>
+            
+             
+              
+                <div class="modal-footer pt-3">
+                    <input type="button" class="btn btn-danger" data-bs-dismiss="modal" value='Cancelar'/>
+                    <a href='{% url 'eliminar' casos.id_caso %}' class="btn btn-danger" data-bs-dismiss="modal" id='a' >eliminar</a>
+                </div>
+            </form>
         </div>
-        <div class="modal-body">
-            {{message}}
-        </div>
-        <div class="modal-footer">
-        <button type="button" class="btn btn-warning" data-bs-dismiss="modal">Aceptar</button>
-        </div>
-    </div>
-    </div>
+      </div> {% endcomment %}
+    {% comment %} {% block js %}
+    <script type="text/javascript">
+      let refresh = document.getElementById('a');
+    refresh.addEventListener('click', _ => {
+                location.reload();
+    })
+    </script>
 </div>
-{% endfor %}
-{% endif %}
+{% endblock%} {% endcomment %}
 
 {% block js %}
-<script type="text/javascript">
-    $(document).ready(function (){
-    $('#exampleModal').modal('show')
-})
-</script>
+    <script type="text/javascript">
+        function abrir_moda_delete(url) {
+            let e;
+  
+             $('#eliminar').load(url, function () {
+                 $(this).modal('show')
+             })
+         }
+         function ajax_post(){
+         }
+ 
+
+    </script>
 {% endblock %}
 {% comment %} {% block modal %}
 {% if messages %}

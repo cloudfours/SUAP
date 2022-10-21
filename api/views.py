@@ -5,7 +5,7 @@ import random
 from api.models import *
 from django.shortcuts import get_object_or_404, render, redirect
 from django.http import HttpResponseRedirect
-from .forms import datosuserForm, userRegister, datosuserFormEdit, CasosForm,EditarFormGestor
+from .forms import datosuserForm, userRegister, datosuserFormEdit, CasosForm,EditarFormGestor,informacionComplementaria
 from django.contrib import messages
 from django.urls import reverse_lazy
 from django.contrib.auth.models import User
@@ -177,15 +177,27 @@ def gestorcrud(request):
     return render(request,'Gestor/gestorcrud.html',{'casos':casos})
 
 @login_required
-def gestorCrudDelete(request,id):
-    casos = Casos.objects.all()
+def gestorCrudDelete(request):
+    
+  casos = Casos.objects.get(pk=request.POST['caso.id_caso'])
+
    
-    if  Casos.objects.filter(pk=id).update(estado_pendiente=False):
-        #  messages.add_messages(request,messages.WARNING,message='¿Esta seguro de eliminar?')
-         return redirect('busqueda')   
+  caso=Casos.objects.filter(id_caso=int(request.POST['modal-pk'])).update(estado_pendiente='0')
+
+  
+
  
 
-    return render(request,'Gestor/advertencia.html',{'casos':casos})
+  context={
+      'casos':casos
+  }
+
+     #print(caso)
+        #  messages.add_messages(request,messages.WARNING,message='¿Esta seguro de eliminar?')
+     
+ 
+
+  return render(request,'Gestor/gestorcrud.html',context)
 
 @login_required
 def editarCrudGestor(request,id):
@@ -213,7 +225,7 @@ def editarCrudGestor(request,id):
 def registrarCasoGestor(request):
     datos_usuario =  DatosUsuario.objects.get(login_id=request.user.id)
     caso = Casos.objects.filter(id_usuario = datos_usuario.id_cedula).select_related('estado').filter(estado__idestado=Case(When(estado__nombreestado='abierto',then=Value(1)),When(estado__nombreestado='proceso',then=Value(2)))).count()
-    print(caso)
+    infocom = InfoComplementaria.objects.all().last()
     numeroradicado = math.floor(random.random()* 1000)
     forma_persona = EditarFormGestor(request.POST, request.FILES)
     if request.method == 'POST':
@@ -222,12 +234,32 @@ def registrarCasoGestor(request):
                return redirect('caso') 
         else:
             if forma_persona.is_valid():
+                key='prueba'
+                file=request.FILES.getlist('formula_medica,adjunto_seg,adjunto_terc')
+                
                 forma_persona.save()
                 return redirect('perfil')
     else:
-            initial_data = {'id_usuario':datos_usuario.id_cedula,'estado':1,'fecharesgistrocaso':datetime.datetime.now(),'numeroradicado':numeroradicado}
+            initial_data = {'id_usuario':datos_usuario.id_cedula,'estado':1,'fecharesgistrocaso':datetime.datetime.now(),'numeroradicado':numeroradicado,'id_comple_info':infocom}
             forma_persona = EditarFormGestor(initial=initial_data)
     return render(request, 'Gestor/registroCasoGestor.html', {'forma_persona': forma_persona})
+
+
+@login_required
+def informacionComplementarias(request):
+
+    if request.method == 'POST':
+        forma_persona = informacionComplementaria(request.POST)
+        
+        if forma_persona.is_valid():
+            forma_persona = forma_persona.save()
+            
+            return redirect('registrarCasoGestor')
+    else:
+        forma_persona=informacionComplementaria()
+    return render(request,'Gestor/informacionComplementaria.html',{'forma_persona':forma_persona})
+            
+            
 
 #  try:
 #         persona = DatosUsuario.objects.get(pk=id)

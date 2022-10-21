@@ -63,6 +63,8 @@
         <div>
         <label for="{{forma_persona.name}}">{{forma_persona.numeroradicado.label}}</label>
         {{forma_persona.numeroradicado}}
+        <input type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
+        onclick="abrir_moda_info('{% url 'info' %}')"value='Informacion complementaria'/> 
         </div>
         <div class='boton_caso'>
             <div>
@@ -83,41 +85,27 @@
             </div>
         </div>
         <input type="submit" class="btn btn-primary  boton_submit" value="Editar caso">
-       
+
     </div> 
     </form>
     </div>
 
 {% endblock %}
+{% block modal %}
+<div class="modal fade" id="infoCo" role="dialog"  tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 
-{% comment %} {% if messages %}
-{% for message in messages %}
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-    <div class="modal-content">
-        <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Mensaje</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-            {{message}}
-        </div>
-        <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Aceptar</button>
-        </div>
-    </div>
-    </div>
 </div>
-{% endfor %}
-{% endif %}
+{% endblock%}
 
 {% block js %}
-<script type="text/javascript">
-    $(document).ready(function (){
-    $('#exampleModal').modal('show')
-})
-</script>
-{% endblock %}
+    <script type="text/javascript">
+        function abrir_moda_info(url) {
+           let e;
+ 
+            $('#infoCo').load(url, function () {
+                $(this).modal('show')
+            })
+        }
 
-      {% endcomment %}
+    </script>
+{% endblock %}
