@@ -14,3 +14,4 @@ $(document).ready(function () {
         table.column($(this).data('index')).search(this.value).draw();
     })
 })
+

@@ -68,7 +68,7 @@
             <td><a href='{% url 'editarGestor' caso.id_caso %}'><i class="fa-solid fa-square-pen  icons_tabla"></i></a>
            
                
-                <button class='btn btn-block w-auto h-auto p-0'    onclick="abrir_moda_delete('{% url 'eliminar'%}')"><i class="fa-solid fa-trash-can  icons_tabla"></i></button>
+                <button class='btn btn-block w-auto h-auto p-0'  id='eliminarboton'><i class="fa-solid fa-trash-can  icons_tabla"></i></button>
                 <div class="modal fade" id="eliminar" role="dialog"  tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" name='eliminar'>
                     <div class="modal-dialog">
                         <div class="modal-content">
@@ -77,20 +77,19 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                           </div>
                           <div class="modal-body">
-                            <form class="mb-0" method="POST" name='eliminar'>
-                                {% csrf_token %}
-                                <h3>¿Estas seguro de eliminarlo?</h3>
+                            
+                                <h3>¿Estas seguro de eliminar el caso {{caso.id_caso}}?</h3>
                                
                             
-                                <input type="hidden" name="modal-pk" value="{{caso.id_caso}}"/>
+                                
                             
                              
                               
                                 <div class="modal-footer pt-3">
                                     <input type="button" class="btn btn-danger" data-bs-dismiss="modal" value='Cancelar'/>
-                                    <input type="button" class="btn btn-danger" data-bs-dismiss="modal" value='Eliminar'/>
+                                    <input type="button" class="btn btn-success" id='finalizar' onclick="ajax_post('{{caso.id_caso}}')" data-bs-dismiss="modal" value='Eliminar'/>
                                 </div>
-                            </form>
+                        
                         </div>
                       </div>
             </td>
@@ -120,103 +119,55 @@
     </tfoot>
 </table>
 </div>
-{% comment %} {% if messages %}
+
+
+<!-- Modal -->
+
+{% if messages %} 
 {% for message in messages %}
-    <script type='text/javascript'>
-        let my = $.toast({
-            heading: 'Success',
-            text: 'And these were just the basic demos! Scroll down to check further details on how to customize the output.',
-            showHideTransition: 'slide',
-            icon: 'success'
-        })
-    </script>
-{% endfor %}
-{% endif %}
-{% if messages %}
-{% for message in messages %} {% endcomment %}
-<!-- Modal -->
-
+  {% if message.tags == 'success'%}
+  <script type=text/javascript>toastr.{{ message.tags }}('{{ message }}')</script>
+   {% endif %}
+   {% endfor %}
+{% endif %} 
 
 
 {% endblock %}
-{% comment %} {% block modal %} {% endcomment %}
-{% comment %} <div class="modal fade" id="eliminar" role="dialog"  tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" name='eliminar'>
-    <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Persona</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <form class="mb-0" method="POST" name='eliminar'>
-                {% csrf_token %}
-                <h3>¿Estas seguro de eliminarlo?</h3>
-               
-            
-                <input type="hidden" name="modal-pk" value="{{casos.id_caso}}"/>
-            
-             
-              
-                <div class="modal-footer pt-3">
-                    <input type="button" class="btn btn-danger" data-bs-dismiss="modal" value='Cancelar'/>
-                    <a href='{% url 'eliminar' casos.id_caso %}' class="btn btn-danger" data-bs-dismiss="modal" id='a' >eliminar</a>
-                </div>
-            </form>
-        </div>
-      </div> {% endcomment %}
-    {% comment %} {% block js %}
-    <script type="text/javascript">
-      let refresh = document.getElementById('a');
-    refresh.addEventListener('click', _ => {
-                location.reload();
-    })
-    </script>
-</div>
-{% endblock%} {% endcomment %}
+
 
 {% block js %}
     <script type="text/javascript">
-        function abrir_moda_delete(url) {
-            let e;
-  
-             $('#eliminar').load(url, function () {
-                 $(this).modal('show')
+        
+             $('#eliminarboton').click('load', function () {
+                 $('#eliminar').modal('show')
              })
-         }
-         function ajax_post(){
+
+          
+{% comment %}             
+             $('#finalizar').click(function () {
+                $(window).reload()
+             }) {% endcomment %}
+
+      
+         function ajax_post(id_caso){
+            let request=$.ajax({
+                type:'POST',
+                dataType: "json",
+                url:'{% url 'eliminar' %}',
+                data:{
+                    "csrfmiddlewaretoken": "{{ csrf_token }}",
+                    'caso.id_caso':id_caso
+                }
+
+
+            });
+            request.done(function(response){
+             location.reload()
+            })
          }
  
 
     </script>
 {% endblock %}
-{% comment %} {% block modal %}
-{% if messages %}
-{%for message in messages%}
-<!-- Modal -->
-<div class="modal fade" id="exampleModals" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-    <div class="modal-content">
-        <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Mensaje</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-            {{message}}
-        </div>
-        <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Aceptar</button>
-        </div>
-    </div>
-    </div>
-</div>
-{%endfor%}
-{%endif%}
-{% endblock %}
-{% block js %}
-    <script type="text/javascript">
-        $(document).ready(function (){
-        $('#exampleModals').modal('show')
-    })
-</script>
- 
-{% endblock %} {% endcomment %}
+
+
