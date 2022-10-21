@@ -29,7 +29,7 @@
         </div>
     </div>
     </div>
-    <table id="example" class="table table-hover table-responsive table-striped" style="width:100%">
+    <table id="example" class="table table-hover  table-striped display responsive nowrap" style="width:100%">
     <thead class='bg-primary bg-gradient'>
         <tr>
             <th class='text-light'>ID caso</th>
@@ -123,13 +123,35 @@
 
 <!-- Modal -->
 
-{% if messages %} 
+
 {% for message in messages %}
   {% if message.tags == 'success'%}
-  <script type=text/javascript>toastr.{{ message.tags }}('{{ message }}')</script>
+  <script type=text/javascript>
+    $(document).ready(function(){
+        toastr.{{ message.tags }}('{{ message }}')
+     
+    })
+    toastr.options = {
+        "closeButton": false,
+        "debug": false,
+        "newestOnTop": false,
+        "progressBar": true,
+        "positionClass": "toast-top-center",
+        "preventDuplicates": false,
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "5000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+      }   
+</script>
    {% endif %}
    {% endfor %}
-{% endif %} 
+
 
 
 {% endblock %}
