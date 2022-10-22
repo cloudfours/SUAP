@@ -1,6 +1,7 @@
 
 import math
 import random
+from urllib import response
 
 from api.models import *
 from django.shortcuts import get_object_or_404, render, redirect
@@ -16,7 +17,7 @@ from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 import datetime
 from django.http import JsonResponse
-
+from django.core.files.storage import FileSystemStorage
 global usuario
 
 
@@ -173,21 +174,27 @@ def historial_casos(request):
 @login_required
 def gestorcrud(request):
     casos = Casos.objects.all()
-  
-    return render(request,'Gestor/gestorcrud.html',{'casos':casos})
+    abierto = Casos.objects.all().filter(estado__idestado=1).count()
+    proceso=Casos.objects.all().filter(estado__idestado=2).count()
+    finalizado=Casos.objects.all().filter(estado__idestado=3).count()
+    modal_status='eliminar'
+    return render(request,'Gestor/gestorcrud.html',{'casos':casos,'abierto':abierto,'proceso':proceso,'finalizado':finalizado,'modal_status':modal_status})
 
 @login_required
-def gestorCrudDelete(request):
-    try :
-        
-        id_caso = request.POST.get('caso.id_caso')
-    #   casos = Casos.objects.get(pk=request.POST['caso.id_caso'])
-        Casos.objects.filter(id_caso=id_caso).update(estado_pendiente='0')
-        response={
-            
-        }
-    except Casos.DoesNotExist as e:
-     print(e)
+def gestorCrudDelete(request,id):
+
+    casos=Casos.objects.get(pk=id)
+    print(casos)
+    return render(request,'Gestor/eliminarcaso.html',{'casos':casos})
+
+@login_required
+def ajax_eliminar(request):
+    id_caso = request.POST.get('id_caso')
+
+    Casos.objects.filter(id_caso=id_caso).update(estado_pendiente='0')
+  
+   
+    response={}
     return JsonResponse(response)
 
 @login_required
@@ -221,13 +228,14 @@ def registrarCasoGestor(request):
     forma_persona = EditarFormGestor(request.POST, request.FILES)
     if request.method == 'POST':
         if caso>=1:
+             
                messages.add_message(request, messages.ERROR,message='No puede crear otro caso hasta que este finalice')
-               return redirect('caso') 
+               return redirect('busqueda') 
         else:
             if forma_persona.is_valid():
-                key='prueba'
-                file=request.FILES.getlist('formula_medica,adjunto_seg,adjunto_terc')
-                
+                files_upload=request.FILES.getlist('formula_medica,adjunto_seg,adjunto_terc')
+                fs=FileSystemStorage()
+                fs.save(files_upload.name,files_upload)
                 forma_persona.save()
                 return redirect('perfil')
     else:

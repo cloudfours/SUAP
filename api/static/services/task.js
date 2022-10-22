@@ -1,5 +1,5 @@
 
-const body = document.querySelector('#body')
+const body = document.querySelector('#boy')
 const menu = document.querySelector('#side')
 const openbtn = document.querySelector('#boton')
 

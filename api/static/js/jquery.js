@@ -9,10 +9,13 @@ $(document).ready(function () {
     $('#nombrecompleto').keyup(function(){
         table.column($(this).data('index')).search(this.value).draw();
     })
-    $('#estado').click(function(){s
+    $('#estado').click(function(){
         table.column($(this).data('index')).search(this.value).draw();
     })
     $('#identificacion').keyup(function(){
         table.column($(this).data('index')).search(this.value).draw();
     })
+ 
+
+
 })
