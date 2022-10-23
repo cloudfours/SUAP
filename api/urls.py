@@ -15,6 +15,7 @@ urlpatterns = [
  path('gestor-eliinar-ajax/',ajax_eliminar,name='ajaxeliminar'),
  path('gestor-editar/<int:id>',editarCrudGestor,name='editarGestor'),
  path('gestorRegristocaso',registrarCasoGestor,name='registrarCasoGestor'),
- path('infoComplementaria/',informacionComplementarias,name='info')
+ path('infoComplementaria/',informacionComplementarias,name='info'),
+ path('seguimientoGestor/',seguimientoGestor,name='seguimientoGestor')
 
 ]

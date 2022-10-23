@@ -52,9 +52,9 @@ class Casos(models.Model):
 
     adjunto_seg = models.FileField(upload_to='%Y/%m/%d/')
     adjunto_terc = models.FileField(upload_to='%Y/%m/%d/')
-    id_comple_info = models.ForeignKey('InfoComplementaria', models.DO_NOTHING, db_column='id_comple_info', blank=True,
+    id_comple_info = models.OneToOneField('InfoComplementaria', models.DO_NOTHING, db_column='id_comple_info', blank=True,
                                        null=True)
-    id_seguimiento = models.ForeignKey('Seguimiento', models.DO_NOTHING, db_column='id_seguimiento')
+    id_seguimiento = models.OneToOneField('Seguimiento', models.DO_NOTHING, db_column='id_seguimiento')
     id_barrera = models.ForeignKey(BarreraAcceso, models.DO_NOTHING, db_column='id_barrera')
     class Estado_activo(models.TextChoices):
         activo='1',_('activo')
@@ -330,6 +330,9 @@ class Seguimiento(models.Model):
     id_gestor = models.ForeignKey(GestorCaso, models.DO_NOTHING, db_column='id_gestor')
     fecharegistro = models.DateField(db_column='fechare', blank=True, null=True)
     descripcion = models.TextField()
+    
+    def __str__(self):
+        return f'{self.id_seg}'
 
     
 

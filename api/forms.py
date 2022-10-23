@@ -13,15 +13,17 @@ from .models import *
 class seguimientoFormulario(forms.ModelForm):
     class Meta:
         model=Seguimiento
-        fields=['id_gestor','fecharegistro','descripcion']
+        fields=['id_seg','id_gestor','fecharegistro','descripcion']
         labels={
+            'id_seg':'seguimiento',
             'id_gestor':'Nombre del gestor',
             'fecharegistro':'Fecha de registro',
             'descripcion':'Descripcion'
         }
         widgets={
+                   'id_seg':forms.NumberInput(attrs={'class':'form-control'}),
                   'id_gestor':forms.Select(attrs={'class':'form-control'}),
-                  'fecharegistro':forms.DateInput(attrs={'class':'form-control datetimepicker-input','type':'datetime-local','placeholder':'ingrese fecha'},format='%Y-%m-%d %H:%M'),
+                  'fecharegistro':forms.DateInput(attrs={'class':'form-control datetimepicker-input','type':'date','placeholder':'ingrese fecha'}),
                   'descripcion':forms.Textarea(attrs={'class':'form-control '}),
         }
 class informacionComplementaria(forms.ModelForm):

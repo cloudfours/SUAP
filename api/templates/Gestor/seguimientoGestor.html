@@ -1,14 +1,14 @@
 <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Persona</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Seguimiento del caso</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <form method="POST" class='form-floating' name='registrarcaso' action='{% url 'info' %}'>
+      <form method="POST" class='form-floating' name='registrarcaso' action='{% url 'seguimientoGestor' %}'>
          {% csrf_token %}
       <div class="modal-body">
         <div class="modal-lg d-flex flex-wrap flex-row">
-          {% for field in forma_persona %}
+          {% for field in seguimientoForm %}
         
         <label  for="{{ field.name }}">{{ field.label }}</label>
         {{ field }}
