@@ -328,6 +328,7 @@ class Reportes(models.Model):
 class Seguimiento(models.Model):
     id_seg = models.SmallAutoField(primary_key=True)
     id_gestor = models.ForeignKey(GestorCaso, models.DO_NOTHING, db_column='id_gestor')
+    fecharegistro = models.DateField(db_column='fechare', blank=True, null=True)
     descripcion = models.TextField()
 
     

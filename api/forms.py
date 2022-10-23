@@ -10,6 +10,20 @@ from django.contrib.auth.validators import UnicodeUsernameValidator
 from .models import *
 # class DateTimePickerInput(forms.DateTimeInput):
 #         input_type = 'datetime'
+class seguimientoFormulario(forms.ModelForm):
+    class Meta:
+        model=Seguimiento
+        fields=['id_gestor','fecharegistro','descripcion']
+        labels={
+            'id_gestor':'Nombre del gestor',
+            'fecharegistro':'Fecha de registro',
+            'descripcion':'Descripcion'
+        }
+        widgets={
+                  'id_gestor':forms.Select(attrs={'class':'form-control'}),
+                  'fecharegistro':forms.DateInput(attrs={'class':'form-control datetimepicker-input','type':'datetime-local','placeholder':'ingrese fecha'},format='%Y-%m-%d %H:%M'),
+                  'descripcion':forms.Textarea(attrs={'class':'form-control '}),
+        }
 class informacionComplementaria(forms.ModelForm):
     class Meta:
         model = InfoComplementaria

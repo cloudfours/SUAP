@@ -53,6 +53,16 @@ margin-bottom: 25px;
 .tamanio_icon_user{
 font-size: 25px;
 }
+.botones_info_seg{
+display: flex;
+flex-direction:row;
+justify-content: center;
+align-items: center;
+}
+.boton{
+    margin-left: 5px;
+    margin-top: 29px;
+}
 @media screen and (max-width: 768px){
 .icono_caja{
     left: 458px;

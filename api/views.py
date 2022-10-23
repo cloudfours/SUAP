@@ -233,9 +233,6 @@ def registrarCasoGestor(request):
                return redirect('busqueda') 
         else:
             if forma_persona.is_valid():
-                files_upload=request.FILES.getlist('formula_medica,adjunto_seg,adjunto_terc')
-                fs=FileSystemStorage()
-                fs.save(files_upload.name,files_upload)
                 forma_persona.save()
                 return redirect('perfil')
     else:
