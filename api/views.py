@@ -272,6 +272,53 @@ def seguimientoGestor(request):
         else:
             seguimientoForm=seguimientoFormulario()
     return render(request,'Gestor/seguimientoGestor.html',{'seguimientoForm':seguimientoForm})
+
+
+
+@login_required
+def editarInfo(request,id):
+
+      try:
+        complementaria=InfoComplementaria.objects.get(pk=id)
+        if request.method == 'GET':
+                forma_persona = informacionComplementaria(instance=complementaria)
+        else:
+                forma_persona = informacionComplementaria(request.POST,request.FILES,instance=complementaria)
+                
+                # files=request.FILES.getlist('formula_medica')
+                if forma_persona.is_valid(): 
+                    forma_persona.save()
+                    messages.add_message(request, messages.SUCCESS, message='Se ha editado con exito')
+                    return redirect('busqueda')
+                else:
+                   messages.add_message(request, messages.ERROR, message='LLENE LOS CAMPOS FALTANTES')
+      except AttributeError as e:
+                   print(e)
+               
+
+      return render(request,'Gestor/editarinfoco.html',{'forma_persona':forma_persona,'complementaria':complementaria})
+  
+@login_required
+def editarSegui(request,id):
+      try:
+        seguimiento=Seguimiento.objects.get(pk=id)
+        if request.method == 'GET':
+                forma_persona = seguimientoFormulario(instance=seguimiento)
+        else:
+                forma_persona = seguimientoFormulario(request.POST,request.FILES,instance=seguimiento)
+                
+                # files=request.FILES.getlist('formula_medica')
+                if forma_persona.is_valid(): 
+                    forma_persona.save()
+                    messages.add_message(request, messages.SUCCESS, message='Se ha editado con exito')
+                    return redirect('busqueda')
+                else:
+                   messages.add_message(request, messages.ERROR, message='LLENE LOS CAMPOS FALTANTES')
+      except AttributeError as e:
+                   print(e)
+               
+
+      return render(request,'Gestor/editarsegui.html',{'forma_persona':forma_persona,'seguimiento':seguimiento})
 #  try:
 #         persona = DatosUsuario.objects.get(pk=id)
 #         if request.method == 'GET':

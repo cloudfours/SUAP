@@ -79,14 +79,14 @@
             <td>{{caso.id_usuario.id_eps.nombre}}</td>
             <td>{{caso.estado.nombreestado}}</td>
     
-            <td><a><i class="fa-solid fa-file icons_tabla"></i></a></td>
-            <td><a><i class="fa-solid fa-right-to-bracket icons_tabla"></i></a></td>
+            <td><button type='button' class='bg-transparent w-25'  onclick="abrir_moda_info('{% url 'editarInfo' caso.id_comple_info %}')"><i class="fa-solid fa-file icons_tabla"></i></button></td>
+            <td><button  type='button'   class='bg-transparent w-25' onclick="abrir_moda_segui('{% url 'editarsegui' caso.id_seguimiento %}')"><i class="fa-solid fa-right-to-bracket icons_tabla"></i></button></td>
             <td><a><i class="fa-solid fa-file-pdf  icons_tabla"></i></a></td>
             <td><a href='{% url 'editarGestor' caso.id_caso %}'><i class="fa-solid fa-square-pen  icons_tabla"></i></a>
          
          
                
-                <button type='button' class='btn btn-block w-auto h-auto p-0 ' onclick="abrir_moda_delete('{% url 'eliminar' caso.id_caso %}')"><i class="fa-solid fa-trash-can  icons_tabla"></i></button>
+                <button type='button'  class='bg-transparent w-25' onclick="abrir_moda_delete('{% url 'eliminar' caso.id_caso %}')"><i class="fa-solid fa-trash-can  icons_tabla"></i></button>
           
                   
             </td>
@@ -158,6 +158,14 @@
 <div class="modal fade" id="modal_eliminar" role="dialog"  tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
    
       </div>
+      <div class="modal fade" id="modal_editar_segui" role="dialog"  tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+   
+    </div>
+  
+    <div class="modal fade" id="modal_editar_info" role="dialog"  tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+   
+    </div>
+  
     
 
 {% endfor %}
@@ -171,6 +179,20 @@
             var e;
   
              $('#modal_eliminar').load(url, function () {
+                 $(this).modal('show')
+             })
+         }
+         function abrir_moda_segui(url) {
+            var e;
+  
+             $('#modal_editar_segui').load(url, function () {
+                 $(this).modal('show')
+             })
+         }
+         function abrir_moda_info(url) {
+            var e;
+  
+             $('#modal_editar_info').load(url, function () {
                  $(this).modal('show')
              })
          }

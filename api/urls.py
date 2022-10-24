@@ -16,6 +16,8 @@ urlpatterns = [
  path('gestor-editar/<int:id>',editarCrudGestor,name='editarGestor'),
  path('gestorRegristocaso',registrarCasoGestor,name='registrarCasoGestor'),
  path('infoComplementaria/',informacionComplementarias,name='info'),
- path('seguimientoGestor/',seguimientoGestor,name='seguimientoGestor')
+ path('seguimientoGestor/',seguimientoGestor,name='seguimientoGestor'),
+ path('infoeditar/<int:id>',editarInfo,name='editarInfo'),
+path('seguimientoeditar/<int:id>',editarSegui,name='editarsegui')
 
 ]

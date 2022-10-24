@@ -23,7 +23,7 @@ class seguimientoFormulario(forms.ModelForm):
         widgets={
                    'id_seg':forms.NumberInput(attrs={'class':'form-control'}),
                   'id_gestor':forms.Select(attrs={'class':'form-control'}),
-                  'fecharegistro':forms.DateInput(attrs={'class':'form-control datetimepicker-input','type':'date','placeholder':'ingrese fecha'}),
+                  'fecharegistro':forms.DateInput(attrs={'class':'form-control datetimepicker-input','type':'date','placeholder':'ingrese fecha'},format='%Y-%m-%d'),
                   'descripcion':forms.Textarea(attrs={'class':'form-control '}),
         }
 class informacionComplementaria(forms.ModelForm):
