@@ -319,17 +319,8 @@ def editarSegui(request,id):
                
 
       return render(request,'Gestor/editarsegui.html',{'forma_persona':forma_persona,'seguimiento':seguimiento})
-#  try:
-#         persona = DatosUsuario.objects.get(pk=id)
-#         if request.method == 'GET':
-#             persona_form = datosuserFormEdit(instance=persona)
-#         else:
-#             persona_form = datosuserFormEdit(request.POST, instance=persona)
-
-#             if persona_form.is_valid():
-#                 persona_form.save()
-#                 return redirect('perfil')
-#             else:
-#                 messages.add_message(
-#                     request, messages.ERROR, message='Vuelva a intetarlo')
-#     except Exceptio
+  
+  
+@login_required
+def calendario_activdades(request):
+    return render(request,'Gestor/actividadestareas.html')

@@ -1,0 +1,72 @@
+{% extends 'informacion_paciente.html' %}
+{% block content %}
+<div class='caja_calendario'>
+<div id='calendar' class='calendario'>
+
+</div>
+</div>
+{% endblock %}
+{
+{% block js%}
+<script>
+  let modal = new bootstrap.Modal(document.getElementById('modal_actividades'))
+    document.addEventListener('DOMContentLoaded', function(){
+        let calendarUi = document.getElementById('calendar');
+        let calendar = new FullCalendar.Calendar(calendarUi,{
+         initialView:'dayGridMonth',
+         locale:'es',   
+         headerToolbar:{
+           left:'prev,next,today',
+           center:'title',
+           right:'dayGridMonth,timeGridWeek,listWeek'
+         },
+
+        });
+        calendar.render();
+    })
+
+</script>
+
+{% endblock %}
+{% block modal %}
+<div class="modal fade" id="modal_actividades" role="dialog"  tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Seguimiento del caso</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form method="POST" class='form-floating' name='registrarcaso' id='formulario'>
+         
+      <div class="modal-body">
+       <select id='gestor' class='form-control' placeholder='seleccione'>
+        <option></option>
+       </select>
+       <div>
+       <label>Actividad</label>
+       <input type='text' id='actvidad' class='form-control'/>
+       </div>
+       <div>
+        <label>Fecha registro</label>
+       <input class='form-control' placeholder='' type='date'/>
+       </div>
+       <div>
+        <label id='programada'>fecha programada</label>
+       <input type='datetime' id='fecha' class='form-control'/>
+       </div>
+       <div>
+        <label>Actividad</label>
+       <textarea class='form-control'type='text'/>
+       </div>
+            
+      </div>
+      <div class="modal-footer">
+        <input type="button" class="btn btn-secondary" data-bs-dismiss="modal" value='cancelar'/>
+        <input type="submit" class="btn btn-primary" value='confirmar'/>
+  
+      </div>
+    </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

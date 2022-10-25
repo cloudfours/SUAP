@@ -14,6 +14,7 @@ class Analista(models.Model):
 class AsignacionTarea(models.Model):
     id_gest = models.ForeignKey('GestorCaso', models.DO_NOTHING, db_column='id_gest', blank=True, null=True)
     actividad = models.CharField(max_length=40)
+    detalle= models.TextField(db_column='detalle',default='')
     fecha = models.DateTimeField()
     fech_registro = models.DateField()
 
