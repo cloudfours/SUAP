@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-
+from colorfield.fields import ColorField
 # se emigra todas las tablas y se convierten en modelos de clase como una plantilla
 class Analista(models.Model):
     analista_id = models.SmallAutoField(primary_key=True)
@@ -10,13 +10,6 @@ class Analista(models.Model):
 
  
 
-
-class AsignacionTarea(models.Model):
-    id_gest = models.ForeignKey('GestorCaso', models.DO_NOTHING, db_column='id_gest', blank=True, null=True)
-    actividad = models.CharField(max_length=40)
-    detalle= models.TextField(db_column='detalle',default='')
-    fecha = models.DateTimeField()
-    fech_registro = models.DateField()
 
 
 
@@ -187,6 +180,16 @@ class GestorCaso(models.Model):
 
     def __str__(self):
         return f'{self.id_datos_us.primer_nombre}'
+    
+    
+class AsignacionTarea(models.Model):
+    id_gest = models.ForeignKey(GestorCaso, models.DO_NOTHING, db_column='id_gest', blank=True, null=True)
+    actividad = models.CharField(max_length=40, blank=True, null=True)
+    detalle= models.TextField(db_column='detalle',default='')
+    fecha = models.DateTimeField()
+    fech_registro = models.DateField()
+    color = ColorField(default='#FFFFFF')
+
 
 class GestorFarmacia(models.Model):
     id_far = models.AutoField(primary_key=True)

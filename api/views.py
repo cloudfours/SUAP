@@ -1,4 +1,5 @@
 
+import json
 import math
 import random
 from urllib import response
@@ -6,7 +7,7 @@ from urllib import response
 from api.models import *
 from django.shortcuts import get_object_or_404, render, redirect
 from django.http import HttpResponseRedirect
-from .forms import datosuserForm, userRegister, datosuserFormEdit, CasosForm,EditarFormGestor,informacionComplementaria,seguimientoFormulario
+from .forms import datosuserForm, userRegister, datosuserFormEdit, CasosForm,EditarFormGestor,informacionComplementaria,seguimientoFormulario,AsignacionTareaForm
 from django.contrib import messages
 from django.urls import reverse_lazy
 from django.contrib.auth.models import User
@@ -314,7 +315,7 @@ def editarSegui(request,id):
                     return redirect('busqueda')
                 else:
                    messages.add_message(request, messages.ERROR, message='LLENE LOS CAMPOS FALTANTES')
-      except AttributeError as e:
+      except Exception as e:
                    print(e)
                
 
@@ -323,4 +324,26 @@ def editarSegui(request,id):
   
 @login_required
 def calendario_activdades(request):
-    return render(request,'Gestor/actividadestareas.html')
+    actividad = AsignacionTareaForm()
+    return render(request,'Gestor/actividadestareas.html',{'actividad':actividad})
+
+@login_required
+def guardar(request):
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        actividad = AsignacionTareaForm(request.POST)
+        if actividad.is_valid():
+            actividad.save()
+            
+        
+    return JsonResponse({'msg':'success'})   
+
+@login_required
+def obtener_gestor(_request):
+    gestor=list(GestorCaso.objects.values('id_datos_us'))
+    if len(gestor)>0:
+        data={'message':'exito','gestor':gestor}
+    else:
+        data={'message':'no encontrado'}
+        
+    return JsonResponse(data)
+    
