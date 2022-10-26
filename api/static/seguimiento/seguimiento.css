@@ -21,6 +21,48 @@ width: 100%;
     height: 53px;
     top: 13px;
 }
+.indicadores{
+display:flex;
+flex-direction: row;
+align-items: center;
+justify-content: center;
+margin-bottom: 25px;
+}
+.amarillo,.verde,.rojo{
+    width: 120px;
+    height: 120px;
+    margin: 0 5px;
+    position: relative;
+    left:90px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+ 
+}
+.amarillo{
+    background-color: #e2f94c;
+}
+.verde{
+    background-color: #17f640;
+}
+.rojo{
+    background-color: #fd1010;
+}
+.tamanio_icon_user{
+font-size: 25px;
+}
+.botones_info_seg{
+display: flex;
+flex-direction:row;
+justify-content: center;
+align-items: center;
+}
+.boton{
+    margin-left: 5px;
+    margin-top: 29px;
+}
 @media screen and (max-width: 768px){
 .icono_caja{
     left: 458px;

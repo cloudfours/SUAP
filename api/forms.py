@@ -1,3 +1,4 @@
+from dataclasses import fields
 from pyexpat import model
 from django import forms
 from .models import *
@@ -8,8 +9,48 @@ from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from .models import *
+class AsignacionTareaForm(forms.ModelForm):
+    
+     class Meta:
+         COLOR_CHOICES = ['#8b0000', '#ffff00', '#006400']
+         model=AsignacionTarea
+         fields=['id_gest','actividad','detalle','fecha','fech_registro','color']
+         labels={
+             'id_gest':'Nombre del gestor',
+             'actividad':'Actividad',
+             'detalle':'Detalle de la actividad',
+             'fecha':'Fecha',
+             'fech_registro':'Fecha de registro',
+             'color':'Color:'
+         }
+         widgets={
+                   'id_gest':forms.Select(attrs={'class':'form-control'}),
+                  'actividad':forms.TextInput(attrs={'class':'form-control'}),
+                  'fecha':forms.DateInput(attrs={'class':'form-control datetimepicker-input','type':'date','placeholder':'ingrese fecha'},format='%Y-%m-%d'),
+                  'fech_registro':forms.DateInput(attrs={'class':'form-control datetimepicker-input','type':'date','placeholder':'ingrese fecha'},format='%Y-%m-%d'),
+                  'detalle':forms.Textarea(attrs={'class':'form-control '}),
+                  'color':forms.TextInput(attrs={'class': 'form-control ','type':'color'})
+                 
+        }
+         
 # class DateTimePickerInput(forms.DateTimeInput):
 #         input_type = 'datetime'
+class seguimientoFormulario(forms.ModelForm):
+    class Meta:
+        model=Seguimiento
+        fields=['id_seg','id_gestor','fecharegistro','descripcion']
+        labels={
+            'id_seg':'seguimiento',
+            'id_gestor':'Nombre del gestor',
+            'fecharegistro':'Fecha de registro',
+            'descripcion':'Descripcion'
+        }
+        widgets={
+                   'id_seg':forms.NumberInput(attrs={'class':'form-control'}),
+                  'id_gestor':forms.Select(attrs={'class':'form-control'}),
+                  'fecharegistro':forms.DateInput(attrs={'class':'form-control datetimepicker-input','type':'date','placeholder':'ingrese fecha'},format='%Y-%m-%d'),
+                  'descripcion':forms.Textarea(attrs={'class':'form-control '}),
+        }
 class informacionComplementaria(forms.ModelForm):
     class Meta:
         model = InfoComplementaria

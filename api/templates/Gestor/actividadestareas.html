@@ -1,0 +1,98 @@
+{% extends 'informacion_paciente.html' %}
+{% block content %}
+<div class='caja_calendario'>
+<div id='calendario' class='calendario'>
+
+</div>
+</div>
+{% endblock %}
+
+{% block modal %}
+<div class="modal fade" id="myModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header bg-info">
+        <h4 class="modal-title">Actividad</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <form method="POST" class='form-floating' name='registrarcaso' id='formulario'>
+        {% csrf_token %}
+        <div class="modal-body">
+          {% for field in actividad %}
+        
+          <label  for="{{ field.name }}">{{ field.label }}</label>
+          {{ field }}
+    
+            {% endfor %}
+          
+        <div class="modal-footer">
+          <input type="button" class="btn btn-secondary" data-bs-dismiss="modal" value='cancelar'/>
+          <button type="submit"  class="btn btn-primary">guardar</button>
+          <input type="button" class="btn btn-warning" value='editar'/>
+          <input type="button" class="btn btn-danger" value='eliminar'/>
+    
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+{% block js %}
+<script type="text/javascript">
+  // let formData = new FormData();
+  // formData.append('title', $('#title').val().trim());
+  let formulario = document.getElementById('formulario')
+  formulario.addEventListener('submit', function (e) {
+    e.preventDefault()
+    const gestor = document.getElementById('id_id_gest').value
+    const actividad = document.getElementById('id_actividad').value;
+    const registro = document.getElementById('id_fech_registro').value;
+    const descripcion = document.getElementById('id_detalle').value;
+    if (gestor == '' || actividad == '' || registro == '' || descripcion == '') {
+      Swal.fire(
+        'Aviso', 'todos los campos son requeridos',
+        'warning'
+      )
+    } else {
+      const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;  
+  let request = $.ajax({
+    type: "POST",
+    headers:{'X-CSRFToken':csrftoken,
+    "X-Requested-With": "XMLHttpRequest"},
+    url: "{% url 'guardaractividad' %}",
+    dataType: 'json',
+    data:$('#formulario').serialize(),
+    success: function (data) {
+      if(data.msg=='success') {
+        Swal.fire(
+          'Aviso registro exitoso', data.msg,
+          'warning'
+        )  
+      }
+  }
+    
+  })
+  request.done(function(response) {
+    $('#myModal').modal('hide')
+     // Cierra el modal, oculta el identificador eliminado, etc.
+ });
+
+}
+  })
+ 
+  
+     
+  
+
+
+
+
+
+
+</script>
+{% endblock %}

@@ -1,11 +1,13 @@
 
+import json
 import math
 import random
+from urllib import response
 
 from api.models import *
 from django.shortcuts import get_object_or_404, render, redirect
 from django.http import HttpResponseRedirect
-from .forms import datosuserForm, userRegister, datosuserFormEdit, CasosForm,EditarFormGestor,informacionComplementaria
+from .forms import datosuserForm, userRegister, datosuserFormEdit, CasosForm,EditarFormGestor,informacionComplementaria,seguimientoFormulario,AsignacionTareaForm
 from django.contrib import messages
 from django.urls import reverse_lazy
 from django.contrib.auth.models import User
@@ -16,7 +18,7 @@ from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 import datetime
 from django.http import JsonResponse
-
+from django.core.files.storage import FileSystemStorage
 global usuario
 
 
@@ -173,21 +175,27 @@ def historial_casos(request):
 @login_required
 def gestorcrud(request):
     casos = Casos.objects.all()
-  
-    return render(request,'Gestor/gestorcrud.html',{'casos':casos})
+    abierto = Casos.objects.all().filter(estado__idestado=1).count()
+    proceso=Casos.objects.all().filter(estado__idestado=2).count()
+    finalizado=Casos.objects.all().filter(estado__idestado=3).count()
+    modal_status='eliminar'
+    return render(request,'Gestor/gestorcrud.html',{'casos':casos,'abierto':abierto,'proceso':proceso,'finalizado':finalizado,'modal_status':modal_status})
 
 @login_required
-def gestorCrudDelete(request):
-    try :
-        
-        id_caso = request.POST.get('caso.id_caso')
-    #   casos = Casos.objects.get(pk=request.POST['caso.id_caso'])
-        Casos.objects.filter(id_caso=id_caso).update(estado_pendiente='0')
-        response={
-            
-        }
-    except Casos.DoesNotExist as e:
-     print(e)
+def gestorCrudDelete(request,id):
+
+    casos=Casos.objects.get(pk=id)
+    print(casos)
+    return render(request,'Gestor/eliminarcaso.html',{'casos':casos})
+
+@login_required
+def ajax_eliminar(request):
+    id_caso = request.POST.get('id_caso')
+
+    Casos.objects.filter(id_caso=id_caso).update(estado_pendiente='0')
+  
+   
+    response={}
     return JsonResponse(response)
 
 @login_required
@@ -214,24 +222,27 @@ def editarCrudGestor(request,id):
 
 @login_required
 def registrarCasoGestor(request):
-    datos_usuario =  DatosUsuario.objects.get(login_id=request.user.id)
-    caso = Casos.objects.filter(id_usuario = datos_usuario.id_cedula).select_related('estado').filter(estado__idestado=Case(When(estado__nombreestado='abierto',then=Value(1)),When(estado__nombreestado='proceso',then=Value(2)))).count()
+    # datos_usuario =  DatosUsuario.objects.get(login_id=request.user.id)
+  
+    
     infocom = InfoComplementaria.objects.all().last()
+    segui = Seguimiento.objects.all().last()
     numeroradicado = math.floor(random.random()* 1000)
     forma_persona = EditarFormGestor(request.POST, request.FILES)
     if request.method == 'POST':
-        if caso>=1:
-               messages.add_message(request, messages.ERROR,message='No puede crear otro caso hasta que este finalice')
-               return redirect('caso') 
-        else:
             if forma_persona.is_valid():
-                key='prueba'
-                file=request.FILES.getlist('formula_medica,adjunto_seg,adjunto_terc')
-                
-                forma_persona.save()
-                return redirect('perfil')
+                forma_persona=forma_persona.save(commit=False)
+                caso = Casos.objects.filter(id_usuario = int(request.POST['id_usuario'])).select_related('estado').filter(estado__idestado=Case(When(estado__nombreestado='abierto',then=Value(1)),When(estado__nombreestado='proceso',then=Value(2)))).count()
+                if caso>=1:
+                    messages.add_message(request, messages.ERROR,message='este usuario que selecciono ya tiene un caso abierto')
+                    return redirect('registrarCasoGestor')
+                else:
+                    forma_persona.save()
+                    return redirect('busqueda')
+            else:
+                messages.add_message(request, messages.ERROR,message='Ingrese informacion complementaria y de seguimiento')
     else:
-            initial_data = {'estado':1,'fecharesgistrocaso':datetime.datetime.now(),'numeroradicado':numeroradicado,'id_comple_info':infocom}
+            initial_data = {'estado':1,'fecharesgistrocaso':datetime.datetime.now(),'numeroradicado':numeroradicado,'id_comple_info':infocom,'id_seguimiento':segui}
             forma_persona = EditarFormGestor(initial=initial_data)
     return render(request, 'Gestor/registroCasoGestor.html', {'forma_persona': forma_persona})
 
@@ -244,25 +255,95 @@ def informacionComplementarias(request):
         
         if forma_persona.is_valid():
             forma_persona = forma_persona.save()
-            messages.add_message(request,messages.ERROR,message='Se aguardo con exito')
+            messages.add_message(request,messages.SUCCESS,message='Se aguardo con exito')
             return redirect('registrarCasoGestor')
     else:
         forma_persona=informacionComplementaria()
     return render(request,'Gestor/informacionComplementaria.html',{'forma_persona':forma_persona})
             
             
+@login_required
+def seguimientoGestor(request):
+    seguimientoForm=seguimientoFormulario(request.POST) 
+    if request.method=='POST':
+        seguimientoForm=seguimientoFormulario(request.POST)
+        if seguimientoForm.is_valid():
+            seguimientoForm= seguimientoForm.save()
+            return redirect('registrarCasoGestor')
+        else:
+            seguimientoForm=seguimientoFormulario()
+    return render(request,'Gestor/seguimientoGestor.html',{'seguimientoForm':seguimientoForm})
 
-#  try:
-#         persona = DatosUsuario.objects.get(pk=id)
-#         if request.method == 'GET':
-#             persona_form = datosuserFormEdit(instance=persona)
-#         else:
-#             persona_form = datosuserFormEdit(request.POST, instance=persona)
 
-#             if persona_form.is_valid():
-#                 persona_form.save()
-#                 return redirect('perfil')
-#             else:
-#                 messages.add_message(
-#                     request, messages.ERROR, message='Vuelva a intetarlo')
-#     except Exceptio
+
+@login_required
+def editarInfo(request,id):
+
+      try:
+        complementaria=InfoComplementaria.objects.get(pk=id)
+        if request.method == 'GET':
+                forma_persona = informacionComplementaria(instance=complementaria)
+        else:
+                forma_persona = informacionComplementaria(request.POST,request.FILES,instance=complementaria)
+                
+                # files=request.FILES.getlist('formula_medica')
+                if forma_persona.is_valid(): 
+                    forma_persona.save()
+                    messages.add_message(request, messages.SUCCESS, message='Se ha editado con exito')
+                    return redirect('busqueda')
+                else:
+                   messages.add_message(request, messages.ERROR, message='LLENE LOS CAMPOS FALTANTES')
+      except AttributeError as e:
+                   print(e)
+               
+
+      return render(request,'Gestor/editarinfoco.html',{'forma_persona':forma_persona,'complementaria':complementaria})
+  
+@login_required
+def editarSegui(request,id):
+      try:
+        seguimiento=Seguimiento.objects.get(pk=id)
+        if request.method == 'GET':
+                forma_persona = seguimientoFormulario(instance=seguimiento)
+        else:
+                forma_persona = seguimientoFormulario(request.POST,request.FILES,instance=seguimiento)
+                
+                # files=request.FILES.getlist('formula_medica')
+                if forma_persona.is_valid(): 
+                    forma_persona.save()
+                    messages.add_message(request, messages.SUCCESS, message='Se ha editado con exito')
+                    return redirect('busqueda')
+                else:
+                   messages.add_message(request, messages.ERROR, message='LLENE LOS CAMPOS FALTANTES')
+      except Exception as e:
+                   print(e)
+               
+
+      return render(request,'Gestor/editarsegui.html',{'forma_persona':forma_persona,'seguimiento':seguimiento})
+  
+  
+@login_required
+def calendario_activdades(request):
+    actividad = AsignacionTareaForm()
+    return render(request,'Gestor/actividadestareas.html',{'actividad':actividad})
+
+@login_required
+def guardar(request):
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        actividad = AsignacionTareaForm(request.POST)
+        if actividad.is_valid():
+            actividad.save()
+            
+        
+    return JsonResponse({'msg':'success'})   
+
+@login_required
+def obtener_gestor(_request):
+    gestor=list(GestorCaso.objects.values('id_datos_us'))
+    if len(gestor)>0:
+        data={'message':'exito','gestor':gestor}
+    else:
+        data={'message':'no encontrado'}
+        
+    return JsonResponse(data)
+    

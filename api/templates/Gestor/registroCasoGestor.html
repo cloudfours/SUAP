@@ -60,11 +60,15 @@
     </div>
     
     <div class="files-editar">
-        <div>
+        <div class='botones_info_seg'>
+            <div>
         <label for="{{forma_persona.name}}">{{forma_persona.numeroradicado.label}}</label>
         {{forma_persona.numeroradicado}}
-        <input type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
+            </div>
+        <input type="button" class="btn btn-primary w-50 h-50 boton" data-bs-toggle="modal" data-bs-target="#exampleModal"
         onclick="abrir_moda_info('{% url 'info' %}')"value='Informacion complementaria'/> 
+        <input type="button" class="btn btn-primary w-50 h-50 boton" data-bs-toggle="modal" data-bs-target="#exampleModal"
+        onclick="abrir_moda_segui('{% url 'seguimientoGestor' %}')"value='Seguimiento del caso'/>
         </div>
         <div class='boton_caso'>
             <div>
@@ -89,9 +93,39 @@
     </div> 
     </form>
     </div>
-
+    {% for message in messages %}
+  {% if message.tags == 'error'%}
+  <script type=text/javascript>
+    $(document).ready(function(){
+        toastr.{{ message.tags }}('{{ message }}')
+     
+    })
+    toastr.options = {
+        "closeButton": false,
+        "debug": false,
+        "newestOnTop": false,
+        "progressBar": false,
+        "positionClass": "toast-top-full-width",
+        "preventDuplicates": false,
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "5000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+      }
+</script>
+   {% endif %}
+   {% endfor %}
+{% endblock %}
 {% block modal %}
 <div class="modal fade" id="infoCo" role="dialog"  tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+</div>
+<div class="modal fade" id="segui" role="dialog"  tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 
 </div>
 {% endblock%}
@@ -106,6 +140,12 @@
                 $(this).modal('show')
             })
         }
-
+        function abrir_moda_segui(url) {
+            let e;
+  
+             $('#segui').load(url, function () {
+                 $(this).modal('show')
+             })
+         }
     </script>
 {% endblock %}

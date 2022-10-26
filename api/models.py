@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-
+from colorfield.fields import ColorField
 # se emigra todas las tablas y se convierten en modelos de clase como una plantilla
 class Analista(models.Model):
     analista_id = models.SmallAutoField(primary_key=True)
@@ -10,12 +10,6 @@ class Analista(models.Model):
 
  
 
-
-class AsignacionTarea(models.Model):
-    id_gest = models.ForeignKey('GestorCaso', models.DO_NOTHING, db_column='id_gest', blank=True, null=True)
-    actividad = models.CharField(max_length=40)
-    fecha = models.DateTimeField()
-    fech_registro = models.DateField()
 
 
 
@@ -52,9 +46,9 @@ class Casos(models.Model):
 
     adjunto_seg = models.FileField(upload_to='%Y/%m/%d/')
     adjunto_terc = models.FileField(upload_to='%Y/%m/%d/')
-    id_comple_info = models.ForeignKey('InfoComplementaria', models.DO_NOTHING, db_column='id_comple_info', blank=True,
+    id_comple_info = models.OneToOneField('InfoComplementaria', models.DO_NOTHING, db_column='id_comple_info', blank=True,
                                        null=True)
-    id_seguimiento = models.ForeignKey('Seguimiento', models.DO_NOTHING, db_column='id_seguimiento')
+    id_seguimiento = models.OneToOneField('Seguimiento', models.DO_NOTHING, db_column='id_seguimiento')
     id_barrera = models.ForeignKey(BarreraAcceso, models.DO_NOTHING, db_column='id_barrera')
     class Estado_activo(models.TextChoices):
         activo='1',_('activo')
@@ -186,6 +180,16 @@ class GestorCaso(models.Model):
 
     def __str__(self):
         return f'{self.id_datos_us.primer_nombre}'
+    
+    
+class AsignacionTarea(models.Model):
+    id_gest = models.ForeignKey(GestorCaso, models.DO_NOTHING, db_column='id_gest', blank=True, null=True)
+    actividad = models.CharField(max_length=40, blank=True, null=True)
+    detalle= models.TextField(db_column='detalle',default='')
+    fecha = models.DateTimeField()
+    fech_registro = models.DateField()
+    color = models.CharField(max_length=7, default="#FFFFFF")
+
 
 class GestorFarmacia(models.Model):
     id_far = models.AutoField(primary_key=True)
@@ -328,7 +332,11 @@ class Reportes(models.Model):
 class Seguimiento(models.Model):
     id_seg = models.SmallAutoField(primary_key=True)
     id_gestor = models.ForeignKey(GestorCaso, models.DO_NOTHING, db_column='id_gestor')
+    fecharegistro = models.DateField(db_column='fechare', blank=True, null=True)
     descripcion = models.TextField()
+    
+    def __str__(self):
+        return f'{self.id_seg}'
 
     
 
