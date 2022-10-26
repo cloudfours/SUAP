@@ -29,7 +29,8 @@ class AsignacionTareaForm(forms.ModelForm):
                   'fecha':forms.DateInput(attrs={'class':'form-control datetimepicker-input','type':'date','placeholder':'ingrese fecha'},format='%Y-%m-%d'),
                   'fech_registro':forms.DateInput(attrs={'class':'form-control datetimepicker-input','type':'date','placeholder':'ingrese fecha'},format='%Y-%m-%d'),
                   'detalle':forms.Textarea(attrs={'class':'form-control '}),
-                  'color':forms.TextInput(attrs={"type": "color"})
+                  'color':forms.TextInput(attrs={'class': 'form-control ','type':'color'})
+                 
         }
          
 # class DateTimePickerInput(forms.DateTimeInput):
