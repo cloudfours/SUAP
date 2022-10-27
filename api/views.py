@@ -2,6 +2,7 @@
 import json
 import math
 import random
+from time import strftime
 from urllib import response
 
 from api.models import *
@@ -325,7 +326,8 @@ def editarSegui(request,id):
 @login_required
 def calendario_activdades(request):
     actividad = AsignacionTareaForm()
-    return render(request,'Gestor/actividadestareas.html',{'actividad':actividad})
+    fechas=AsignacionTarea.objects.values()
+    return render(request,'Gestor/actividadestareas.html',{'actividad':actividad,'fechas':fechas})
 
 @login_required
 def guardar(request):
@@ -337,13 +339,21 @@ def guardar(request):
         
     return JsonResponse({'msg':'success'})   
 
-@login_required
+
 def obtener_gestor(_request):
-    gestor=list(GestorCaso.objects.values('id_datos_us'))
-    if len(gestor)>0:
-        data={'message':'exito','gestor':gestor}
-    else:
-        data={'message':'no encontrado'}
+    gestor=AsignacionTarea.objects.all()
+    fechas =[]
+    for valor in gestor:
+        fechas.append({
+            'id_gest':1,
+            'actividad':valor.actividad,
+            'detalle':valor.detalle,
+            'fecha':valor.fecha.strftime('%Y-%m-%d'),
+            'fech_registro':valor.fech_registro.strftime('%Y-%m-%d'),
+            'color':valor.color,
+        })
+    print(fechas)
+  
         
-    return JsonResponse(data)
+    return JsonResponse(json.dumps(fechas), safe=False)
     

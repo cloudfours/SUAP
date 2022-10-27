@@ -186,7 +186,7 @@ class AsignacionTarea(models.Model):
     id_gest = models.ForeignKey(GestorCaso, models.DO_NOTHING, db_column='id_gest', blank=True, null=True)
     actividad = models.CharField(max_length=40, blank=True, null=True)
     detalle= models.TextField(db_column='detalle',default='')
-    fecha = models.DateTimeField()
+    fecha = models.DateField()
     fech_registro = models.DateField()
     color = models.CharField(max_length=7, default="#FFFFFF")
 

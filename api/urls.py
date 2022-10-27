@@ -20,7 +20,7 @@ urlpatterns = [
  path('infoeditar/<int:id>',editarInfo,name='editarInfo'),
 path('seguimientoeditar/<int:id>',editarSegui,name='editarsegui'),
 path('actividades/',calendario_activdades,name='actividades'),
-# path('obtenergestor/',obtener_gestor,name='gestor'),
+path('gestor/',obtener_gestor,name='gestor'),
 path('guardaractividad/',guardar,name='guardaractividad')
 
 ]
