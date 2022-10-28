@@ -1,45 +1,18 @@
-let modal = new bootstrap.Modal(document.getElementById('myModal'))
+// let insertar = new bootstrap.Modal(document.getElementById('myModal'))
+// function abrir(){
 
-// document.addEventListener('DOMContentLoaded', function () {
-//   let calendarUi = document.getElementById('calendario');
-//   let calendar = new FullCalendar.Calendar(calendarUi, {
-//     initialView: 'dayGridMonth',
-//     locale: 'es',
-//     headerToolbar: {
-//       left: 'prev,next,today',
-//       center: 'title',
-//       right: 'dayGridMonth,timeGridWeek,listWeek'
-//     },
-//     events:'/api/gestor/',
-//     dateClick: function (info) {
-//       document.getElementById('id_fecha').value = info.dateStr
-//       console.log(info.dateStr)
-//       modal.show()
-//     },
-   
-//   });
-//   calendar.render();
-
-// })
+//     insertar.modal('show');
 
 
-// const cargarfechas=async()=>{
- 
-//  let response= await fetch('/api/gestor/')
-//  let data = await  response.json()
-// return data
-
-  
 // }
-// // const cargarGestor =async()=>{
+$(document).ready(function () {
+  let table =$('#calendar').DataTable({"language": {
+      "url": "//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json"},
+      responsive:true,
+    
+    })
+  $('#calendar').DataTable();
 
 
-// //     request.done(function(response) {
-// //        window.location.reload()
-// //         modal.hidden()
-// //     });
-// //     }
 
-// window.addEventListener('load',async()=>{
-// await cargarfechas()
-// })
+})

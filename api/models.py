@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from colorfield.fields import ColorField
+from django.forms import model_to_dict
 # se emigra todas las tablas y se convierten en modelos de clase como una plantilla
 class Analista(models.Model):
     analista_id = models.SmallAutoField(primary_key=True)
@@ -190,7 +191,9 @@ class AsignacionTarea(models.Model):
     fech_registro = models.DateTimeField()
     color = models.CharField(max_length=7, default="#FFFFFF")
 
-
+    def toJSON(self):
+        item = model_to_dict(self)
+        return item
 class GestorFarmacia(models.Model):
     id_far = models.AutoField(primary_key=True)
     nombrefarmacia = models.CharField(db_column='nombreFarmacia', max_length=40)  # Field name made lowercase.

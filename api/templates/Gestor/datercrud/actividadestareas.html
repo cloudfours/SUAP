@@ -1,0 +1,175 @@
+{% extends 'informacion_paciente.html' %}
+{% block content %}
+<div class='caja_calendario'>
+  <input type='button' class='btn btn-primary' onclick='abrir()' value='Crear tarea'/>
+  <div class='container'>
+    <div class='row'>
+      <div class='col-lg-12'>
+        <table id="calendar" class="table table-bordered display nowrap" cellspacing="0" style="width:100%">
+          <thead class='bg-primary bg-gradient'>
+              <tr>
+                  <th class='text-light'>nombre del gestor</th>
+                  <th class='text-light'>actividad</th>
+                  <th class='text-light'>fecha programada</th>
+                  <th class='text-light'>fecha de registro</th>
+                  <th class='text-light'>Detalle de la actividad</th>
+                  <th class='text-light'>Editar actividad</th>
+                  <th class='text-light'>Eliminar</th>
+                 
+              </tr>
+          </thead>
+          <tbody>
+              {% for fecha in fechas%}
+               {% if fecha %}
+              <tr class='shadow-sm p-3 mb-5 bg-body rounded'>
+                  <td>{{fecha.id_gest.id_datos_us.primer_nombre}}</td>
+                  <td>{{fecha.actividad}}</td>
+                  <td>{{fecha.fecha}} </td>
+                  <td>{{fecha.fech_registro}} </td>
+                 
+                  <td><button type='button' class='bg-transparent w-25'  onclick="abrir_moda_info('{% url 'mostraractividad' fecha.id %}')"><i class="fa-solid fa-file icons_tabla"></i></button></td>
+                  <td><button  type='button'   class='bg-transparent w-25' ><i class="fa-solid fa-right-to-bracket icons_tabla"></i></button></td>
+                
+                  <td><a><i class="fa-solid fa-square-pen  icons_tabla"></i></a>
+               
+               
+                     
+                      <button type='button'  class='bg-transparent w-25' ><i class="fa-solid fa-trash-can  icons_tabla"></i></button>
+                
+                        
+                  </td>
+            
+              </tr>
+              
+           
+              {% endif %}
+           {% endfor %}
+         
+          </tbody>
+          <tfoot>
+              <tr>
+                <th class='text-dark'>nombre del gestor</th>
+                <th class='text-dark'>actividad</th>
+                <th class='text-dark'>fecha programada</th>
+                <th class='text-dark'>fecha de registro</th>
+                <th class='text-dark'>Detalle de la actividad</th>
+                <th class='text-dark'>Editar actividad</th>
+                <th class='text-dark'>Eliminar</th>
+              </tr>
+          </tfoot>
+      </table>
+      </div>
+    </div>
+  </div>
+ 
+</div>
+
+ 
+</div>
+{% endblock %}
+{% block modal_actividades%}
+<div class="modal fade" id="mostrar" role="dialog"  tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+   
+</div>
+
+{% endblock %}
+{% block modal %}
+<div class="modal fade" id="myModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header bg-info">
+        <h4 class="modal-title">Actividad</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <form method="POST" class='form-floating' name='registrarcaso' id='formulario'>
+        {% csrf_token %}
+        <div class="modal-body">
+          {% for field in actividad %}
+        
+          <label  for="{{ field.name }}">{{ field.label }}</label>
+          {{ field }}
+    
+            {% endfor %}
+          
+        <div class="modal-footer">
+          <input type="button" class="btn btn-secondary" data-bs-dismiss="modal" value='cancelar'/>
+          <button type="submit"  class="btn btn-primary">guardar</button>
+          <input type="button" class="btn btn-warning" value='editar'/>
+          <input type="button" class="btn btn-danger" value='eliminar'/>
+    
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+{% block js %}
+<script type="text/javascript">
+  // let formData = new FormData();
+  // formData.append('title', $('#title').val().trim());
+  let formulario = document.getElementById('formulario')
+  formulario.addEventListener('submit', function (e) {
+    e.preventDefault()
+    const gestor = document.getElementById('id_id_gest').value
+    const actividad = document.getElementById('id_actividad').value;
+    const registro = document.getElementById('id_fech_registro').value;
+    const descripcion = document.getElementById('id_detalle').value;
+    if (gestor == '' || actividad == '' || registro == '' || descripcion == '') {
+      Swal.fire(
+        'Aviso', 'todos los campos son requeridos',
+        'warning'
+      )
+    } else {
+      const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;  
+  let request = $.ajax({
+    type: "POST",
+    headers:{'X-CSRFToken':csrftoken,
+    "X-Requested-With": "XMLHttpRequest"},
+    url: "{% url 'guardaractividad' %}",
+    dataType: 'json',
+    data:$('#formulario').serialize(),
+    success: function (data) {
+      if(data.msg=='success') {
+        Swal.fire(
+          'Aviso registro exitoso', data.msg,
+          'warning'
+        )  
+      }
+  }
+    
+  })
+  request.done(function(response) {
+    $('#myModal').modal('hide')
+    window.location.reload()
+     // Cierra el modal, oculta el identificador eliminado, etc.
+ });
+
+}
+
+  })
+  function abrir_moda_info(url) {
+    let e;
+  
+     $('#mostrar').load(url, function () {
+         $(this).modal('show')
+     })
+    } 
+  
+     
+  
+  
+
+
+
+function abrir(){
+  $('#myModal').modal('show');
+}
+
+
+</script>
+{% endblock %}

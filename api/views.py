@@ -326,8 +326,8 @@ def editarSegui(request,id):
 @login_required
 def calendario_activdades(request):
     actividad = AsignacionTareaForm()
-    fechas=AsignacionTarea.objects.values()
-    return render(request,'Gestor/actividadestareas.html',{'actividad':actividad,'fechas':fechas})
+    fechas=AsignacionTarea.objects.all()
+    return render(request,'Gestor/datercrud/actividadestareas.html',{'actividad':actividad,'fechas':fechas})
 
 @login_required
 def guardar(request):
@@ -340,20 +340,21 @@ def guardar(request):
     return JsonResponse({'msg':'success'})   
 
 
-def obtener_gestor(_request):
-    gestor=AsignacionTarea.objects.all()
-    fechas =[]
-    for valor in gestor:
-        fechas.append({
-            'id_gest':1,
-            'actividad':valor.actividad,
-            'detalle':valor.detalle,
-            'fecha':valor.fecha.strftime('%Y-%m-%d'),
-            'fech_registro':valor.fech_registro.strftime('%Y-%m-%d'),
-            'color':valor.color,
-        })
-    print(fechas)
+@login_required
+def mostrarinfo(request,id):
+    mostratinfodetalle=AsignacionTarea.objects.get(pk=id)
+    print(mostratinfodetalle)
+    return render(request,'Gestor/datercrud/mostrarmodalactividad.html',{'mostratinfodetalle':mostratinfodetalle})
+
+
+# def obtener_gestor(_request):
+#     gestor=AsignacionTarea.objects.all()
+#     success =[]
+#     for valor in gestor:
+#         success.append(valor)
+
+#     print(success)
   
         
-    return JsonResponse(json.dumps(fechas), safe=False)
+#     return JsonResponse(success, safe=False)
     
