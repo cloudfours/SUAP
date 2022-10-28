@@ -142,7 +142,7 @@ def registrarCaso(request):
                 forma_persona.save()
                 return redirect('perfil')
     else:
-            initial_data = {'id_usuario':datos_usuario.id_cedula,'estado':1,'fecharesgistrocaso':datetime.datetime.now(),'numeroradicado':numeroradicado}
+            initial_data = {'id_usuario':datos_usuario.id_cedula,'estado':1,'fecharesgistrocaso':datetime.datetime.now(),'numeroradicado':numeroradicado,'id_comple_info':9,'id_seguimiento':7}
             forma_persona = CasosForm(initial=initial_data)
     return render(request, 'registrarCaso.html', {'forma_persona': forma_persona})
 
@@ -325,28 +325,41 @@ def editarSegui(request,id):
   
 @login_required
 def calendario_activdades(request):
-    actividad = AsignacionTareaForm()
-    fechas=AsignacionTarea.objects.all()
-    return render(request,'Gestor/datercrud/actividadestareas.html',{'actividad':actividad,'fechas':fechas})
+   actividad = AsignacionTarea.objects.all()
+   return render(request,'Gestor/datercrud/actividadestareas.html',{'actividad':actividad})
 
 @login_required
 def guardar(request):
-    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        actividad = AsignacionTareaForm(request.POST)
-        if actividad.is_valid():
-            actividad.save()
-            
-        
-    return JsonResponse({'msg':'success'})   
-
+      actividad = AsignacionTareaForm()
+      if request.method == 'POST' and 'registrartarea' in request.POST:
+            actividad = AsignacionTareaForm(request.POST)
+            if actividad.is_valid():
+                actividad = actividad.save()
+                return redirect('actividades')
+            else:
+                 actividad = AsignacionTareaForm()
+      return render(request,'Gestor/datercrud/creartarea.html',{'actividad':actividad})
 
 @login_required
 def mostrarinfo(request,id):
     mostratinfodetalle=AsignacionTarea.objects.get(pk=id)
-    print(mostratinfodetalle)
+   
     return render(request,'Gestor/datercrud/mostrarmodalactividad.html',{'mostratinfodetalle':mostratinfodetalle})
 
-
+@login_required
+def editaractividad(request,id):
+    mostratinfodetalle=AsignacionTarea.objects.get(pk=id)
+    if request.method=='GET':
+        actividad = AsignacionTareaForm(instance=mostratinfodetalle)
+    else:
+        actividad=AsignacionTareaForm(request.POST,instance=mostratinfodetalle)
+        if actividad.is_valid():
+            actividad = actividad.save()
+            messages.add_message(request, messages.SUCCESS, message='Se ha editado con exito')
+            return redirect('actividades')
+        else:
+              messages.add_message(request, messages.ERROR, message='LLENE LOS CAMPOS FALTANTES')
+    return render(request, 'Gestor/datercrud/editaractividadmodal.html',{'actividad':actividad,'mostrarinfodetalle':mostratinfodetalle})
 # def obtener_gestor(_request):
 #     gestor=AsignacionTarea.objects.all()
 #     success =[]

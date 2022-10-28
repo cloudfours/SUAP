@@ -49,7 +49,7 @@ class Casos(models.Model):
     adjunto_terc = models.FileField(upload_to='%Y/%m/%d/')
     id_comple_info = models.OneToOneField('InfoComplementaria', models.DO_NOTHING, db_column='id_comple_info', blank=True,
                                        null=True)
-    id_seguimiento = models.OneToOneField('Seguimiento', models.DO_NOTHING, db_column='id_seguimiento')
+    id_seguimiento = models.OneToOneField('Seguimiento', models.DO_NOTHING, db_column='id_seguimiento',blank=True, null=True)
     id_barrera = models.ForeignKey(BarreraAcceso, models.DO_NOTHING, db_column='id_barrera')
     class Estado_activo(models.TextChoices):
         activo='1',_('activo')
@@ -185,6 +185,7 @@ class GestorCaso(models.Model):
     
 class AsignacionTarea(models.Model):
     id_gest = models.ForeignKey(GestorCaso, models.DO_NOTHING, db_column='id_gest', blank=True, null=True)
+    asginacion = models.CharField(max_length=255,blank=True,null=True)
     actividad = models.CharField(max_length=40, blank=True, null=True)
     detalle= models.TextField(db_column='detalle',default='')
     fecha = models.DateTimeField()
@@ -223,21 +224,21 @@ class IndicadoresGestion(models.Model):
 
 class InfoComplementaria(models.Model):
     id_comple = models.SmallAutoField(primary_key=True)
-    gestor_farma = models.ForeignKey(GestorFarmacia, models.DO_NOTHING, db_column='gestor_farma')
-    terapia = models.ForeignKey('Terapia', models.DO_NOTHING, db_column='terapia')
+    gestor_farma = models.ForeignKey(GestorFarmacia, models.DO_NOTHING, db_column='gestor_farma',blank=True, null=True)
+    terapia = models.ForeignKey('Terapia', models.DO_NOTHING, db_column='terapia',blank=True, null=True)
     otra_terapia = models.CharField(max_length=50, blank=True, null=True)
     tipo_req = models.ForeignKey('TipReq', models.DO_NOTHING, db_column='tipo_req', blank=True, null=True)
     clasificacion_pbs = models.ForeignKey(ClasificacionPbs, models.DO_NOTHING ,blank=True, null=True)
     medico_trat = models.CharField(max_length=40)
-    especialidad_med = models.ForeignKey(EspecialidadMed, models.DO_NOTHING, db_column='especialidad_med')
+    especialidad_med = models.ForeignKey(EspecialidadMed, models.DO_NOTHING, db_column='especialidad_med',blank=True, null=True)
     segunda_barrera = models.CharField(max_length=40)
-    fech_rad_for_eps = models.DateTimeField(db_column='fech_rad_for_EPS')  # Field name made lowercase.
-    fecha_for_medi = models.DateTimeField()
-    fecha_aut = models.DateTimeField()
-    fech_rad_aut_farm = models.DateTimeField()
-    fecha_entrega = models.DateTimeField()
+    fech_rad_for_eps = models.DateTimeField(db_column='fech_rad_for_EPS',blank=True, null=True)  # Field name made lowercase.
+    fecha_for_medi = models.DateTimeField(blank=True, null=True)
+    fecha_aut = models.DateTimeField(blank=True, null=True)
+    fech_rad_aut_farm = models.DateTimeField(blank=True, null=True)
+    fecha_entrega = models.DateTimeField(blank=True, null=True)
     origen_soli = models.CharField(max_length=40)
-    ips_id_terapia = models.ForeignKey('Ips', models.DO_NOTHING, db_column='ips_id_terapia')
+    ips_id_terapia = models.ForeignKey('Ips', models.DO_NOTHING, db_column='ips_id_terapia',blank=True, null=True)
     def __str__(self):
         return f'{self.id_comple}'
 
@@ -334,9 +335,9 @@ class Reportes(models.Model):
 
 class Seguimiento(models.Model):
     id_seg = models.SmallAutoField(primary_key=True)
-    id_gestor = models.ForeignKey(GestorCaso, models.DO_NOTHING, db_column='id_gestor')
+    id_gestor = models.ForeignKey(GestorCaso, models.DO_NOTHING, db_column='id_gestor', blank=True, null=True)
     fecharegistro = models.DateField(db_column='fechare', blank=True, null=True)
-    descripcion = models.TextField()
+    descripcion = models.TextField(default='escriba')
     
     def __str__(self):
         return f'{self.id_seg}'

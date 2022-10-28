@@ -78,7 +78,7 @@
             <td>{{caso.enfermedad.nombreenfermedad}}</td>
             <td>{{caso.id_usuario.id_eps.nombre}}</td>
             <td>{{caso.estado.nombreestado}}</td>
-    
+             
             <td><button type='button' class='bg-transparent w-25'  onclick="abrir_moda_info('{% url 'editarInfo' caso.id_comple_info %}')"><i class="fa-solid fa-file icons_tabla"></i></button></td>
             <td><button  type='button'   class='bg-transparent w-25' onclick="abrir_moda_segui('{% url 'editarsegui' caso.id_seguimiento %}')"><i class="fa-solid fa-right-to-bracket icons_tabla"></i></button></td>
             <td><a><i class="fa-solid fa-file-pdf  icons_tabla"></i></a></td>

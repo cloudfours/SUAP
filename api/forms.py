@@ -12,16 +12,18 @@ from .models import *
 class AsignacionTareaForm(forms.ModelForm):
     
      class Meta:
-         COLOR_CHOICES = ['#8b0000', '#ffff00', '#006400']
+   
          model=AsignacionTarea
-         fields=['id_gest','actividad','detalle','fecha','fech_registro','color']
+         fields=['id_gest','actividad','detalle','fecha','fech_registro','color','asginacion']
          labels={
              'id_gest':'Nombre del gestor',
              'actividad':'Actividad',
              'detalle':'Detalle de la actividad',
              'fecha':'Fecha',
              'fech_registro':'Fecha de registro',
-             'color':'Color:'
+             'color':'Color:',
+             'asginacion':'Quien lo asigna'
+             
          }
          widgets={
                    'id_gest':forms.Select(attrs={'class':'form-control'}),
@@ -29,7 +31,9 @@ class AsignacionTareaForm(forms.ModelForm):
                   'fecha':forms.DateInput(attrs={'class':'form-control datetimepicker-input','type':'date','placeholder':'ingrese fecha'},format='%Y-%m-%d'),
                   'fech_registro':forms.DateInput(attrs={'class':'form-control datetimepicker-input','type':'date','placeholder':'ingrese fecha'},format='%Y-%m-%d'),
                   'detalle':forms.Textarea(attrs={'class':'form-control '}),
-                  'color':forms.TextInput(attrs={'class': 'form-control ','type':'color'})
+                  'color':forms.TextInput(attrs={'class': 'form-control ','type':'color'}),
+                  'asginacion':forms.TextInput(attrs={'class':'form-control '}),
+                  
                  
         }
          
@@ -162,7 +166,7 @@ class CasosForm(forms.ModelForm):
         model=Casos
         fields =['id_usuario','numeroradicado','descripcioncaso'
                  ,'enfermedad','fechaatencioneps','formula_medica','estado','fecharesgistrocaso'
-                ,'id_barrera']
+                ,'id_barrera','id_seguimiento','id_comple_info']
         labels={
             # 'id_caso':'Caso',
             'id_usuario':'Usuario',

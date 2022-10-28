@@ -5,3 +5,5 @@ from .models import *
 admin.site.register(DatosUsuario)
 admin.site.register(Pais)
 admin.site.register(TipoDocumento)
+admin.site.register(InfoComplementaria)
+admin.site.register(Seguimiento)

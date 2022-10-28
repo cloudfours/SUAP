@@ -21,6 +21,7 @@ urlpatterns = [
 path('seguimientoeditar/<int:id>',editarSegui,name='editarsegui'),
 path('actividades/',calendario_activdades,name='actividades'),
 path('mostraractividad/<int:id>',mostrarinfo,name='mostraractividad'),
-path('guardaractividad/',guardar,name='guardaractividad')
+path('guardaractividad/',guardar,name='guardaractividad'),
+path('editaractividad/<int:id>',editaractividad,name='editaractividad'),
 
 ]
