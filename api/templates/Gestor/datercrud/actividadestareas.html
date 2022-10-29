@@ -36,7 +36,7 @@
                
                
                      
-                      <button type='button'  class='bg-transparent w-25' ><i class="fa-solid fa-trash-can  icons_tabla"></i></button>
+                      <button type='button'  class='bg-transparent w-25'  onclick="eliminar('{% url 'eliminaractividad' fecha.id %}')"><i class="fa-solid fa-trash-can  icons_tabla"></i></button>
                 
                         
                   </td>
@@ -67,8 +67,35 @@
  
 </div>
 
- 
+{% for message in messages %}
+  {% if message.tags == 'success'%}
+  <script type=text/javascript>
+    $(document).ready(function(){
+        toastr.{{ message.tags }}('{{ message }}')
+     
+    })
+    toastr.options = {
+        "closeButton": false,
+        "debug": false,
+        "newestOnTop": false,
+        "progressBar": true,
+        "positionClass": "toast-top-center",
+        "preventDuplicates": false,
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "5000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+      }   
+</script>
+   {% endif %}
+   {% endfor %} 
 </div>
+
 {% endblock %}
 
 {% block modal %}
@@ -151,6 +178,13 @@
            $(this).modal('show')
        })
       } 
+      function eliminar(url) {
+        let e;
+      
+         $('#eliminar').load(url, function () {
+             $(this).modal('show')
+         })
+        } 
     
        
   

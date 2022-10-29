@@ -303,3 +303,9 @@ class userRegister(UserCreationForm):
     class Meta:
         model = User
         fields = ('username', 'email', 'password1', 'password2',)
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        qs = User.objects.filter(email=email)
+        if qs.exists():
+            raise forms.ValidationError("La direccion email ya existe")
+        return email

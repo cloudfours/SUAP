@@ -89,7 +89,7 @@ class perfilUsuarioRegistro(CreateView):
 
 
 def validar_grupo(user):
-    return user.groups.filter(name__in=['Analista', 'Gestor', 'Paciente']).exists()
+    return user.groups.filter(name__in=['Administrador','Analista', 'Gestor', 'Paciente']).exists()
 
 
 def logear(request):
@@ -98,7 +98,7 @@ def logear(request):
         password = request.POST.get('password')
         user = authenticate(request, username=username, password=password)
         print(username)
-
+     
         if not user:
             messages.add_message(request, messages.ERROR,
                                  message='contraseña errada o usuario errado')
@@ -371,3 +371,22 @@ def editaractividad(request,id):
         
 #     return JsonResponse(success, safe=False)
     
+@login_required
+def actividadCrudDelete(request,id):
+
+    asig=AsignacionTarea.objects.get(pk=id)
+    print(asig)
+    return render(request,'Gestor/datercrud/eliminaractividad.html',{'asig':asig})
+
+@login_required
+def ajax_eliminaractividad(request):
+    id = request.POST.get('id')
+
+    AsignacionTarea.objects.filter(id=id).update(estado_pendiente='0')
+  
+   
+    response={}
+    return JsonResponse(response)
+
+def entrada(request):
+    return render(request,'entrada.html')

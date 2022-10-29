@@ -9,13 +9,13 @@
       <div class="modal-body">
         <div class="modal-lg d-flex flex-wrap flex-row">
         
-      <h4>¿Estas seguro de eliminar el caso {{casos.id_caso}}?</h4>
+      <h4>¿Estas seguro de eliminar el caso {{asig.id}}?</h4>
  
 </div>
       </div>
       <div class="modal-footer">
         <input type="button" class="btn btn-secondary" data-bs-dismiss="modal" value='cancelar'/>
-        <input type='button' onclick="eliminarIdentificador('{{casos.id_caso}}')" class="btn btn-danger" id='cargar' value='Eliminar'/>
+        <input type='button' onclick="eliminarIdentificador('{{asig.id}}')" class="btn btn-danger" id='cargar' value='Eliminar'/>
       </div>
     </form>
     </div>
@@ -26,13 +26,13 @@
     cargar.addEventListener('click', function(e) {
         window.location.reload()
     }) {% endcomment %}
-    function eliminarIdentificador(id_caso) {
+    function eliminarIdentificador(id) {
         var request = $.ajax({
             type: "POST",
-            url: "{% url 'ajaxeliminar' %}",
+            url: "{% url 'ajax_eliminaractividad' %}",
             data: {
                 "csrfmiddlewaretoken": "{{ csrf_token }}",
-                "id_caso": id_caso,                    
+                "id": id,                    
             },
         });
         request.done(function(response) {

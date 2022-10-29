@@ -23,5 +23,7 @@ path('actividades/',calendario_activdades,name='actividades'),
 path('mostraractividad/<int:id>',mostrarinfo,name='mostraractividad'),
 path('guardaractividad/',guardar,name='guardaractividad'),
 path('editaractividad/<int:id>',editaractividad,name='editaractividad'),
+path('eliminaractividad/<int:id>',actividadCrudDelete,name='eliminaractividad'),
+path('ajax_eliminaractividad/',ajax_eliminaractividad,name='ajax_eliminaractividad'),
 
 ]

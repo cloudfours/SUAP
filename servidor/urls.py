@@ -13,13 +13,14 @@ handler404=page_not_found
 
 app_name = 'api'
 urlpatterns = [
-    path('admin/',admin.site.urls),
-    path('',logear,name='login'),
+    path('admin/',admin.site.urls,name='administrador'),
+    path('usuario/',logear,name='login'),
     path('log_out/',log_out,name='log_out'),
     path('api/',include('api.urls')),
 
     path('registrar/',perfilUsuarioRegistro.as_view(),name='registrar'),
-    path('estruc/',perfiluser,name='estruc')
+    path('estruc/',perfiluser,name='estruc'),
+    path('',entrada,name='entrada')
 ]
 if settings.DEBUG: 
     urlpatterns += static(

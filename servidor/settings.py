@@ -33,6 +33,7 @@ LOGOUT_REDIRECT_URL='api/usuarioPorcorreo.html'
 # Application definition
 
 INSTALLED_APPS = [
+    'admin_interface',
     'whitenoise.runserver_nostatic',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -42,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'api',
     'colorfield',
+  
     
   
    

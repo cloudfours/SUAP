@@ -191,6 +191,10 @@ class AsignacionTarea(models.Model):
     fecha = models.DateTimeField()
     fech_registro = models.DateTimeField()
     color = models.CharField(max_length=7, default="#FFFFFF")
+    class Estado_activo_actividad(models.TextChoices):
+            activo='1',_('activo')
+            inactivo='0',_('inactivo')
+    estado_pendiente=models.CharField(max_length=8,choices=Estado_activo_actividad.choices,default=Estado_activo_actividad.activo)
 
     def toJSON(self):
         item = model_to_dict(self)
