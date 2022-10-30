@@ -9,6 +9,22 @@ from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from .models import *
+class EnviarCorreos(forms.ModelForm):
+    class Meta:
+        model=MensajesCorreo
+        fields=['para','asunto','mensaje','adjunto']
+        labels={
+            'para':'Para',
+            'asunto':'Asunto',
+            'mensaje':'Mensaje',
+            'adjunto':'Adjunto',
+        }
+        widgets={
+               'para':forms.TextInput(attrs={'class':'form-control'}),
+                'asunto':forms.TextInput(attrs={'class':'form-control'}),
+               'mensaje':forms.Textarea(attrs={'class':'form-control'}),
+               'adjunto':forms.FileInput(attrs={'class':'form-control','multiple':True})
+        }
 class AsignacionTareaForm(forms.ModelForm):
     
      class Meta:
@@ -28,8 +44,8 @@ class AsignacionTareaForm(forms.ModelForm):
          widgets={
                    'id_gest':forms.Select(attrs={'class':'form-control'}),
                   'actividad':forms.TextInput(attrs={'class':'form-control'}),
-                  'fecha':forms.DateInput(attrs={'class':'form-control datetimepicker-input','type':'date','placeholder':'ingrese fecha'},format='%Y-%m-%d'),
-                  'fech_registro':forms.DateInput(attrs={'class':'form-control datetimepicker-input','type':'date','placeholder':'ingrese fecha'},format='%Y-%m-%d'),
+                  'fecha':forms.DateInput(attrs={'class':'form-control datetimepicker-input','type':'datetime-local','placeholder':'ingrese fecha','required':False},format='%Y-%m-%d %H:%M'),
+                  'fech_registro':forms.DateInput(attrs={'class':'form-control datetimepicker-input','type':'datetime-local','placeholder':'ingrese fecha','required':False},format='%Y-%m-%d %H:%M'),
                   'detalle':forms.Textarea(attrs={'class':'form-control '}),
                   'color':forms.TextInput(attrs={'class': 'form-control ','type':'color'}),
                   'asginacion':forms.TextInput(attrs={'class':'form-control '}),
@@ -100,11 +116,13 @@ class informacionComplementaria(forms.ModelForm):
 class EditarFormGestor(forms.ModelForm):
     def __init__(self,*args,**kwargs):
         super().__init__(*args,**kwargs)
-        self.fields['id_comple_info'].required=False
-        self.fields['id_seguimiento'].required=False
+
         self.fields['fechaatenfinalizado'].required=False
         self.fields['fechaatenabierto'].required=False
         self.fields['fechaatenproceso'].required=False
+        self.fields['formula_medica'].required=False
+        self.fields['adjunto_seg'].required=False
+        self.fields['adjunto_terc'].required=False
        
     class Meta:
         model=Casos
@@ -166,7 +184,7 @@ class CasosForm(forms.ModelForm):
         model=Casos
         fields =['id_usuario','numeroradicado','descripcioncaso'
                  ,'enfermedad','fechaatencioneps','formula_medica','estado','fecharesgistrocaso'
-                ,'id_barrera','id_seguimiento','id_comple_info']
+                ,'id_barrera']
         labels={
             # 'id_caso':'Caso',
             'id_usuario':'Usuario',

@@ -25,5 +25,9 @@ path('guardaractividad/',guardar,name='guardaractividad'),
 path('editaractividad/<int:id>',editaractividad,name='editaractividad'),
 path('eliminaractividad/<int:id>',actividadCrudDelete,name='eliminaractividad'),
 path('ajax_eliminaractividad/',ajax_eliminaractividad,name='ajax_eliminaractividad'),
-
+path('infocreareditar/',informacionComplementariasCrear,name='infocreareditar'),
+path('seguicreareditar/',seguimientoGestor_creareditar,name='seguicreareditar'),
+path('enviarajaxinfo/',info_co_post_ajax,name='infoajax'),
+path('enviarajaxsegui/',segui_co_post_ajax,name='seguioajax'),
+path('enviarcorreos/',correo,name='correo')
 ]

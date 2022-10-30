@@ -1,0 +1,26 @@
+{% extends 'informacion_paciente.html' %}
+{% block content %}
+<div class='caja_seguimiento'>
+    <h3>Enviar Correo</h3>
+    <form method="POST" action="" enctype='multipart/form'>
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="exampleFormControlInput1" class="form-label">Para</label>
+            <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com" name='para'>
+          </div>
+          <div class="mb-3">
+            <label for="exampleFormControlInput1" class="form-label">Asunto</label>
+            <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Asunto" name='asunto'>
+          </div>
+          <div class="mb-3">
+            <label for="exampleFormControlTextarea1" class="form-label">Mensaje</label>
+            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name='mensaje'></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="formFileMultiple" class="form-label">Adjuntar</label>
+            <input class="form-control" type="file" id="formFileMultiple" name='adjunto'>
+          </div>
+          <input type='submit' class="btn btn-primary" value='enviar'/>
+    </form>
+</div>
+{% endblock %}

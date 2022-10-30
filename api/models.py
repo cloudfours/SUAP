@@ -43,10 +43,10 @@ class Casos(models.Model):
     fechaatenabierto = models.DateTimeField(db_column='fechaAtenAbierto', 
                                             null=True)  # Field name made lowercase.
     hora = models.TimeField( null=True)
-    formula_medica = models.FileField(upload_to='%Y/%m/%d/')
+    formula_medica = models.FileField(upload_to='uploads')
 
-    adjunto_seg = models.FileField(upload_to='%Y/%m/%d/')
-    adjunto_terc = models.FileField(upload_to='%Y/%m/%d/')
+    adjunto_seg = models.FileField(upload_to='uploads')
+    adjunto_terc = models.FileField(upload_to='uploads')
     id_comple_info = models.OneToOneField('InfoComplementaria', models.DO_NOTHING, db_column='id_comple_info', blank=True,
                                        null=True)
     id_seguimiento = models.OneToOneField('Seguimiento', models.DO_NOTHING, db_column='id_seguimiento',blank=True, null=True)
@@ -194,7 +194,7 @@ class AsignacionTarea(models.Model):
     class Estado_activo_actividad(models.TextChoices):
             activo='1',_('activo')
             inactivo='0',_('inactivo')
-    estado_pendiente=models.CharField(max_length=8,choices=Estado_activo_actividad.choices,default=Estado_activo_actividad.activo)
+    estado_pendiente=models.CharField(max_length=8,choices=Estado_activo_actividad.choices,default=Estado_activo_actividad.activo, blank=True,null=True)
 
     def toJSON(self):
         item = model_to_dict(self)
@@ -264,6 +264,7 @@ class MensajesCorreo(models.Model):
     enviados = models.CharField(max_length=40, blank=True, null=True)
     asunto = models.CharField(max_length=50, blank=True, null=True)
     mensaje = models.TextField(blank=True, null=True)
+    para = models.TextField(blank=True, null=True)
     adjunto = models.FileField(upload_to='uploads/% Y/% m/% d/')
 
 

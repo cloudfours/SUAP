@@ -2,9 +2,14 @@
 import json
 import math
 import random
-from time import strftime
-from urllib import response
-
+from django.conf import settings
+from django.core.mail import send_mail, EmailMessage
+import os
+from reportlab.pdfgen import canvas
+from io import BytesIO
+from reportlab.lib.pagesizes import A4,cm
+from djangp.http import HttpResponse
+from django.core import serializers
 from api.models import *
 from django.shortcuts import get_object_or_404, render, redirect
 from django.http import HttpResponseRedirect
@@ -142,7 +147,7 @@ def registrarCaso(request):
                 forma_persona.save()
                 return redirect('perfil')
     else:
-            initial_data = {'id_usuario':datos_usuario.id_cedula,'estado':1,'fecharesgistrocaso':datetime.datetime.now(),'numeroradicado':numeroradicado,'id_comple_info':9,'id_seguimiento':7}
+            initial_data = {'id_usuario':datos_usuario.id_cedula,'estado':1,'fecharesgistrocaso':datetime.datetime.now(),'numeroradicado':numeroradicado}
             forma_persona = CasosForm(initial=initial_data)
     return render(request, 'registrarCaso.html', {'forma_persona': forma_persona})
 
@@ -202,19 +207,26 @@ def ajax_eliminar(request):
 @login_required
 def editarCrudGestor(request,id):
    try:
+           
+        infocom = InfoComplementaria.objects.all().last()
+        segui = Seguimiento.objects.all().last()
         caso=Casos.objects.get(pk=id)
         if request.method == 'GET':
-                forma_persona = EditarFormGestor(instance=caso)
+                initial_data = {'id_seguimiento':segui,'id_comple_info':infocom}
+                forma_persona = EditarFormGestor(instance=caso,initial=initial_data)
+             
         else:
                 forma_persona = EditarFormGestor(request.POST,request.FILES,instance=caso)
-                
+               
+               
                 # files=request.FILES.getlist('formula_medica')
                 if forma_persona.is_valid(): 
                     forma_persona.save()
                     messages.add_message(request, messages.SUCCESS, message='Se ha editado con exito')
                     return redirect('busqueda')
                 else:
-                   messages.add_message(request, messages.ERROR, message='LLENE LOS CAMPOS FALTANTES')
+                   initial_data = {'id_seguimiento':segui,'id_comple_info':infocom}
+                   forma_persona = CasosForm(initial=initial_data)
    except AttributeError as e:
                    print(e)
                
@@ -258,11 +270,27 @@ def informacionComplementarias(request):
             forma_persona = forma_persona.save()
             messages.add_message(request,messages.SUCCESS,message='Se aguardo con exito')
             return redirect('registrarCasoGestor')
+        
     else:
         forma_persona=informacionComplementaria()
     return render(request,'Gestor/informacionComplementaria.html',{'forma_persona':forma_persona})
-            
-            
+@login_required           
+def informacionComplementariasCrear(request):
+     
+
+    forma_persona=informacionComplementaria()
+    return render(request,'Gestor/informacionComplementariacreareditar.html',{'forma_persona':forma_persona})    
+@login_required
+def info_co_post_ajax(request):
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+           forma_persona=informacionComplementaria(request.POST)
+           if forma_persona.is_valid():
+               forma_persona=forma_persona.save()
+               serializar=serializers.serialize('json',[forma_persona,])
+               return JsonResponse({'exito':serializar},status=200)
+           else:
+               return JsonResponse({'error':serializar},status=400)
+    return JsonResponse({"error": ""}, status=400)
 @login_required
 def seguimientoGestor(request):
     seguimientoForm=seguimientoFormulario(request.POST) 
@@ -275,8 +303,26 @@ def seguimientoGestor(request):
             seguimientoForm=seguimientoFormulario()
     return render(request,'Gestor/seguimientoGestor.html',{'seguimientoForm':seguimientoForm})
 
+@login_required
+def seguimientoGestor_creareditar(request):
+    seguimientoForm=seguimientoFormulario() 
+   
+    return render(request,'Gestor/seguimientoGestorcreareditar.html',{'seguimientoForm':seguimientoForm})
+@login_required
+def segui_co_post_ajax(request):
 
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
+           segui_form=seguimientoFormulario(request.POST)
 
+           if segui_form.is_valid():
+           
+               segui_form=segui_form.save()
+               segui=serializers.serialize('json',[segui_form,])
+               return JsonResponse({'exito':segui},status=200)
+           else:
+            
+               return JsonResponse({'error':segui},status=400)
+    return JsonResponse({"error": ""}, status=400)
 @login_required
 def editarInfo(request,id):
 
@@ -331,7 +377,7 @@ def calendario_activdades(request):
 @login_required
 def guardar(request):
       actividad = AsignacionTareaForm()
-      if request.method == 'POST' and 'registrartarea' in request.POST:
+      if request.method == 'POST':
             actividad = AsignacionTareaForm(request.POST)
             if actividad.is_valid():
                 actividad = actividad.save()
@@ -390,3 +436,40 @@ def ajax_eliminaractividad(request):
 
 def entrada(request):
     return render(request,'entrada.html')
+
+@login_required
+def correo(request):
+    print(request.POST)
+    if request.method=='POST':
+    
+        para = request.POST["para"]
+        asunto=request.POST.get("asunto")
+        mensaje=request.POST["mensaje"]
+        
+        desde = settings.EMAIL_HOST_USER
+        email = EmailMessage(asunto,mensaje,desde,to=[para])
+        email.fail_silenty=False
+        email.send()  
+        uploaded_file = request.FILES
+        for file in uploaded_file.getlist('adjunto'):
+          
+           email.attach_file(file.name, file.read(), file.content_type)
+           print('-------------------',file.name)
+        email.fail_silenty=False
+        email.send()  
+        return redirect('busqueda')
+    else:
+        redirect('correo')
+    
+    
+    return render(request,'Gestor/correo.html')
+
+
+
+@login_required
+def generar_report_caso(request,id):
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename=Caso-por-usuario.pdf'
+    buffer = BytesIO()
+    c=canvas.Canvas(buffer,pagasize=A4)
+    
