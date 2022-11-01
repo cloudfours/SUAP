@@ -29,5 +29,8 @@ path('infocreareditar/',informacionComplementariasCrear,name='infocreareditar'),
 path('seguicreareditar/',seguimientoGestor_creareditar,name='seguicreareditar'),
 path('enviarajaxinfo/',info_co_post_ajax,name='infoajax'),
 path('enviarajaxsegui/',segui_co_post_ajax,name='seguioajax'),
-path('enviarcorreos/',correo,name='correo')
+path('enviarcorreos/',correo,name='correo'),
+path('reporteporcaso/<int:id>',generar_report_caso,name='reportcaso'),
+path('graficas/',vista_graficas,name='graficas'),
+path('graficas-generar/',get_data,name='data')
 ]

@@ -5,10 +5,12 @@ import random
 from django.conf import settings
 from django.core.mail import send_mail, EmailMessage
 import os
+from api.utils import render_to_pdf
+
 from reportlab.pdfgen import canvas
 from io import BytesIO
-from reportlab.lib.pagesizes import A4,cm
-from djangp.http import HttpResponse
+
+from django.http import HttpResponse
 from django.core import serializers
 from api.models import *
 from django.shortcuts import get_object_or_404, render, redirect
@@ -37,7 +39,9 @@ def perfilUsuario(request):
             login_id=request.user.id).select_related('login_id')
 
     return render(request, 'informacion_paciente.html', {'usuario': usuario})
-
+'''
+registro y crud del usuario
+'''
 
 @login_required
 def editarUser(request, id):
@@ -83,7 +87,7 @@ class perfilUsuarioRegistro(CreateView):
             solicitud = form.save(commit=False)
             solicitud.login_id = form2.save()
             solicitud.save()
-            messages.add_message(request, messages.SUCESS,
+            messages.add_message(request, messages.SUCCESS,
                                  message='Registro exitoso')
             
             return HttpResponseRedirect(self.get_success_url())
@@ -129,7 +133,9 @@ def log_out(request):
 
 def perfiluser(request):
     return render(request, 'estructuraSuap.html')
-
+'''
+aqui empieza el crud del paciente
+'''
 
 @login_required
 def registrarCaso(request):
@@ -178,6 +184,10 @@ def historial_casos(request):
         messages.add_message(request,messages.ERROR,message='No existe a un caso creado')
 
     return render(request,'historial.html',{'casoshistorial': casoshistorial,'dic_fecha':fechafinal})
+'''
+aqui empieza el crud de los casos
+'''
+
 @login_required
 def gestorcrud(request):
     casos = Casos.objects.all()
@@ -367,7 +377,9 @@ def editarSegui(request,id):
                
 
       return render(request,'Gestor/editarsegui.html',{'forma_persona':forma_persona,'seguimiento':seguimiento})
-  
+'''
+aqui empieza el crud de actividades  
+'''
   
 @login_required
 def calendario_activdades(request):
@@ -436,7 +448,9 @@ def ajax_eliminaractividad(request):
 
 def entrada(request):
     return render(request,'entrada.html')
-
+'''
+envios de correos
+'''
 @login_required
 def correo(request):
     print(request.POST)
@@ -464,12 +478,35 @@ def correo(request):
     
     return render(request,'Gestor/correo.html')
 
+'''
+aqui empieza los reportes
+'''
+
+@login_required
+def generar_report_caso(_request,id):
+  template_name='Gestor/reporte_por_caso.html'
+  caso = Casos.objects.get(pk=id)
+  data = {
+      'caso':caso
+  }
+  pdf=render_to_pdf(template_name,data)
+  return HttpResponse(pdf,content_type='application/pdf')
+@login_required
+def pagina_report(request):
+    return render(request,'Gestor/crear_casos_general.html')
+
+
+'''
+aqui empieza las graficas 
+'''
+@login_required
+def vista_graficas(request):
+    return render(request,'analista/graficas.html')
 
 
 @login_required
-def generar_report_caso(request,id):
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename=Caso-por-usuario.pdf'
-    buffer = BytesIO()
-    c=canvas.Canvas(buffer,pagasize=A4)
-    
+def get_data(request):
+    data={
+        'valor':100
+    }
+    return JsonResponse(data)

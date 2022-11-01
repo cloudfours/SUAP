@@ -88,7 +88,7 @@
             <td><button  type='button'   class='bg-transparent w-25' onclick="abrir_moda_segui('{% url 'editarsegui' caso.id_seguimiento %}')"><i class="fa-solid fa-right-to-bracket icons_tabla"></i></button></td>
 
             {% endif %}
-            <td><a><i class="fa-solid fa-file-pdf  icons_tabla"></i></a></td>
+            <td><a href="{% url 'reportcaso' caso.id_caso %}" target="_blank"><i class="fa-solid fa-file-pdf  icons_tabla"></i></a></td>
             <td><a href='{% url 'editarGestor' caso.id_caso %}'><i class="fa-solid fa-square-pen  icons_tabla"></i></a>
          
          
