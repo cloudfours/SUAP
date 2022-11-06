@@ -1,61 +1,1559 @@
 {% extends 'informacion_paciente.html' %}
 {% block content %}
-<div class='graficas' url-endpoint='{% url 'data' %}'>
-    <canvas id="myChart" width="400" height="400"></canvas>
+
+<div class='graficas'>
+<h2>INFORME EN GENERAL</h2>
+<table id="calendar" class="table table-bordered display nowrap" cellspacing="0" style="width:100%">
+  <thead class='bg-primary bg-gradient'>
+      <tr>
+          <th class='text-light'>No caso</th>
+          <th class='text-light'>Numero de identificacion</th>
+          <th class='text-light'>Nombres</th>
+          <th class='text-light'>Apellidos</th>
+          <th class='text-light'>Telefono</th>
+          <th class='text-light'>Correo</th>
+          <th class='text-light'>Enfermedad</th>
+          <th class='text-light'>EPS</th>
+          <th class='text-light'>Regimen</th>
+          <th class='text-light'>Barrera de acceso</th>
+          <th class='text-light'>Fecha de  registro</th>
+          <th class='text-light'>Estado actual</th>
+          <th class='text-light'>Gestor</th>
+         
+         
+      </tr>
+  </thead>
+  <tbody>
+    {% if casos %}
+      {% for caso in casos%}
+
+      <tr class='shadow-sm p-3 mb-5 bg-body rounded'>
+          <td>{{caso.id_caso}}</td>
+          <td>{{caso.id_usuario}}</td>
+          <td>{{caso.id_usuario.primer_nombre}} {{caso.id_usuario.segundo_nombre}}</td>
+          <td>{{caso.id_usuario.primer_apellido}} {{caso.id_usuario.segundo_apellido}}</td>
+         <td>{{caso.id_usuario.celular}}</td>
+          <td>{{caso.id_usuario.login_id.email }}</td>
+          <td>{{caso.enfermedad.nombreenfermedad}}</td>
+          <td>{{caso.id_usuario.id_eps.nombre}}</td>
+          <td>{{caso.id_usuario.idtiporegimen.nombreregimen}}</td>
+          <td>{{caso.id_barrera.nombre}}</td>
+           <td>{{caso.fecharesgistrocaso }}</td>
+           <td>{{caso.estado.nombreestado}}</td>
+           <td>{{caso.id_gest}}</td>
+        
+        
+    
+      </tr>
+      
+   
+   
+   {% endfor %}
+   {% endif %}
+  </tbody>
+  <tfoot>
+      <tr>
+        <th class='text-black'>No caso</th>
+          <th class='text-black'>Numero de identificacion</th>
+          <th class='text-black'>Nombres</th>
+          <th class='text-black'>Apellidos</th>
+          <th class='text-black'>Telefono</th>
+          <th class='text-black'>Correo</th>
+          <th class='text-black'>Enfermedad</th>
+          <th class='text-black'>EPS</th>
+          <th class='text-black'>Regimen</th>
+          <th class='text-black'>Barrera de acceso</th>
+          <th class='text-black'>Fecha de  registro</th>
+          <th class='text-black'>Estado actual</th>
+          <th class='text-black'>Gestor</th>
+      </tr>
+  </tfoot>
+</table>
+<h2>Informe estadistico</h2>
+<div class='busqueda1'>
+   
+  <div class='caja_busqueda'>
+
+<input type='button' class="btn btn-primary" aria-label=".form-select-sm example" id='estado_caso'  value='Por casos'/>
+
+
+</div>
+
+<div class='caja_busqueda'>
+
+<input type='button' class="btn btn-primary" aria-label=".form-select-sm example" id='estado_eps'  value='Por eps'/>
+</div>
+<div class='caja_busqueda'>
+
+<input type='button' class="btn btn-primary" aria-label=".form-select-sm example" id='estado_reg'  value='Por regimen'/>
+</div>
+<div class='caja_busqueda'>
+
+<input type='button' class="btn btn-primary" aria-label=".form-select-sm example" id='estado_dep'  value='Por Departamento'/>
+</div>
+<div class='caja_busqueda'>
+
+<input type='button' class="btn btn-primary" aria-label=".form-select-sm example" id='estado_mun'  value='Por Municipio'/>
+</div>
+<div class='caja_busqueda'>
+
+<input type='button' class="btn btn-primary" aria-label=".form-select-sm example" id='estado_genero'  value='Por Genero'/>
+</div>
+</div>
+<div class='busqueda2'>
+
+<div class='caja_busqueda'>
+<input type='button' class="btn btn-primary" aria-label=".form-select-sm example" id='estado_enferDia'  value='Enfermedad o diagnostico'/>
+  </div>
+  <div class='caja_busqueda'>
+    <input type='button' class="btn btn-primary" aria-label=".form-select-sm example" id='estado_med'  value='Por pbs'/>
+      </div>
+      <div class='caja_busqueda'>
+        <input type='button' class="btn btn-primary" aria-label=".form-select-sm example" id='estado_barre'  value='Barrera de acceso'/>
+          </div>
+     
+</div>
+<input type='button' class="btn bg-success text-white" value='Generar PDF' />
+<div class='graficas-grupos'>
+
+    <div class='grafica'>
+    <canvas id="myChart" width="300" height="300"></canvas>
+  
+    </div>
+<div class='grafica'>
+    <canvas id="Chart" width="300" height="300"></canvas>
+</div>
+<div class='grafica'>
+    <canvas id="line-chart" width="300" height="300"></canvas>
+</div>
+
+
+
+</div>
+
+
 
 </div>
 {% endblock %}
 {% block js %}
 <script type='text/javascript'>
-let url='{% url 'data' %}'
+ {% comment %} let url='{% url 'data' %}'
 $.ajax({
 
     method:'GET',
     url:url,
     success:function(data){
-console.log(data)
-    },
+    }
     error:function(error){
         console.log(error)
     }
 
 
-})
-const ctx = document.getElementById('myChart').getContext('2d');
-const myChart = new Chart(ctx, {
+})  {% endcomment %}
+const ctx = document.getElementById('myChart');
+let myChart=null
+const estado_caso =  document.getElementById('estado_caso')
+const estado_eps = document.getElementById('estado_eps')
+const estado_regimen = document.getElementById('estado_reg')
+const estado_dep = document.getElementById('estado_dep')
+const estado_genero = document.getElementById('estado_genero')
+const estado_mun = document.getElementById('estado_mun')
+const estado_enferDia = document.getElementById('estado_enferDia')
+const estado_med = document.getElementById('estado_med')
+const estado_barre = document.getElementById('estado_barre')
+let config={
+  type: 'bar',
+  data: {
+      labels: [],
+      datasets: [{
+          label: 'casos por estado',
+          data: [],
+          backgroundColor: [
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(54, 162, 235, 0.2)',
+              'rgba(255, 206, 86, 0.2)',
+              'rgba(75, 192, 192, 0.2)',
+              'rgba(153, 102, 255, 0.2)',
+              'rgba(255, 159, 64, 0.2)'
+          ],
+          borderColor: [
+              'rgba(255, 99, 132, 1)',
+              'rgba(54, 162, 235, 1)',
+              'rgba(255, 206, 86, 1)',
+              'rgba(75, 192, 192, 1)',
+              'rgba(153, 102, 255, 1)',
+              'rgba(255, 159, 64, 1)'
+          ],
+          borderWidth: 1
+      }]
+  },
+  options: {
+    animation: {
+      duration: 5000,
+  },
+      scales: {
+          y: {
+              beginAtZero: true
+          }
+      }
+  }
+}
+
+myChart=new Chart(ctx,config)       
+        
+ /*pizza*/
+let ctxx = document.getElementById("Chart").getContext('2d');
+let Charte=null
+let pizza={
+    
+  type: 'pie',
+  data: {
+    labels: [0],
+    datasets: [{
+      label: 'estados por caso',
+      data: [1],
+      backgroundColor: [
+        'rgba(255, 99, 132, 0.5)',
+        'rgba(54, 162, 235, 0.2)',
+        'rgba(255, 206, 86, 0.2)',
+        'rgba(75, 192, 192, 0.2)'
+      ],
+      borderColor: [
+        'rgba(255,99,132,1)',
+        'rgba(54, 162, 235, 1)',
+        'rgba(255, 206, 86, 1)',
+        'rgba(75, 192, 192, 1)'
+      ],
+      borderWidth: 1
+    }]
+  },
+  options: {
+     //cutoutPercentage: 40,
+    responsive: false,
+
+  }
+
+}
+
+Charte=new Chart(ctxx,pizza)
+/*lineas*/
+let txx=document.getElementById("line-chart")
+let lineas=null
+
+let lineasoption= {
+   type: 'line',
+   data: {
+     labels: [],
+     datasets: [{ 
+         data: [],
+         label: "",
+         borderColor: "#3e95cd",
+         fill: false
+       }, { 
+         data: [],
+         label: "",
+         borderColor: "#8e5ea2",
+         fill: false
+       }, { 
+         data: [],
+         label: "",
+         borderColor: "#3cba9f",
+         fill: false
+       }, { 
+         data: [],
+         label: "",
+         borderColor: "#e8c3b9",
+         fill: false
+       }, { 
+         data:[],
+         label: "",
+         borderColor: "#c45850",
+         fill: false
+       }
+     ]
+   },
+   options: {
+     title: {
+       display: true,
+       text: 'World population per region (in millions)'
+     }
+   }
+ }
+
+ lineas =new Chart(txx,lineasoption)
+ 
+let barchat=document.getElementById("bar-chart-grouped")
+let bargroup=null
+let lineasgroup={
+  type: 'bar',
+  data: {
+    labels: [],
+    datasets: [
+      {
+        label: "Africa",
+        backgroundColor: "#3e95cd",
+        data: []
+      }, {
+        label: "Europe",
+        backgroundColor: "#8e5ea2",
+        data: []
+      }
+    ]
+  },
+  options: {
+    title: {
+      display: true,
+      text: 'Population growth (millions)'
+    }
+  }
+}
+
+ bargroup=new Chart(barchat,lineasgroup);
+
+{% comment %} new Chart(document.getElementById("mixed-chart"), {
     type: 'bar',
     data: {
-        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+      labels: ["1900", "1950", "1999", "2050"],
+      datasets: [{
+          label: "Europe",
+          type: "line",
+          borderColor: "#8e5ea2",
+          data: [408,547,675,734],
+          fill: false
+        }, {
+          label: "Africa",
+          type: "line",
+          borderColor: "#3e95cd",
+          data: [133,221,783,2478],
+          fill: false
+        }, {
+          label: "Europe",
+          type: "bar",
+          backgroundColor: "rgba(0,0,0,0.2)",
+          data: [408,547,675,734],
+        }, {
+          label: "Africa",
+          type: "bar",
+          backgroundColor: "rgba(0,0,0,0.2)",
+          backgroundColorHover: "#3e95cd",
+          data: [133,221,783,2478]
+        }
+      ]
+    },
+    options: {
+      title: {
+        display: true,
+        text: 'Population growth (millions): Europe & Africa'
+      },
+      legend: { display: false }
+    }
+}); {% endcomment %}
+
+{% comment %} google.charts.load('current', {
+    'packages': ['geochart'],
+    // Note: you will need to get a mapsApiKey for your project.
+    // See: https://developers.google.com/chart/interactive/docs/basic_load_libs#load-settings
+    'mapsApiKey': 'AIzaSyD-9tSrke72PouQMnMX-a7eZSW0jkFMBWY'
+  });
+  google.charts.setOnLoadCallback(drawRegionsMap);
+  
+  function drawRegionsMap() {
+    var data = google.visualization.arrayToDataTable([
+      ['Departamento', 'Número de SE', '%'],
+      ['Amazonas', 0, 0],
+      ['Antioquia', 3775, 22],
+      ['Arauca', 15, 0],
+      ['Atlántico', 761, 4],
+      ['Bogotá', 3792, 22],
+      ['Bolívar', 476, 3],
+    ]);
+    var options = {
+      backgroundColor: '#81d4fa',
+      datalessRegionColor: '#f8bbd0',
+      defaultColor: '#f5f5f5',
+      colorAxis: {colors: ['green', 'blue']},
+      resolution: 'provinces',
+      region: 'CO'
+    };
+  
+    var chart = new google.visualization.GeoChart(document.getElementById('geochart-colors'));
+  
+    chart.draw(data, options); {% endcomment %}
+
+
+
+  
+
+
+ 
+  estado_caso.addEventListener('click', actualizar)
+
+  function actualizar(e){
+  
+      let config={
+        type: 'bar',
+        data: {
+            labels: {{estados|safe}},
+            datasets: [{
+                label: 'casos por estado',
+                data: {{labelsestados|safe}},
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                ],
+                label: 'casos por estado',
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+          animation: {
+            duration: 5000,
+        },
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+
+
+    }
+    if(myChart!=null){
+      myChart.destroy()
+    
+    }
+    myChart=new Chart(ctx,config)
+    
+    let pizza={
+    
+      type: 'pie',
+      data: {
+        labels: {{estados|safe}},
         datasets: [{
-            label: '# of Votes',
-            data: [12, 19, 3, 5, 2, 3],
+          label: 'estados por caso',
+          data: {{labelsestados|safe}},
+          backgroundColor: [
+            'rgba(255, 99, 132, 0.5)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)'
+          ],
+          borderColor: [
+            'rgba(255,99,132,1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)'
+          ],
+          borderWidth: 1
+        }]
+      },
+      options: {
+         //cutoutPercentage: 40,
+        responsive: false,
+    
+      }
+  
+}
+if(Charte!=null){
+  Charte.destroy()
+
+}
+Charte =new Chart(ctxx,pizza)
+
+
+ let lineasoption= {
+    type: 'line',
+    data: {
+      labels:['abierto','proceso','finalizado'],
+      datasets: [{ 
+          data:{{labelsfinalizado|safe}},
+          label: "Finalizado",
+          borderColor: "#3e95cd",
+          fill: false
+        }, { 
+          data: {{labelsabierto|safe}},
+          label: "Abierto",
+          borderColor: "#8e5ea2",
+          fill: false
+        }, { 
+          data:{{labelsestados|safe}},
+          label: "Proceso",
+          borderColor: "#3cba9f",
+          fill: false
+        }
+      ]
+    },
+    options: {
+      title: {
+        display: true,
+        text: 'World population per region (in millions)'
+      }
+    }
+  }
+  if(lineas!=null){
+    lineas.destroy()
+  
+  }   
+  lineas =new Chart(txx,lineasoption)
+
+  let lineasgroup={
+    type: 'bar',
+    data: {
+      labels:{{estados|safe}},
+      datasets: [
+        {
+          label: 'estados',
+          backgroundColor: "#3e95cd",
+          data:{{labelsestados|safe}}
+        }, 
+      ]
+    },
+    options: {
+      title: {
+        display: true,
+        text: 'Population growth (millions)'
+      }
+    }
+
+  }
+  if(bargroup!=null){
+    bargroup.destroy()
+  }
+bargroup=new Chart(barchat,lineasgroup)
+    
+  }
+
+
+
+  estado_eps.addEventListener('click', actualizar_eps)
+
+  function actualizar_eps(e){
+  
+
+    
+      let config={
+        type: 'bar',
+        data: {
+            labels: {{EPS|safe}},
+            datasets: [{
+                label: 'casos por estado',
+                data: {{labelseps|safe}},
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                ],
+                label: 'casos por eps',
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+          animation: {
+            duration: 5000,
+        },
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+
+
+    }
+    if(myChart!=null){
+      myChart.destroy()
+    
+    }
+    myChart=new Chart(ctx,config)
+    
+    let pizza={
+    
+      type: 'pie',
+      data: {
+        labels: {{EPS|safe}},
+        datasets: [{
+          label: 'estados por eps',
+          data: {{labelseps|safe}},
+          backgroundColor: [
+            'rgba(255, 99, 132, 0.5)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)'
+          ],
+          borderColor: [
+            'rgba(255,99,132,1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)'
+          ],
+          borderWidth: 1
+        }]
+      },
+      options: {
+         //cutoutPercentage: 40,
+        responsive: false,
+    
+      }
+  
+}
+if(Charte!=null){
+  Charte.destroy()
+
+}
+Charte =new Chart(ctxx,pizza)
+
+
+ let lineasoption= {
+    type: 'polarArea',
+    data: {
+      labels: {{EPS|safe}},
+      datasets: [{
+        label: 'estados por eps',
+        data: {{labelseps|safe}},
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.5)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 206, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)'
+        ],
+        borderColor: [
+          'rgba(255,99,132,1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)'
+        ],
+        borderWidth: 1
+      }]
+      
+    },
+    options: {
+      title: {
+        display: true,
+        text: 'World population per region (in millions)'
+      }
+    }
+  }
+  if(lineas!=null){
+    lineas.destroy()
+  
+  }   
+  lineas =new Chart(txx,lineasoption)
+
+  
+    }
+  
+  estado_regimen.addEventListener('click', actualizar_reg)
+
+  function actualizar_reg(e){
+  
+
+
+      let config={
+        type: 'bar',
+        data: {
+            labels: {{reg|safe}},
+            datasets: [{
+                label: 'Regimen por estado',
+                data: {{labelsreg|safe}},
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                ],
+                label: 'Regimen por estado',
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+          animation: {
+            duration: 5000,
+        },
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+
+
+    }
+    if(myChart!=null){
+      myChart.destroy()
+    
+    }
+    myChart=new Chart(ctx,config)
+    
+    let pizza={
+    
+      type: 'pie',
+      data: {
+        labels: {{reg|safe}},
+        datasets: [{
+          label: 'Regimenes por caso',
+          data: {{labelsreg|safe}},
+          backgroundColor: [
+            'rgba(255, 99, 132, 0.5)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)'
+          ],
+          borderColor: [
+            'rgba(255,99,132,1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)'
+          ],
+          borderWidth: 1
+        }]
+      },
+      options: {
+         //cutoutPercentage: 40,
+        responsive: false,
+    
+      }
+  
+}
+if(Charte!=null){
+  Charte.destroy()
+
+}
+Charte =new Chart(ctxx,pizza)
+
+
+ let lineasoption= {
+    type: 'line',
+    data: {
+      labels:['Contributivo','subisdiado'],
+      datasets: [{ 
+          data: {{labelscont|safe}},
+          label: "contributivo",
+          borderColor: "#3e95cd",
+          fill: false
+        }, 
+        { 
+          data: {{subsidiado|safe}},
+          label: "subisdiado",
+          borderColor: "#3f99cd",
+          fill: false
+        }, 
+      ]
+    },
+    options: {
+      title: {
+        display: true,
+        text: 'World population per region (in millions)'
+      }
+    }
+  }
+  if(lineas!=null){
+    lineas.destroy()
+  
+  }   
+  lineas =new Chart(txx,lineasoption)
+
+    }
+    /*departamento*/
+  
+    estado_dep.addEventListener('click', actualizar_dep)
+
+    function actualizar_dep(e){
+    
+  
+  
+        let config={
+          type: 'bar',
+          data: {
+              labels: {{departamento|safe}},
+              datasets: [{
+                  label: 'casos por departamento',
+                  data: {{labelsdep|safe}},
+                  backgroundColor: [
+                      'rgba(255, 99, 132, 0.2)',
+                      'rgba(54, 162, 235, 0.2)',
+                      'rgba(255, 206, 86, 0.2)',
+                      'rgba(75, 192, 192, 0.2)',
+                      'rgba(153, 102, 255, 0.2)',
+                      'rgba(255, 159, 64, 0.2)'
+                  ],
+                  label: 'casos por departamento',
+                  borderColor: [
+                      'rgba(255, 99, 132, 1)',
+                      'rgba(54, 162, 235, 1)',
+                      'rgba(255, 206, 86, 1)',
+                      'rgba(75, 192, 192, 1)',
+                      'rgba(153, 102, 255, 1)',
+                      'rgba(255, 159, 64, 1)'
+                  ],
+                  borderWidth: 1
+              }]
+          },
+          options: {
+            animation: {
+              duration: 5000,
+          },
+              scales: {
+                  y: {
+                      beginAtZero: true
+                  }
+              }
+          }
+  
+  
+      }
+      if(myChart!=null){
+        myChart.destroy()
+      
+      }
+      myChart=new Chart(ctx,config)
+      
+      let pizza={
+      
+        type: 'pie',
+        data: {
+          labels: {{departamento|safe}},
+          datasets: [{
+            label: 'estados por caso',
+            data: {{labelsdep|safe}},
             backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(255, 159, 64, 0.2)'
+              'rgba(255, 99, 132, 0.5)',
+              'rgba(54, 162, 235, 0.2)',
+              'rgba(255, 206, 86, 0.2)',
+              'rgba(75, 192, 192, 0.2)'
             ],
             borderColor: [
-                'rgba(255, 99, 132, 1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)'
+              'rgba(255,99,132,1)',
+              'rgba(54, 162, 235, 1)',
+              'rgba(255, 206, 86, 1)',
+              'rgba(75, 192, 192, 1)'
             ],
             borderWidth: 1
+          }]
+        },
+        options: {
+           //cutoutPercentage: 40,
+          responsive: false,
+      
+        }
+    
+  }
+  if(Charte!=null){
+    Charte.destroy()
+  
+  }
+  Charte =new Chart(ctxx,pizza)
+  
+  
+   let lineasoption= {
+      type: 'doughnut',
+      data: {
+        labels: {{departamento|safe}},
+        datasets: [{
+            label: 'estados por caso',
+            data: {{labelsdep|safe}},
+            backgroundColor: [
+              'rgba(255, 99, 132, 0.5)',
+              'rgba(54, 162, 235, 0.2)',
+              'rgba(255, 206, 86, 0.2)',
+              'rgba(75, 192, 192, 0.2)'
+            ],
+            borderColor: [
+              'rgba(255,99,132,1)',
+              'rgba(54, 162, 235, 1)',
+              'rgba(255, 206, 86, 1)',
+              'rgba(75, 192, 192, 1)'
+            ],
+            borderWidth: 1
+          }]
+      },
+      options: {
+        title: {
+          display: true,
+          text: 'World population per region (in millions)'
+        }
+      }
+    }
+    if(lineas!=null){
+      lineas.destroy()
+    
+    }   
+    lineas =new Chart(txx,lineasoption)
+  
+  
+      }
+    
+  /*municipio*/
+  estado_mun.addEventListener('click', actualizar_mun)
+
+  function actualizar_mun(e){
+  
+
+
+      let config={
+        type: 'bar',
+        data: {
+            labels: {{municipio|safe}},
+            datasets: [{
+                label: 'casos por Municipio',
+                data: {{labelsmuni|safe}},
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                ],
+                label: 'casos por Municipio',
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+          animation: {
+            duration: 5000,
+        },
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+
+
+    }
+    if(myChart!=null){
+      myChart.destroy()
+    
+    }
+    myChart=new Chart(ctx,config)
+    
+    let pizza={
+    
+      type: 'pie',
+      data: {
+        labels: {{municipio|safe}},
+        datasets: [{
+          label: 'estados por Municipio',
+          data: {{labelsmuni|safe}},
+          backgroundColor: [
+            'rgba(255, 99, 132, 0.5)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)'
+          ],
+          borderColor: [
+            'rgba(255,99,132,1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)'
+          ],
+          borderWidth: 1
+        }]
+      },
+      options: {
+         //cutoutPercentage: 40,
+        responsive: false,
+    
+      }
+  
+}
+if(Charte!=null){
+  Charte.destroy()
+
+}
+Charte =new Chart(ctxx,pizza)
+
+
+ let lineasoption= {
+    type: 'doughnut',
+    data: {
+      labels: {{municipio|safe}},
+      datasets: [{
+          label: 'estados por Municipio',
+          data: {{labelsmuni|safe}},
+          backgroundColor: [
+            'rgba(255, 99, 132, 0.5)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)'
+          ],
+          borderColor: [
+            'rgba(255,99,132,1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)'
+          ],
+          borderWidth: 1
         }]
     },
     options: {
-        scales: {
-            y: {
-                beginAtZero: true
+      title: {
+        display: true,
+        text: 'World population per region (in millions)'
+      }
+    }
+  }
+  if(lineas!=null){
+    lineas.destroy()
+  
+  }   
+  lineas =new Chart(txx,lineasoption)
+
+ 
+    }
+/*genero*/
+estado_genero.addEventListener('click', actualizar_gen)
+
+  function actualizar_gen(e){
+  
+
+
+      let config={
+        type: 'bar',
+        data: {
+            labels: {{genero|safe}},
+            datasets: [{
+                label: 'casos por genero',
+                data: {{labelsge|safe}},
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                ],
+                label: 'casos por genero',
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+          animation: {
+            duration: 5000,
+        },
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
             }
         }
+
+
     }
-});
+    if(myChart!=null){
+      myChart.destroy()
+    
+    }
+    myChart=new Chart(ctx,config)
+    
+    let pizza={
+    
+      type: 'pie',
+      data: {
+        labels: {{genero|safe}},
+        datasets: [{
+          label: 'estados por genero',
+          data: {{labelsge|safe}},
+          backgroundColor: [
+            'rgba(255, 99, 132, 0.5)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)'
+          ],
+          borderColor: [
+            'rgba(255,99,132,1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)'
+          ],
+          borderWidth: 1
+        }]
+      },
+      options: {
+         //cutoutPercentage: 40,
+        responsive: false,
+    
+      }
+  
+}
+if(Charte!=null){
+  Charte.destroy()
+
+}
+Charte =new Chart(ctxx,pizza)
+
+
+ let lineasoption= {
+    type: 'polarArea',
+    data: {
+      labels: {{genero|safe}},
+      datasets: [{
+        label: 'estados por genero',
+        data: {{labelsge|safe}},
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.5)',
+          'rgba(54, 162, 235, 0.2)',
+          'rgba(255, 206, 86, 0.2)',
+          'rgba(75, 192, 192, 0.2)'
+        ],
+        borderColor: [
+          'rgba(255,99,132,1)',
+          'rgba(54, 162, 235, 1)',
+          'rgba(255, 206, 86, 1)',
+          'rgba(75, 192, 192, 1)'
+        ],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      title: {
+        display: true,
+        text: 'World population per region (in millions)'
+      }
+    }
+  }
+  if(lineas!=null){
+    lineas.destroy()
+  
+  }   
+  lineas =new Chart(txx,lineasoption)
+
+    }
+
+/*por enfermedad o diagnostico*/
+estado_enferDia.addEventListener('click', actualizar_enfer)
+
+    function actualizar_enfer(e){
+    
+        let config={
+          type: 'bar',
+          data: {
+              labels: {{enfermedad|safe}},
+              datasets: [{
+                  label: 'casos por enfermedad',
+                  data: {{labelsenfer|safe}},
+                  backgroundColor: [
+                      'rgba(255, 99, 132, 0.2)',
+                      'rgba(54, 162, 235, 0.2)',
+                      'rgba(255, 206, 86, 0.2)',
+                      'rgba(75, 192, 192, 0.2)',
+                      'rgba(153, 102, 255, 0.2)',
+                      'rgba(255, 159, 64, 0.2)'
+                  ],
+                  label: 'casos por enfermedad',
+                  borderColor: [
+                      'rgba(255, 99, 132, 1)',
+                      'rgba(54, 162, 235, 1)',
+                      'rgba(255, 206, 86, 1)',
+                      'rgba(75, 192, 192, 1)',
+                      'rgba(153, 102, 255, 1)',
+                      'rgba(255, 159, 64, 1)'
+                  ],
+                  borderWidth: 1
+              }]
+          },
+          options: {
+            animation: {
+              duration: 5000,
+          },
+              scales: {
+                  y: {
+                      beginAtZero: true
+                  }
+              }
+          }
+  
+  
+      }
+      if(myChart!=null){
+        myChart.destroy()
+      
+      }
+      myChart=new Chart(ctx,config)
+      
+      let pizza={
+      
+        type: 'pie',
+        data: {
+          labels: {{enfermedad|safe}},
+          datasets: [{
+            label: 'estados por caso',
+            data: {{labelsenfer|safe}},
+            backgroundColor: [
+              'rgba(255, 99, 132, 0.5)',
+              'rgba(54, 162, 235, 0.2)',
+              'rgba(255, 206, 86, 0.2)',
+              'rgba(75, 192, 192, 0.2)'
+            ],
+            borderColor: [
+              'rgba(255,99,132,1)',
+              'rgba(54, 162, 235, 1)',
+              'rgba(255, 206, 86, 1)',
+              'rgba(75, 192, 192, 1)'
+            ],
+            borderWidth: 1
+          }]
+        },
+        options: {
+           //cutoutPercentage: 40,
+          responsive: false,
+      
+        }
+    
+  }
+  if(Charte!=null){
+    Charte.destroy()
+  
+  }
+  Charte =new Chart(ctxx,pizza)
+  
+  
+   let lineasoption= {
+      type: 'doughnut',
+      data: {
+        labels: {{enfermedad|safe}},
+        datasets: [{
+          label: 'estados por genero',
+          data: {{labelsenfer|safe}},
+          backgroundColor: [
+            'rgba(255, 99, 132, 0.5)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)'
+          ],
+          borderColor: [
+            'rgba(255,99,132,1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)'
+          ],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        title: {
+          display: true,
+          text: 'World population per region (in millions)'
+        }
+      },
+      options: {
+        title: {
+          display: true,
+          text: 'World population per region (in millions)'
+        }
+      }
+    }
+    if(lineas!=null){
+      lineas.destroy()
+    
+    }   
+    lineas =new Chart(txx,lineasoption)
+  
+   
+      
+    }    
+  /*por medicamento*/
+  
+
+  estado_med.addEventListener('click', actualizar_medr)
+
+    function actualizar_medr(e){
+    
+        let config={
+          type: 'bar',
+          data: {
+              labels: {{medic|safe}},
+              datasets: [{
+                  label: 'casos por medicamento',
+                  data: {{labelsmedic|safe}},
+                  backgroundColor: [
+                      'rgba(255, 99, 132, 0.2)',
+                      'rgba(54, 162, 235, 0.2)',
+                      'rgba(255, 206, 86, 0.2)',
+                      'rgba(75, 192, 192, 0.2)',
+                      'rgba(153, 102, 255, 0.2)',
+                      'rgba(255, 159, 64, 0.2)'
+                  ],
+                  label: 'casos por medicamento',
+                  borderColor: [
+                      'rgba(255, 99, 132, 1)',
+                      'rgba(54, 162, 235, 1)',
+                      'rgba(255, 206, 86, 1)',
+                      'rgba(75, 192, 192, 1)',
+                      'rgba(153, 102, 255, 1)',
+                      'rgba(255, 159, 64, 1)'
+                  ],
+                  borderWidth: 1
+              }]
+          },
+          options: {
+            animation: {
+              duration: 5000,
+          },
+              scales: {
+                  y: {
+                      beginAtZero: true
+                  }
+              }
+          }
+  
+  
+      }
+      if(myChart!=null){
+        myChart.destroy()
+      
+      }
+      myChart=new Chart(ctx,config)
+      
+      let pizza={
+      
+        type: 'pie',
+        data: {
+          labels: {{medic|safe}},
+          datasets: [{
+            label: 'estados por medicamentos',
+            data: {{labelsmedic|safe}},
+            backgroundColor: [
+              'rgba(255, 99, 132, 0.5)',
+              'rgba(54, 162, 235, 0.2)',
+              'rgba(255, 206, 86, 0.2)',
+              'rgba(75, 192, 192, 0.2)'
+            ],
+            borderColor: [
+              'rgba(255,99,132,1)',
+              'rgba(54, 162, 235, 1)',
+              'rgba(255, 206, 86, 1)',
+              'rgba(75, 192, 192, 1)'
+            ],
+            borderWidth: 1
+          }]
+        },
+        options: {
+           //cutoutPercentage: 40,
+          responsive: false,
+      
+        }
+    
+  }
+  if(Charte!=null){
+    Charte.destroy()
+  
+  }
+  Charte =new Chart(ctxx,pizza)
+  
+  
+   let lineasoption= {
+      type: 'doughnut',
+      data: {
+        labels: {{medic|safe}},
+        datasets: [{
+          label: 'estados por medicamentos',
+          data: {{labelsmedic|safe}},
+          backgroundColor: [
+            'rgba(255, 99, 132, 0.5)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)'
+          ],
+          borderColor: [
+            'rgba(255,99,132,1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)'
+          ],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        title: {
+          display: true,
+          text: 'World population per region (in millions)'
+        }
+      }
+    }
+    if(lineas!=null){
+      lineas.destroy()
+    
+    }   
+    lineas =new Chart(txx,lineasoption)
+  
+      
+    }    
+  /*barrera de acceso*/
+  estado_barre.addEventListener('click', actualizar_barr)
+
+    function actualizar_barr(e){
+    
+        let config={
+          type: 'bar',
+          data: {
+              labels: {{barrera|safe}},
+              datasets: [{
+                  label: 'casos por barrera',
+                  data: {{labelsbarr|safe}},
+                  backgroundColor: [
+                      'rgba(255, 99, 132, 0.2)',
+                      'rgba(54, 162, 235, 0.2)',
+                      'rgba(255, 206, 86, 0.2)',
+                      'rgba(75, 192, 192, 0.2)',
+                      'rgba(153, 102, 255, 0.2)',
+                      'rgba(255, 159, 64, 0.2)'
+                  ],
+                  label: 'casos por barrera',
+                  borderColor: [
+                      'rgba(255, 99, 132, 1)',
+                      'rgba(54, 162, 235, 1)',
+                      'rgba(255, 206, 86, 1)',
+                      'rgba(75, 192, 192, 1)',
+                      'rgba(153, 102, 255, 1)',
+                      'rgba(255, 159, 64, 1)'
+                  ],
+                  borderWidth: 1
+              }]
+          },
+          options: {
+            animation: {
+              duration: 5000,
+          },
+              scales: {
+                  y: {
+                      beginAtZero: true
+                  }
+              }
+          }
+  
+  
+      }
+      if(myChart!=null){
+        myChart.destroy()
+      
+      }
+      myChart=new Chart(ctx,config)
+      
+      let pizza={
+      
+        type: 'pie',
+        data: {
+          labels: {{barrera|safe}},
+          datasets: [{
+            label: 'estados por barrera',
+            data: {{labelsbarr|safe}},
+            backgroundColor: [
+              'rgba(255, 99, 132, 0.5)',
+              'rgba(54, 162, 235, 0.2)',
+              'rgba(255, 206, 86, 0.2)',
+              'rgba(75, 192, 192, 0.2)'
+            ],
+            borderColor: [
+              'rgba(255,99,132,1)',
+              'rgba(54, 162, 235, 1)',
+              'rgba(255, 206, 86, 1)',
+              'rgba(75, 192, 192, 1)'
+            ],
+            borderWidth: 1
+          }]
+        },
+        options: {
+           //cutoutPercentage: 40,
+          responsive: false,
+      
+        }
+    
+  }
+  if(Charte!=null){
+    Charte.destroy()
+  
+  }
+  Charte =new Chart(ctxx,pizza)
+  
+  
+   let lineasoption= {
+      type: 'doughnut',
+      data: {
+        labels: {{barrera|safe}},
+        datasets: [{
+          label: 'estados por barrera',
+          data: {{labelsbarr|safe}},
+          backgroundColor: [
+            'rgba(255, 99, 132, 0.5)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)'
+          ],
+          borderColor: [
+            'rgba(255,99,132,1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)'
+          ],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        title: {
+          display: true,
+          text: 'World population per region (in millions)'
+        }
+      }
+    }
+    if(lineas!=null){
+      lineas.destroy()
+    
+    }   
+    lineas =new Chart(txx,lineasoption)
+  
+    
+      
+    }    
 </script>
 
 

@@ -17,42 +17,7 @@
 <body class="centrar">
   
 
-    <img class="logo_tipo" src="{% static "./img/b19834ff3b28b99d3da830ecaf38bb05-fococlipping-standard.png"%}">
-  
-    </div>
-    <div class="caja_hijo shadow p-3 mb-5 bg-white rounded h-25">
-
-    
-        <h1>Reporte del numero del caso {{caso.id_caso}}</h1>   
-        <div class='container d-flex justify-content-center'>
-    <img src='google.png' />
-        </div>
-        <div class='container d-flex flex-column'>
-            <h2>Datos del usuario:</h2>
-            <h2>Nombres: {{caso.id_usuario.primer_nombre}} {{caso.id_usuario.segundo_nombre}}</h2>
-            <h2>Apellidos: {{caso.id_usuario.primer_apellido}} {{caso.id_usuario.segundo_apellido}}</h2>
-             <h2>Tipo de documento:{{caso.id_usuario.tipo_doc.nombredocumento}}</h2>
-             <h2>Celular:{{caso.id_usuario.celular}}</h2>
-             <h2>Direccion:{{caso.id_usuario.direccion}}</h2>
-             <h2>Eps:{{caso.id_usuario.id_eps.nombre}}</h2>
-             <h2>Regimen:{{caso.id_usuario.idtiporegimen.nombreregimen}}</h2>
-             <h2>Genero:{{caso.id_usuario.idgenero.nombregenero}}</h2>
-             <h2>Pais:{{caso.id_usuario.cod_pais.nombrepais}}</h2>
-             <h2>Departamento:{{caso.id_usuario.cod_dep.nombre}}</h2>
-             <h2>Municipio:{{caso.id_usuario.cod_muni.nombremunicipio}}</h2>
-             <h2>Fecha de nacimiento:{{caso.id_usuario.fechanaci}}</h2>
-             <h2>Ocupacion:{{caso.id_usuario.ocupacion}}</h2>
-             <h2>Envio:{{caso.id_usuario.tipo_envio.tipoenvio}}</h2>
-             <h2>Nombre del grupo etnico: {{caso.id_usuario.id_grupo_etnico.nombreetnico}}</h2>
-             <h2>Poblacion especial: {{caso.id_usuario.id_poblacion_especial.nombrepoblacionesp}}</h2>
-              <h2>Correo: {{caso.id_usuario.login_id.email }}</h2>
-        </div>
-           
-        </div>
-        <img src="{% static "./img/intro.jfif"%}" class="introimage">
-    </div>
-
-
+   
 
 </body>
 

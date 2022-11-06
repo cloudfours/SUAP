@@ -1,8 +1,9 @@
 
 
 from django.contrib import admin
-from django.urls import path,include
+from django.urls import path,include,re_path
 from api.views import  *
+from django.views.static import serve
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.decorators import login_required
 from django.conf.urls  import handler404,handler500
@@ -22,9 +23,10 @@ urlpatterns = [
     path('estruc/',perfiluser,name='estruc'),
     path('',entrada,name='entrada')
 ]
-if settings.DEBUG: 
-    urlpatterns += static(
-        settings.MEDIA_URL, 
-        document_root = settings.MEDIA_ROOT
-    )
 
+
+urlpatterns += [
+    re_path(r'^media/(?P<path>.*)$',serve,{
+        'document_root':settings.MEDIA_ROOT,
+    })
+]

@@ -142,7 +142,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS=[(os.path.join(BASE_DIR,'static/'))]
 STATIC_ROOT= "/static"
 MEDIA_URL='/media/'
-MEDIA_ROOT=BASE_DIR/'uploads'
+MEDIA_ROOT=os.path.join(BASE_DIR,'media')
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
@@ -162,3 +162,6 @@ EMAIL_POST=587
 EMAIL_HOST_USER='kashsantxl@gmail.com'
 EMAIL_HOST_PASSWORD='xcllyovgccmcskbv'
 #xcllyovgccmcskbv
+# SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+# SESSION_COOKIE_AGE = 50000 # 5 segundos para prueba
+# SESSION_SAVE_EVERY_REQUEST = True

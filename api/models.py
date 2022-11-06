@@ -43,10 +43,10 @@ class Casos(models.Model):
     fechaatenabierto = models.DateTimeField(db_column='fechaAtenAbierto', 
                                             null=True)  # Field name made lowercase.
     hora = models.TimeField( null=True)
-    formula_medica = models.FileField(upload_to='uploads')
+    formula_medica = models.FileField(upload_to='uploads/',blank=True, null=True)
 
-    adjunto_seg = models.FileField(upload_to='uploads')
-    adjunto_terc = models.FileField(upload_to='uploads')
+    adjunto_seg = models.FileField(upload_to='uploads/',blank=True, null=True)
+    adjunto_terc = models.FileField(upload_to='uploads/',blank=True, null=True)
     id_comple_info = models.OneToOneField('InfoComplementaria', models.DO_NOTHING, db_column='id_comple_info', blank=True,
                                        null=True)
     id_seguimiento = models.OneToOneField('Seguimiento', models.DO_NOTHING, db_column='id_seguimiento',blank=True, null=True)

@@ -5,7 +5,7 @@ import random
 from django.conf import settings
 from django.core.mail import send_mail, EmailMessage
 import os
-from api.utils import render_to_pdf
+
 
 from reportlab.pdfgen import canvas
 from io import BytesIO
@@ -20,7 +20,7 @@ from django.contrib import messages
 from django.urls import reverse_lazy
 from django.contrib.auth.models import User
 from django.views.generic import ListView, CreateView
-from django.db.models import When,Case,Value,F,Count
+from django.db.models import When,Case,Value,F,Count,Sum
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
@@ -222,8 +222,8 @@ def editarCrudGestor(request,id):
         segui = Seguimiento.objects.all().last()
         caso=Casos.objects.get(pk=id)
         if request.method == 'GET':
-                initial_data = {'id_seguimiento':segui,'id_comple_info':infocom}
-                forma_persona = EditarFormGestor(instance=caso,initial=initial_data)
+              
+                forma_persona = EditarFormGestor(instance=caso)
              
         else:
                 forma_persona = EditarFormGestor(request.POST,request.FILES,instance=caso)
@@ -489,11 +489,14 @@ def generar_report_caso(_request,id):
   data = {
       'caso':caso
   }
-  pdf=render_to_pdf(template_name,data)
+  
   return HttpResponse(pdf,content_type='application/pdf')
+
+
+
 @login_required
 def pagina_report(request):
-    return render(request,'Gestor/crear_casos_general.html')
+    return render(request,'Gestor/reporte_por_casol.html')
 
 
 '''
@@ -501,12 +504,141 @@ aqui empieza las graficas
 '''
 @login_required
 def vista_graficas(request):
-    return render(request,'analista/graficas.html')
+    casos=Casos.objects.all()
+    proceso=[]
+    labelsproceso=[]
+    finalizado=[]
+    labelsfinalizado=[]
+    abierto=[]
+    labelsabierto=[]
+    estados=[]
+    labelsestados=[]
+    epss=[]
+    labelseps=[]
+    reg=[]
+    labelsreg=[]
+    regcont=[]
+    labelsregcont=[]
+    sub=[]
+    labelssub=[]
+    depart=[]
+    labelsdep=[]
+    muni=[]
+    labelsmuni=[]
+    generos=[]
+    labelsge=[]
+    enfer=[]
+    labelsenfe=[]
+    medic=[]
+    labelsmedic=[]
+    barr=[]
+    labelsbarr=[]
+    queryabierto= Casos.objects.values('estado__nombreestado').filter(estado__nombreestado='abierto').annotate(cant_estado=Count('estado'))
+    queryproceso= Casos.objects.values('estado__nombreestado').filter(estado__nombreestado='proceso').annotate(cant_estado=Count('estado'))
+    queryfinalizado= Casos.objects.values('estado__nombreestado').filter(estado__nombreestado='finalizado').annotate(cant_estado=Count('estado'))
+    queryestados=Casos.objects.values('estado__nombreestado').annotate(cant_estado=Count('estado'))
+    eps = Casos.objects.values('id_usuario__id_eps__nombre').annotate(cant_eps=Count('id_usuario__id_eps'))
+    regimen=Casos.objects.values('id_usuario__idtiporegimen__nombreregimen').annotate(cant_reg=Count('id_usuario__idtiporegimen__nombreregimen'))
+    regimencont=Casos.objects.values('id_usuario__idtiporegimen__nombreregimen').filter(id_usuario__idtiporegimen__nombreregimen='Contributivo').annotate(cant_cont=Count('id_usuario__idtiporegimen'))
+    regimensub=Casos.objects.values('id_usuario__idtiporegimen__nombreregimen').filter(id_usuario__idtiporegimen__nombreregimen='subsidiado').annotate(cant_sub=Count('id_usuario__idtiporegimen'))
+    departamento=Casos.objects.values('id_usuario__cod_dep__nombre').annotate(cant_dep=Count('id_usuario__cod_dep'))
+    municipio = Casos.objects.values('id_usuario__cod_muni__nombremunicipio').annotate(cant_mun=Count('id_usuario__cod_muni'))
+    genero = Casos.objects.values('id_usuario__idgenero__nombregenero').annotate(cant_genero=Count('id_usuario__idgenero'))
+    enfermedad=Casos.objects.values('enfermedad__nombreenfermedad').annotate(enfermedad=Count('enfermedad'))
+    medicamentos=Casos.objects.values('id_comple_info__clasificacion_pbs__nombrepbs').annotate(medicamentos=Count('id_comple_info__clasificacion_pbs'))
+    barrera=Casos.objects.values('id_barrera__nombre').annotate(barreras=Count('id_barrera'))
+    
+    for x in barrera:
+        barr.append(x['id_barrera__nombre'])
+        labelsbarr.append(x['barreras'])
+    for x in medicamentos:
+        medic.append(x['id_comple_info__clasificacion_pbs__nombrepbs'])
+        labelsmedic.append(x['medicamentos'])
+    for x in enfermedad:
+        enfer.append(x['enfermedad__nombreenfermedad'])
+        labelsenfe.append(x['enfermedad'])
+    for x in genero:
+        generos.append(x['id_usuario__idgenero__nombregenero'])
+        labelsge.append(x['cant_genero'])
+    for x in municipio:
+        muni.append(x['id_usuario__cod_muni__nombremunicipio'])
+        labelsmuni.append(x['cant_mun'])
+    for z in departamento:
+        depart.append(z['id_usuario__cod_dep__nombre'])
+        labelsdep.append(z['cant_dep'])
+    print(depart)
+    for x in regimensub:
+        sub.append(x['id_usuario__idtiporegimen__nombreregimen'])
+        labelssub.append(x['cant_sub'])
+    for x in regimencont:
+        regcont.append(x['id_usuario__idtiporegimen__nombreregimen'])
+        labelsregcont.append(x['cant_cont'])
+    for r in regimen:
+        reg.append(r['id_usuario__idtiporegimen__nombreregimen'])
+        labelsreg.append(r['cant_reg'])
+    for e in eps:
+        epss.append(e['id_usuario__id_eps__nombre'])
+        labelseps.append(e['cant_eps'])
+    for abiertos in queryabierto:
+        abierto.append(abiertos['estado__nombreestado'])
+        labelsabierto.append(abiertos['cant_estado'])
+    for abiertos in queryproceso:
+        proceso.append(abiertos['estado__nombreestado'])
+        labelsproceso.append(abiertos['cant_estado'])
+    for abiertos in queryfinalizado:
+        finalizado.append(abiertos['estado__nombreestado'])
+        labelsfinalizado.append(abiertos['cant_estado'])
+    for nestados in queryestados:
+        estados.append(nestados['estado__nombreestado'])
+        labelsestados.append(nestados['cant_estado'])
+    print(epss)
+    return render(request,'analista/graficas.html',
+                  {
+                   'labelsestados':labelsestados,
+                   'estados':estados,
+                   'labelsabierto':labelsabierto,
+                   'abierto':abierto,
+                   'labelsfinalizado':labelsfinalizado,
+                   'finalizado':finalizado,
+                   'labelsproceso':labelsproceso,
+                   'proceso':proceso,
+                   'labelseps':labelseps,
+                   'EPS':epss,
+                   'labelsreg':labelsreg,
+                   'reg':reg,
+                   'casos':casos,
+                   'contributivo':regcont,
+                   'labelscont':labelsregcont,
+                   'subsidiado':labelssub,
+                   'departamento':depart,
+                   'labelsdep':labelsdep,
+                   'municipio':muni,
+                   'labelsmuni':labelsmuni,
+                   'genero':generos,
+                   'labelsge':labelsge,
+                   'enfermedad':enfer,
+                   'labelsenfer':labelsenfe,
+                   'medic':medic,
+                   'labelsmedic':labelsmedic,
+                   'barrera':barr,
+                   'labelsbarr':labelsbarr,
+                   
+                                                    })
 
 
 @login_required
 def get_data(request):
+    proceso=[]
+    labels=[]
+    query= Casos.objects.values('estado__nombreestado').filter(estado__nombreestado='abierto').annotate(cant_estado=Count('estado'))
+    for valor in query:
+        proceso.append(valor['estado__nombreestado'])
+        labels.append(valor['cant_estado'])
+    print(proceso)
+    print(labels)
     data={
-        'valor':100
+        'proceso':proceso,
+        'labels':labels
     }
+
     return JsonResponse(data)

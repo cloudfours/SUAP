@@ -9,22 +9,7 @@ from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from .models import *
-class EnviarCorreos(forms.ModelForm):
-    class Meta:
-        model=MensajesCorreo
-        fields=['para','asunto','mensaje','adjunto']
-        labels={
-            'para':'Para',
-            'asunto':'Asunto',
-            'mensaje':'Mensaje',
-            'adjunto':'Adjunto',
-        }
-        widgets={
-               'para':forms.TextInput(attrs={'class':'form-control'}),
-                'asunto':forms.TextInput(attrs={'class':'form-control'}),
-               'mensaje':forms.Textarea(attrs={'class':'form-control'}),
-               'adjunto':forms.FileInput(attrs={'class':'form-control','multiple':True})
-        }
+
 class AsignacionTareaForm(forms.ModelForm):
     
      class Meta:
