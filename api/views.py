@@ -28,7 +28,10 @@ import datetime
 from django.http import JsonResponse
 from django.core.files.storage import FileSystemStorage
 global usuario
-
+from django.template.loader import render_to_string
+from weasyprint import HTML
+from openpyxl import Workbook
+from openpyxl.styles import Alignment,Border,Font,PatternFill,Side
 
 @login_required
 def perfilUsuario(request):
@@ -462,8 +465,6 @@ def correo(request):
         
         desde = settings.EMAIL_HOST_USER
         email = EmailMessage(asunto,mensaje,desde,to=[para])
-        email.fail_silenty=False
-        email.send()  
         uploaded_file = request.FILES
         for file in uploaded_file.getlist('adjunto'):
           
@@ -484,21 +485,249 @@ aqui empieza los reportes
 
 @login_required
 def generar_report_caso(_request,id):
-  template_name='Gestor/reporte_por_caso.html'
   caso = Casos.objects.get(pk=id)
-  data = {
-      'caso':caso
-  }
+  context = {'caso':caso,
+             'hora_actual':datetime.datetime.now()}
+  html = render_to_string("Gestor/reporte_por_caso.html", context)
+
+  response = HttpResponse(content_type="application/pdf")
+  response["Content-Disposition"] = "inline; report.pdf"
+
   
-  return HttpResponse(pdf,content_type='application/pdf')
+  HTML(string=html).write_pdf(response)
+
+   
+  
+  return response
 
 
 
 @login_required
 def pagina_report(request):
-    return render(request,'Gestor/reporte_por_casol.html')
+    
+    return render(request,'Gestor/selecciontiporeporte.html')
 
-
+@login_required
+def reportes_general_excel(request):
+    casos = Casos.objects.all()
+    wb=Workbook()
+    bandera=True
+    cont=1
+ 
+    ws=wb.active 
+    ws=wb.create_sheet('Hoja'+str(cont))
+    ws['B1'].alignment=Alignment(horizontal='center',vertical='center')
+    ws['B1'].border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
+    ws['B1'].fill=PatternFill(start_color='66FFCC',end_color='66FFCC',fill_type='solid')
+    ws['B1'].font=Font(name='Calibri',size=12,bold=True)
+    ws['B1']='REPORTE GENERAL DE CASOS'
+    ws.merge_cells('B1:AH1')
+    ws.row_dimensions[1].height=25
+    ws.column_dimensions['B'].width=20
+    ws.column_dimensions['C'].width=20
+    ws.column_dimensions['D'].width=20
+    ws.column_dimensions['E'].width=20
+    ws.column_dimensions['F'].width=20
+    ws.column_dimensions['G'].width=20
+    ws.column_dimensions['H'].width=20
+    ws.column_dimensions['I'].width=20
+    ws.column_dimensions['J'].width=20
+    ws.column_dimensions['K'].width=20
+    ws.column_dimensions['L'].width=20
+    ws.column_dimensions['M'].width=20
+    ws.column_dimensions['N'].width=20
+    ws.column_dimensions['O'].width=20
+    ws.column_dimensions['P'].width=20
+    ws.column_dimensions['Q'].width=40
+    ws.column_dimensions['R'].width=40
+    ws.column_dimensions['S'].width=40
+    ws.column_dimensions['T'].width=20
+    ws.column_dimensions['U'].width=40
+    ws.column_dimensions['V'].width=20
+    ws.column_dimensions['W'].width=20
+    ws.column_dimensions['X'].width=20
+    ws.column_dimensions['Y'].width=20
+    ws.column_dimensions['Z'].width=40
+    ws.column_dimensions['AA'].width=40
+    ws.column_dimensions['AB'].width=40
+    ws.column_dimensions['AC'].width=40
+    ws.column_dimensions['AD'].width=40
+    ws.column_dimensions['AE'].width=40
+    ws.column_dimensions['AF'].width=40
+    ws.column_dimensions['AG'].width=30
+    ws.column_dimensions['AH'].width=30
+    ws['B3'].alignment=Alignment(horizontal='center',vertical='center')
+    ws['B3'].border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
+    ws['B3'].fill=PatternFill(start_color='66CFCC',end_color='66CFCC',fill_type='solid')
+    ws['B3'].font=Font(name='Calibri',size=10,bold=True)
+    ws['B3']='No caso'
+    ws['C3'].alignment=Alignment(horizontal='center',vertical='center')
+    ws['C3'].border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
+    ws['C3'].fill=PatternFill(start_color='66CFCC',end_color='66CFCC',fill_type='solid')
+    ws['C3'].font=Font(name='Calibri',size=10,bold=True)
+    ws['C3']='Nombres'
+    ws['D3'].alignment=Alignment(horizontal='center',vertical='center')
+    ws['D3'].border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
+    ws['D3'].fill=PatternFill(start_color='66CFCC',end_color='66CFCC',fill_type='solid')
+    ws['D3'].font=Font(name='Calibri',size=10,bold=True)
+    ws['D3']='Apellidos'
+    ws['E3'].alignment=Alignment(horizontal='center',vertical='center')
+    ws['E3'].border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
+    ws['E3'].fill=PatternFill(start_color='66CFCC',end_color='66CFCC',fill_type='solid')
+    ws['E3'].font=Font(name='Calibri',size=10,bold=True)
+    ws['E3']='Identificacion'
+    ws['F3'].alignment=Alignment(horizontal='center',vertical='center')
+    ws['F3'].border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
+    ws['F3'].fill=PatternFill(start_color='66CFCC',end_color='66CFCC',fill_type='solid')
+    ws['F3'].font=Font(name='Calibri',size=10,bold=True)
+    ws['F3']='Celular'
+    ws['G3'].alignment=Alignment(horizontal='center',vertical='center')
+    ws['G3'].border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
+    ws['G3'].fill=PatternFill(start_color='66CFCC',end_color='66CFCC',fill_type='solid')
+    ws['G3'].font=Font(name='Calibri',size=10,bold=True)
+    ws['G3']='Correo'
+    ws['H3'].alignment=Alignment(horizontal='center',vertical='center')
+    ws['H3'].border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
+    ws['H3'].fill=PatternFill(start_color='66CFCC',end_color='66CFCC',fill_type='solid')
+    ws['H3'].font=Font(name='Calibri',size=10,bold=True)
+    ws['H3']='Enfermedad'
+    ws['I3'].alignment=Alignment(horizontal='center',vertical='center')
+    ws['I3'].border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
+    ws['I3'].fill=PatternFill(start_color='66CFCC',end_color='66CFCC',fill_type='solid')
+    ws['I3'].font=Font(name='Calibri',size=10,bold=True)
+    ws['I3']='Estado actual'
+    ws['J3'].alignment=Alignment(horizontal='center',vertical='center')
+    ws['J3'].border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
+    ws['J3'].fill=PatternFill(start_color='66CFCC',end_color='66CFCC',fill_type='solid')
+    ws['J3'].font=Font(name='Calibri',size=10,bold=True)
+    ws['J3']='Gestor Farmaceutico'
+    ws['K3'].alignment=Alignment(horizontal='center',vertical='center')
+    ws['K3'].border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
+    ws['K3'].fill=PatternFill(start_color='66CFCC',end_color='66CFCC',fill_type='solid')
+    ws['K3'].font=Font(name='Calibri',size=10,bold=True)
+    ws['K3']='Terapia'
+    ws['L3'].alignment=Alignment(horizontal='center',vertical='center')
+    ws['L3'].border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
+    ws['L3'].fill=PatternFill(start_color='66CFCC',end_color='66CFCC',fill_type='solid')
+    ws['L3'].font=Font(name='Calibri',size=10,bold=True)
+    ws['L3']='Otra Terapia'
+    ws['M3'].alignment=Alignment(horizontal='center',vertical='center')
+    ws['M3'].border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
+    ws['M3'].fill=PatternFill(start_color='66CFCC',end_color='66CFCC',fill_type='solid')
+    ws['M3'].font=Font(name='Calibri',size=10,bold=True)
+    ws['M3']='Tipo de requerimiento'
+    ws['N3'].alignment=Alignment(horizontal='center',vertical='center')
+    ws['N3'].border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
+    ws['N3'].fill=PatternFill(start_color='66CFCC',end_color='66CFCC',fill_type='solid')
+    ws['N3'].font=Font(name='Calibri',size=10,bold=True)
+    ws['N3']='Clasificacion pbs'
+    ws['O3'].alignment=Alignment(horizontal='center',vertical='center')
+    ws['O3'].border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
+    ws['O3'].fill=PatternFill(start_color='66CFCC',end_color='66CFCC',fill_type='solid')
+    ws['O3'].font=Font(name='Calibri',size=10,bold=True)
+    ws['O3']='Medico Tratante'
+    ws['P3'].alignment=Alignment(horizontal='center',vertical='center')
+    ws['P3'].border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
+    ws['P3'].fill=PatternFill(start_color='66CFCC',end_color='66CFCC',fill_type='solid')
+    ws['P3'].font=Font(name='Calibri',size=10,bold=True)
+    ws['P3']='Seguna Barrera'
+    ws['Q3'].alignment=Alignment(horizontal='center',vertical='center')
+    ws['Q3'].border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
+    ws['Q3'].fill=PatternFill(start_color='66CFCC',end_color='66CFCC',fill_type='solid')
+    ws['Q3'].font=Font(name='Calibri',size=10,bold=True)
+    ws['Q3']='Fecha de radicacion de la EPS'
+    ws['R3'].alignment=Alignment(horizontal='center',vertical='center')
+    ws['R3'].border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
+    ws['R3'].fill=PatternFill(start_color='66CFCC',end_color='66CFCC',fill_type='solid')
+    ws['R3'].font=Font(name='Calibri',size=10,bold=True)
+    ws['R3']='Fecha de radicacion de la EPS'       
+    ws['S3'].alignment=Alignment(horizontal='center',vertical='center')
+    ws['S3'].border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
+    ws['S3'].fill=PatternFill(start_color='66CFCC',end_color='66CFCC',fill_type='solid')
+    ws['S3'].font=Font(name='Calibri',size=10,bold=True)
+    ws['S3']='Fecha de la formula médica' 
+    ws['T3'].alignment=Alignment(horizontal='center',vertical='center')
+    ws['T3'].border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
+    ws['T3'].fill=PatternFill(start_color='66CFCC',end_color='66CFCC',fill_type='solid')
+    ws['T3'].font=Font(name='Calibri',size=10,bold=True)
+    ws['T3']='Fecha de autorizacion'
+    ws['U3'].alignment=Alignment(horizontal='center',vertical='center')
+    ws['U3'].border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
+    ws['U3'].fill=PatternFill(start_color='66CFCC',end_color='66CFCC',fill_type='solid')
+    ws['U3'].font=Font(name='Calibri',size=10,bold=True)
+    ws['U3']='Fecha de radicacion formula medica'
+    ws['V3'].alignment=Alignment(horizontal='center',vertical='center')
+    ws['V3'].border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
+    ws['V3'].fill=PatternFill(start_color='66CFCC',end_color='66CFCC',fill_type='solid')
+    ws['V3'].font=Font(name='Calibri',size=10,bold=True)
+    ws['V3']='Fecha de autorizacion'
+    ws['W3'].alignment=Alignment(horizontal='center',vertical='center')
+    ws['W3'].border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
+    ws['W3'].fill=PatternFill(start_color='66CFCC',end_color='66CFCC',fill_type='solid')
+    ws['W3'].font=Font(name='Calibri',size=10,bold=True)
+    ws['W3']='Fecha de entrega'
+    ws['X3'].alignment=Alignment(horizontal='center',vertical='center')
+    ws['X3'].border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
+    ws['X3'].fill=PatternFill(start_color='66CFCC',end_color='66CFCC',fill_type='solid')
+    ws['X3'].font=Font(name='Calibri',size=10,bold=True)
+    ws['X3']='Origen de solicitud'
+    ws['Y3'].alignment=Alignment(horizontal='center',vertical='center')
+    ws['Y3'].border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
+    ws['Y3'].fill=PatternFill(start_color='66CFCC',end_color='66CFCC',fill_type='solid')
+    ws['Y3'].font=Font(name='Calibri',size=10,bold=True)
+    ws['Y3']='IPS'
+    ws['Z3'].alignment=Alignment(horizontal='center',vertical='center')
+    ws['Z3'].border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
+    ws['Z3'].fill=PatternFill(start_color='66CFCC',end_color='66CFCC',fill_type='solid')
+    ws['Z3'].font=Font(name='Calibri',size=10,bold=True)
+    ws['Z3']='Nombre del gestor'
+    ws['AA3'].alignment=Alignment(horizontal='center',vertical='center')
+    ws['AA3'].border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
+    ws['AA3'].fill=PatternFill(start_color='66CFCC',end_color='66CFCC',fill_type='solid')
+    ws['AA3'].font=Font(name='Calibri',size=10,bold=True)
+    ws['AA3']='Fecha de registro del seguimiento'
+    ws['AB3'].alignment=Alignment(horizontal='center',vertical='center')
+    ws['AB3'].border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
+    ws['AB3'].fill=PatternFill(start_color='66CFCC',end_color='66CFCC',fill_type='solid')
+    ws['AB3'].font=Font(name='Calibri',size=10,bold=True)
+    ws['AB3']='Descripcion del seguimiento'
+    ws['AC3'].alignment=Alignment(horizontal='center',vertical='center')
+    ws['AC3'].border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
+    ws['AC3'].fill=PatternFill(start_color='66CFCC',end_color='66CFCC',fill_type='solid')
+    ws['AC3'].font=Font(name='Calibri',size=10,bold=True)
+    ws['AC3']='Fecha de atencion de EPS' 
+    ws['AD3'].alignment=Alignment(horizontal='center',vertical='center')
+    ws['AD3'].border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
+    ws['AD3'].fill=PatternFill(start_color='66CFCC',end_color='66CFCC',fill_type='solid')
+    ws['AD3'].font=Font(name='Calibri',size=10,bold=True)
+    ws['AD3']='Fecha de estado abierta' 
+    ws['AE3'].alignment=Alignment(horizontal='center',vertical='center')
+    ws['AE3'].border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
+    ws['AE3'].fill=PatternFill(start_color='66CFCC',end_color='66CFCC',fill_type='solid')
+    ws['AE3'].font=Font(name='Calibri',size=10,bold=True)
+    ws['AE3']='Fecha de estado en proceso' 
+    ws['AF3'].alignment=Alignment(horizontal='center',vertical='center')
+    ws['AF3'].border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
+    ws['AF3'].fill=PatternFill(start_color='66CFCC',end_color='66CFCC',fill_type='solid')
+    ws['AF3'].font=Font(name='Calibri',size=10,bold=True)
+    ws['AF3']='Fecha de estado finalizado'
+    ws['AG3'].alignment=Alignment(horizontal='center',vertical='center')
+    ws['AG3'].border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
+    ws['AG3'].fill=PatternFill(start_color='66CFCC',end_color='66CFCC',fill_type='solid')
+    ws['AG3'].font=Font(name='Calibri',size=10,bold=True)
+    ws['AG3']='No radicado' 
+    ws['AH3'].alignment=Alignment(horizontal='center',vertical='center')
+    ws['AH3'].border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
+    ws['AH3'].fill=PatternFill(start_color='66CFCC',end_color='66CFCC',fill_type='solid')
+    ws['AH3'].font=Font(name='Calibri',size=10,bold=True)
+    ws['AH3']='Descripcion del caso'      
+        
+    nombre_del_archivo='ReporteCaso.xlsx'
+    response=HttpResponse(content_type='application/ms-excel')
+    contenido='attachment;filename = {0}'.format(nombre_del_archivo)
+    response['Content-Disposition']=contenido
+    wb.save(response)
+    return response
 '''
 aqui empieza las graficas 
 '''

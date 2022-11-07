@@ -105,6 +105,16 @@ margin-top: 25px;
     align-items: center;
     margin: 5px 15px;
 }
+.reportesgeneral{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    width: 1000px;
+    height: 259px;
+    margin-left: 177px;
+    margin-top: 83px;
+    justify-content: space-between;
+}
 @media screen and (max-width: 768px){
 .icono_caja{
     left: 458px;

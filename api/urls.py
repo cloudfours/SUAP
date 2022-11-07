@@ -32,5 +32,6 @@ path('enviarajaxsegui/',segui_co_post_ajax,name='seguioajax'),
 path('enviarcorreos/',correo,name='correo'),
 path('reporteporcaso/<int:id>',generar_report_caso,name='reportcaso'),
 path('graficas/',vista_graficas,name='graficas'),
-
+path('reportecaso/',pagina_report,name='reporte'),
+path('reporte-genera-excel/',reportes_general_excel,name='excel')
 ]
