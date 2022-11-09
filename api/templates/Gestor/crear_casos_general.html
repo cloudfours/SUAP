@@ -1,0 +1,17 @@
+{% extends 'informacion_paciente.html' %}
+{% block content %}
+<div class='caja_seguimiento'>
+    <h2>Generar un reporte en general</h2>
+    <form method="POST" action="" class='h-100 w-100 d-flex flex-column justify-content-around'>
+    <div class='d-flex justify-content-center align-items-center'>
+    <select class="form-select" aria-label="Default select example">
+        <option selected>Seleccione</option>
+        <option value="Pdf">Pdf</option>
+        <option value="Excel">Excel</option>
+   
+      </select>
+    </div>
+      <input type='submit' class='btn btn-primary' value='generar'>
+    </form>
+</div>
+{% endblock %}

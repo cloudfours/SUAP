@@ -46,7 +46,7 @@
         </div>
     </div>
     </div>
-    <table id="example" class="table table-hover  table-striped display responsive nowrap" style="width:100%">
+    <table id="example" class="table table-bordered display  responsive nowrap" style="width:100%">
     <thead class='bg-primary bg-gradient'>
         <tr>
             <th class='text-light'>ID caso</th>
@@ -78,10 +78,17 @@
             <td>{{caso.enfermedad.nombreenfermedad}}</td>
             <td>{{caso.id_usuario.id_eps.nombre}}</td>
             <td>{{caso.estado.nombreestado}}</td>
-    
+             {% if  caso.id_comple_info is None or caso.id_seguimiento is None %}
+             <td><button type='button' class='bg-transparent w-25'><i class="fa-solid fa-file icons_tabla"></i></button></td>
+             <td><button  type='button'   class='bg-transparent w-25' ><i class="fa-solid fa-right-to-bracket icons_tabla"></i></button></td>            
+
+            {% elif not caso.id_seguimiento  is None or caso.id_comple.info is None %}
+
             <td><button type='button' class='bg-transparent w-25'  onclick="abrir_moda_info('{% url 'editarInfo' caso.id_comple_info %}')"><i class="fa-solid fa-file icons_tabla"></i></button></td>
             <td><button  type='button'   class='bg-transparent w-25' onclick="abrir_moda_segui('{% url 'editarsegui' caso.id_seguimiento %}')"><i class="fa-solid fa-right-to-bracket icons_tabla"></i></button></td>
-            <td><a><i class="fa-solid fa-file-pdf  icons_tabla"></i></a></td>
+
+            {% endif %}
+            <td><a href="{% url 'reportcaso' caso.id_caso %}" target="_blank"><i class="fa-solid fa-file-pdf  icons_tabla"></i></a></td>
             <td><a href='{% url 'editarGestor' caso.id_caso %}'><i class="fa-solid fa-square-pen  icons_tabla"></i></a>
          
          

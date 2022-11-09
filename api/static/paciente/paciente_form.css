@@ -134,7 +134,9 @@ span {
 }
 
 .icons_tabla:hover {
-    color: #184193;
+    color: #e93636;
+
+    transition: all 2s ease-in-out;
 }
 
 

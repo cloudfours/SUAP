@@ -1,0 +1,206 @@
+{% extends 'informacion_paciente.html' %}
+{% block content %}
+<div class='caja_calendario'>
+  <input type='button' class='btn btn-primary' data-bs-target="#myModal" onclick="abrir_moda_crear('{% url 'guardaractividad' %}')" value='Crear tarea'/>
+  <div class='container'>
+    <div class='row'>
+      <div class='col-lg-12'>
+        <table id="calendar" class="table table-bordered display nowrap" cellspacing="0" style="width:100%">
+          <thead class='bg-primary bg-gradient'>
+              <tr>
+                  <th class='text-light'>nombre del gestor</th>
+                  <th class='text-light'>actividad</th>
+                  <th class='text-light'>fecha programada</th>
+                  <th class='text-light'>fecha de registro</th>
+                  <th class='text-light'>Quien lo asigna</th>
+                  <th class='text-light'>Detalle de la actividad</th>
+                  <th class='text-light'>Editar actividad</th>
+                  <th class='text-light'>Eliminar</th>
+                 
+              </tr>
+          </thead>
+          <tbody>
+            {% if actividad %}
+              {% for fecha in actividad%}
+        
+              <tr class='shadow-sm p-3 mb-5 bg-body rounded'>
+                  <td>{{fecha.id_gest.id_datos_us.primer_nombre}}</td>
+                  <td>{{fecha.actividad}}</td>
+                  <td>{{fecha.fecha}} </td>
+                  <td>{{fecha.fech_registro}} </td>
+                 <td>{{fecha.asginacion}}</td>
+                  <td><button type='button' class='bg-transparent w-25' data-bs-toggle="modal" onclick="abrir_moda_info('{% url 'mostraractividad' fecha.id %}')"><i class="fa-solid fa-eye icons_tabla"></i></button></td>
+                  <td><button  type='button'   class='bg-transparent w-25'  onclick="abrir_moda_editar('{% url 'editaractividad' fecha.id %}')"><i class="fa-solid fa-right-to-bracket icons_tabla"></i></button></td>
+                
+                  <td>
+               
+               
+                     
+                      <button type='button'  class='bg-transparent w-25'  onclick="eliminar('{% url 'eliminaractividad' fecha.id %}')"><i class="fa-solid fa-trash-can  icons_tabla"></i></button>
+                
+                        
+                  </td>
+            
+              </tr>
+              
+           
+           
+           {% endfor %}
+           {% endif %}
+          </tbody>
+          <tfoot>
+              <tr>
+                <th class='text-dark'>nombre del gestor</th>
+                <th class='text-dark'>actividad</th>
+                <th class='text-dark'>fecha programada</th>
+                <th class='text-dark'>fecha de registro</th>
+                <th class='text-light'>Quien lo asigna</th>
+                <th class='text-dark'>Detalle de la actividad</th>
+                <th class='text-dark'>Editar actividad</th>
+                <th class='text-dark'>Eliminar</th>
+              </tr>
+          </tfoot>
+      </table>
+      </div>
+    </div>
+  </div>
+ 
+</div>
+
+{% for message in messages %}
+  {% if message.tags == 'success'%}
+  <script type=text/javascript>
+    $(document).ready(function(){
+        toastr.{{ message.tags }}('{{ message }}')
+     
+    })
+    toastr.options = {
+        "closeButton": false,
+        "debug": false,
+        "newestOnTop": false,
+        "progressBar": true,
+        "positionClass": "toast-top-center",
+        "preventDuplicates": false,
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "5000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+      }   
+</script>
+   {% endif %}
+   {% endfor %} 
+</div>
+
+{% endblock %}
+
+{% block modal %}
+<div class="modal fade" id="myModal" name='crear'>
+  
+</div>
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+   
+</div>
+<div class="modal fade" id="editaractividad" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+   
+</div>
+<div class="modal fade" id="eliminar" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+   
+</div>
+
+{% endblock %}
+{% block js %}
+<script type="text/javascript">
+  // let formData = new FormData();
+  // formData.append('title', $('#title').val().trim());
+  {% comment %} let formulario = document.getElementById('formulario')
+  formulario.addEventListener('submit', function (e) {
+    e.preventDefault()
+    const gestor = document.getElementById('id_id_gest').value
+    const actividad = document.getElementById('id_actividad').value;
+    const registro = document.getElementById('id_fech_registro').value;
+    const descripcion = document.getElementById('id_detalle').value;
+    if (gestor == '' || actividad == '' || registro == '' || descripcion == '') {
+      Swal.fire(
+        'Aviso', 'todos los campos son requeridos',
+        'warning'
+      )
+    } else {
+      const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;  
+  let request = $.ajax({
+    type: "POST",
+    headers:{'X-CSRFToken':csrftoken,
+    "X-Requested-With": "XMLHttpRequest"},
+    url: "{% url 'guardaractividad' %}",
+    dataType: 'json',
+    data:$('#formulario').serialize(),
+    success: function (data) {
+      if(data.msg=='success') {
+        Swal.fire(
+          'Aviso registro exitoso', data.msg,
+          'warning'
+        )  
+      }
+  }
+    
+  })
+  request.done(function(response) {
+    $('#myModal').modal('hide')
+    window.location.reload()
+     // Cierra el modal, oculta el identificador eliminado, etc.
+ });
+
+} {% endcomment %}
+
+  {% comment %} }) {% endcomment %}
+  function abrir_moda_info(url) {
+    let e;
+  
+     $('#exampleModal').load(url, function () {
+         $(this).modal('show')
+     })
+    } 
+    function abrir_moda_editar(url) {
+      let e;
+    
+       $('#editaractividad').load(url, function () {
+           $(this).modal('show')
+       })
+      } 
+    function abrir_moda_crear(url) {
+      let e;
+    
+       $('#myModal').load(url, function () {
+           $(this).modal('show')
+       })
+      } 
+      function eliminar(url) {
+        let e;
+      
+         $('#eliminar').load(url, function () {
+             $(this).modal('show')
+         })
+        } 
+    
+       
+  
+     
+  
+  
+    {% comment %} function mod(){
+      $('#mostrar').modal('show');
+    }
+     {% endcomment %}
+
+
+{% comment %} function abrir(){
+  $('#myModal').modal('show');
+} {% endcomment %}
+
+
+</script>
+{% endblock %}

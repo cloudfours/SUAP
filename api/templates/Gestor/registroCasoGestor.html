@@ -2,7 +2,7 @@
 
 {% block content %}
 <div class="caja_form">
-    <form method="POST" class="form_caso" enctype="multipart/form-data">
+    <form method="POST" class="form_caso" enctype="multipart/form-data" name='registrarcaso'>
         {% csrf_token %}
         <div class="caja-titulo">
             <h3>Crear  Caso</h3>

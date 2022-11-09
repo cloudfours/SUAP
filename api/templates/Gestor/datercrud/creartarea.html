@@ -1,0 +1,29 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header bg-info">
+        <h4 class="modal-title">Actividad</h4>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <form method="POST" class='form-floating' name='registrartarea' id='formulario' action="{% url 'guardaractividad' %}">
+        {% csrf_token %}
+        <div class="modal-body">
+          {% for field in actividad %}
+        
+          <label  for="{{ field.name }}">{{ field.label }}</label>
+          {{ field }}
+    
+            {% endfor %}
+          
+        <div class="modal-footer">
+          <input type="button" class="btn btn-secondary" data-bs-dismiss="modal" value='cancelar'/>
+          <input type="submit"  class="btn btn-primary" value='guardar'/>
+          
+    
+        </div>
+      </form>
+
+    </div>
+  </div>

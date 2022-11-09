@@ -20,7 +20,20 @@ urlpatterns = [
  path('infoeditar/<int:id>',editarInfo,name='editarInfo'),
 path('seguimientoeditar/<int:id>',editarSegui,name='editarsegui'),
 path('actividades/',calendario_activdades,name='actividades'),
-# path('obtenergestor/',obtener_gestor,name='gestor'),
-path('guardaractividad/',guardar,name='guardaractividad')
-
+path('mostraractividad/<int:id>',mostrarinfo,name='mostraractividad'),
+path('guardaractividad/',guardar,name='guardaractividad'),
+path('editaractividad/<int:id>',editaractividad,name='editaractividad'),
+path('eliminaractividad/<int:id>',actividadCrudDelete,name='eliminaractividad'),
+path('ajax_eliminaractividad/',ajax_eliminaractividad,name='ajax_eliminaractividad'),
+path('infocreareditar/',informacionComplementariasCrear,name='infocreareditar'),
+path('seguicreareditar/',seguimientoGestor_creareditar,name='seguicreareditar'),
+path('enviarajaxinfo/',info_co_post_ajax,name='infoajax'),
+path('enviarajaxsegui/',segui_co_post_ajax,name='seguioajax'),
+path('enviarcorreos/',correo,name='correo'),
+path('reporteporcaso/<int:id>',generar_report_caso,name='reportcaso'),
+path('graficas/',vista_graficas,name='graficas'),
+path('reportecaso/',pagina_report,name='reporte'),
+path('reporte-genera-excel/',reportes_general_excel,name='excel'),
+path('reporte-general-pdf/',generar_report_caso_general,name='pdfgeneral'),
+path('reporte-graficas-pdf/',generar_report_graficas,name='pdf-graficas')
 ]

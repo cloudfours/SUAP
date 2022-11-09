@@ -9,27 +9,32 @@ from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from .models import *
+
 class AsignacionTareaForm(forms.ModelForm):
     
      class Meta:
-         COLOR_CHOICES = ['#8b0000', '#ffff00', '#006400']
+   
          model=AsignacionTarea
-         fields=['id_gest','actividad','detalle','fecha','fech_registro','color']
+         fields=['id_gest','actividad','detalle','fecha','fech_registro','color','asginacion']
          labels={
              'id_gest':'Nombre del gestor',
              'actividad':'Actividad',
              'detalle':'Detalle de la actividad',
              'fecha':'Fecha',
              'fech_registro':'Fecha de registro',
-             'color':'Color:'
+             'color':'Color:',
+             'asginacion':'Quien lo asigna'
+             
          }
          widgets={
                    'id_gest':forms.Select(attrs={'class':'form-control'}),
                   'actividad':forms.TextInput(attrs={'class':'form-control'}),
-                  'fecha':forms.DateInput(attrs={'class':'form-control datetimepicker-input','type':'date','placeholder':'ingrese fecha'},format='%Y-%m-%d'),
-                  'fech_registro':forms.DateInput(attrs={'class':'form-control datetimepicker-input','type':'date','placeholder':'ingrese fecha'},format='%Y-%m-%d'),
+                  'fecha':forms.DateInput(attrs={'class':'form-control datetimepicker-input','type':'datetime-local','placeholder':'ingrese fecha','required':False},format='%Y-%m-%d %H:%M'),
+                  'fech_registro':forms.DateInput(attrs={'class':'form-control datetimepicker-input','type':'datetime-local','placeholder':'ingrese fecha','required':False},format='%Y-%m-%d %H:%M'),
                   'detalle':forms.Textarea(attrs={'class':'form-control '}),
-                  'color':forms.TextInput(attrs={'class': 'form-control ','type':'color'})
+                  'color':forms.TextInput(attrs={'class': 'form-control ','type':'color'}),
+                  'asginacion':forms.TextInput(attrs={'class':'form-control '}),
+                  
                  
         }
          
@@ -48,7 +53,7 @@ class seguimientoFormulario(forms.ModelForm):
         widgets={
                    'id_seg':forms.NumberInput(attrs={'class':'form-control'}),
                   'id_gestor':forms.Select(attrs={'class':'form-control'}),
-                  'fecharegistro':forms.DateInput(attrs={'class':'form-control datetimepicker-input','type':'date','placeholder':'ingrese fecha'},format='%Y-%m-%d'),
+                  'fecharegistro':forms.DateInput(attrs={'class':'form-control ','type':'date','placeholder':'ingrese fecha'},format='%Y-%m-%d'),
                   'descripcion':forms.Textarea(attrs={'class':'form-control '}),
         }
 class informacionComplementaria(forms.ModelForm):
@@ -85,22 +90,24 @@ class informacionComplementaria(forms.ModelForm):
             'medico_trat':forms.TextInput(attrs={'class':'form-control'}),
             'especialidad_med':forms.Select(attrs={'class':'form-control '}),
             'segunda_barrera':forms.TextInput(attrs={'class':'form-control'}),
-            'fech_rad_for_eps':forms.DateInput(attrs={'class':'form-control datetimepicker-input','type':'datetime-local','placeholder':'ingrese fecha','required':False},format='%Y-%m-%d %H:%M'),
-            'fecha_for_medi':forms.DateInput(attrs={'class':'form-control datetimepicker-input','type':'datetime-local','placeholder':'ingrese fecha'},format='%Y-%m-%d %H:%M'),
-            'fecha_aut':forms.DateInput(attrs={'class':'form-control datetimepicker-input','type':'datetime-local','placeholder':'ingrese fecha'},format='%Y-%m-%d %H:%M'),
-            'fech_rad_aut_farm':forms.DateInput(attrs={'class':'form-control datetimepicker-input','type':'datetime-local','placeholder':'ingrese fecha'},format='%Y-%m-%d %H:%M'),
-            'fecha_entrega':forms.DateInput(attrs={'class':'form-control datetimepicker-input','type':'datetime-local','placeholder':'ingrese fecha'},format='%Y-%m-%d %H:%M'),
+            'fech_rad_for_eps':forms.DateInput(attrs={'class':'form-control datetimepicker-input','type':'date','placeholder':'ingrese fecha','required':False},format='%Y-%m-%d '),
+            'fecha_for_medi':forms.DateInput(attrs={'class':'form-control datetimepicker-input','type':'date','placeholder':'ingrese fecha'},format='%Y-%m-%d '),
+            'fecha_aut':forms.DateInput(attrs={'class':'form-control datetimepicker-input','type':'date','placeholder':'ingrese fecha'},format='%Y-%m-%d '),
+            'fech_rad_aut_farm':forms.DateInput(attrs={'class':'form-control datetimepicker-input','type':'date','placeholder':'ingrese fecha'},format='%Y-%m-%d '),
+            'fecha_entrega':forms.DateInput(attrs={'class':'form-control datetimepicker-input','type':'date','placeholder':'ingrese fecha'},format='%Y-%m-%d'),
             'origen_soli':forms.TextInput(attrs={'class':'form-control'}),
             'ips_id_terapia':forms.Select(attrs={'class':'form-control'}),
         }
 class EditarFormGestor(forms.ModelForm):
     def __init__(self,*args,**kwargs):
         super().__init__(*args,**kwargs)
-        self.fields['id_comple_info'].required=False
-        self.fields['id_seguimiento'].required=False
+
         self.fields['fechaatenfinalizado'].required=False
         self.fields['fechaatenabierto'].required=False
         self.fields['fechaatenproceso'].required=False
+        self.fields['formula_medica'].required=False
+        self.fields['adjunto_seg'].required=False
+        self.fields['adjunto_terc'].required=False
        
     class Meta:
         model=Casos
@@ -136,12 +143,12 @@ class EditarFormGestor(forms.ModelForm):
             'id_usuario':forms.Select(attrs={'class':'form-control'}),
             'id_gest': forms.Select(attrs={'class':'form-control'}),
             'estado': forms.Select(attrs={'class':'form-control'}),
-            'fecharesgistrocaso':forms.DateTimeInput(attrs={'class':'form-control datetimepicker-input','type':'datetime-local','placeholder':'ingrese fecha'},format='%Y-%m-%d %H:%M'),
-            'fechaatenproceso':forms.DateTimeInput(attrs={'class':'form-control datetimepicker-input','type':'datetime-local','placeholder':'ingrese fecha','required':False},format='%Y-%m-%d %H:%M'),
-            'fechaatenfinalizado':forms.DateTimeInput(attrs={'class':'form-control datetimepicker-input','type':'datetime-local','placeholder':'ingrese fecha','required':False},format='%Y-%m-%d %H:%M'),
-            'fechaatenabierto':forms.DateTimeInput(attrs={'class':'form-control datetimepicker-input','type':'datetime-local','placeholder':'ingrese fecha','required':False},format='%Y-%m-%d %H:%M'),
+            'fecharesgistrocaso':forms.DateInput(attrs={'class':'form-control ','type':'date','placeholder':'ingrese fecha'},format='%Y-%m-%d'),
+            'fechaatenproceso':forms.DateInput(attrs={'class':'form-control ','type':'date','placeholder':'ingrese fecha'},format='%Y-%m-%d'),
+            'fechaatenfinalizado':forms.DateInput(attrs={'class':'form-control ','type':'date','placeholder':'ingrese fecha'},format='%Y-%m-%d'),
+            'fechaatenabierto':forms.DateInput(attrs={'class':'form-control','type':'date','placeholder':'ingrese fecha'},format='%Y-%m-%d'),
             'numeroradicado':forms.NumberInput(attrs={'class':'form-control '}),
-            'fechaatencioneps':forms.DateTimeInput(attrs={'class':'form-control datetimepicker-input','type':'datetime-local','placeholder':'ingrese fecha'},format='%Y-%m-%d %H:%M'),
+            'fechaatencioneps':forms.DateInput(attrs={'class':'form-control','type':'date','placeholder':'ingrese fecha'},format='%Y-%m-%d'),
             'descripcioncaso':forms.Textarea(attrs={'class':'form-control '}),
             'enfermedad':forms.Select(attrs={'class':'form-control '}),
             'formula_medica':forms.FileInput(attrs={'class':'form-control','multiple':True}),
@@ -151,7 +158,7 @@ class EditarFormGestor(forms.ModelForm):
             'id_comple_info':forms.Select(attrs={'class':'form-control'}),
             'id_seguimiento':forms.Select(attrs={'class':'form-control','default':'0'}),
             'id_barrera':forms.Select(attrs={'class':'form-control'}),
-            'hora':forms.TimeInput(attrs={'class':'form-control'}),
+            'hora':forms.TimeInput(attrs={'class':'form-control','type':'time'}),
         }
 
 class CasosForm(forms.ModelForm):
@@ -177,8 +184,8 @@ class CasosForm(forms.ModelForm):
             # 'id_caso':forms.NumberInput(attrs={'class':'form-control'}),
             'id_usuario':forms.Select(attrs={'class':'form-control'}),
             'numeroradicado':forms.NumberInput(attrs={'class':'form-control ','readonly':'readonly'}),
-            'fechaatencioneps':forms.DateTimeInput(attrs={'class':'form-control datetimepicker-input','type':'datetime-local','placeholder':'ingrese fecha'},format='%Y-%m-%d %H:%M'),
-            'fecharesgistrocaso':forms.DateTimeInput(attrs={'class':'form-control datetimepicker-input','type':'datetime-local','placeholder':'ingrese fecha'},format='%Y-%m-%d %H:%M'),
+            'fechaatencioneps':forms.DateTimeInput(attrs={'class':'form-control ','type':'date','placeholder':'ingrese fecha'},format='%Y-%m-%d'),
+            'fecharesgistrocaso':forms.DateTimeInput(attrs={'class':'form-control ','type':'date','placeholder':'ingrese fecha'},format='%Y-%m-%d'),
             'descripcioncaso':forms.Textarea(attrs={'class':'form-control '}),
             'enfermedad':forms.Select(attrs={'class':'form-control '}),
             'formula_medica':forms.FileInput(attrs={'class':'form-control'}),
@@ -299,3 +306,9 @@ class userRegister(UserCreationForm):
     class Meta:
         model = User
         fields = ('username', 'email', 'password1', 'password2',)
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        qs = User.objects.filter(email=email)
+        if qs.exists():
+            raise forms.ValidationError("La direccion email ya existe")
+        return email

@@ -2,7 +2,7 @@
 
 {% block content %}
 <div class="caja_form">
-    <form method="POST" class="form_caso" enctype="multipart/form-data">
+    <form method="POST" class="form_caso" enctype="multipart/form-data" name='editar'>
         {% csrf_token %}
         <div class="caja-titulo">
             <h3>Editar  Caso</h3>
@@ -58,28 +58,46 @@
           
           
     </div>
-    
+    <input type="button" class="btn btn-primary w-50 h-50 boton" data-bs-toggle="modal" data-bs-target="#exampleModal"
+    onclick="abrir_moda_info('{% url 'infocreareditar' %}')"value='Informacion complementaria'/> 
+    <input type="button" class="btn btn-primary w-50 h-50 boton" data-bs-toggle="modal" data-bs-target="#exampleModal"
+    onclick="abrir_moda_segui('{% url 'seguicreareditar' %}')"value='Seguimiento del caso'/>
     <div class="files-editar">
         <div>
         <label for="{{forma_persona.name}}">{{forma_persona.numeroradicado.label}}</label>
         {{forma_persona.numeroradicado}}
+     
         </div>
         <div class='boton_caso'>
             <div>
         <label for="{{forma_persona.name}}">{{forma_persona.formula_medica.label}}</label>
         {{forma_persona.formula_medica}}
-            </div>
-            <div>
-        <label for="{{forma_persona.name}}">{{forma_persona.adjunto_pri.label}}</label>
-        {{forma_persona.adjunto_pri}}
+        {% if caso.formula_medica  %}
+        <a href='{{caso.formula_medica.url}}' download>{{caso.formula_medica}}</a>
+       
+        {% else  %}
+        <a href='#' download></a>
+        {% endif %}
             </div>
             <div>
         <label for="{{forma_persona.name}}">{{forma_persona.adjunto_seg.label}}</label>
         {{forma_persona.adjunto_seg}}
+        {% if caso.adjunto_seg  %}
+        <a href='{{caso.adjunto_seg.url}}' download>{{caso.adjunto_seg}}</a>
+       
+        {% else  %}
+        <a href='#' download></a>
+        {% endif %}
             </div>
             <div>
         <label for="{{forma_persona.name}}">{{forma_persona.adjunto_terc.label}}</label>
         {{forma_persona.adjunto_terc}}
+        {% if caso.adjunto_seg %}
+        <a href='{{caso.adjunto_seg.url}}' download>{{caso.adjunto_terc}}</a>
+       
+        {% else   %}
+        <a href='#' download></a>
+        {% endif %}
             </div>
         </div>
         <input type="submit" class="btn btn-primary  boton_submit" value="Editar caso">
@@ -121,3 +139,31 @@
 {% endblock %}
 
       {% endcomment %}
+      {% block modal %}
+<div class="modal fade" id="infoCo" role="dialog"  tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+</div>
+<div class="modal fade" id="segui" role="dialog"  tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+</div>
+{% endblock%}
+
+
+{% block js %}
+    <script type="text/javascript">
+        function abrir_moda_info(url) {
+           let e;
+ 
+            $('#infoCo').load(url, function () {
+                $(this).modal('show')
+            })
+        }
+        function abrir_moda_segui(url) {
+            let e;
+  
+             $('#segui').load(url, function () {
+                 $(this).modal('show')
+             })
+         }
+    </script>
+{% endblock %}
