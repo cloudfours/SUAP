@@ -15,6 +15,8 @@ from django.core import serializers
 from api.models import *
 from django.shortcuts import get_object_or_404, render, redirect
 from django.http import HttpResponseRedirect
+
+from servidor.settings import BASE_DIR
 from .forms import datosuserForm, userRegister, datosuserFormEdit, CasosForm,EditarFormGestor,informacionComplementaria,seguimientoFormulario,AsignacionTareaForm
 from django.contrib import messages
 from django.urls import reverse_lazy
@@ -225,10 +227,11 @@ def editarCrudGestor(request,id):
         segui = Seguimiento.objects.all().last()
         caso=Casos.objects.get(pk=id)
         if request.method == 'GET':
-              
-                forma_persona = EditarFormGestor(instance=caso)
+                initial_data = {'id_seguimiento':segui,'id_comple_info':infocom}  
+                forma_persona = EditarFormGestor(instance=caso,initial=initial_data)
              
         else:
+               
                 forma_persona = EditarFormGestor(request.POST,request.FILES,instance=caso)
                
                
@@ -238,8 +241,8 @@ def editarCrudGestor(request,id):
                     messages.add_message(request, messages.SUCCESS, message='Se ha editado con exito')
                     return redirect('busqueda')
                 else:
-                   initial_data = {'id_seguimiento':segui,'id_comple_info':infocom}
-                   forma_persona = CasosForm(initial=initial_data)
+         
+                 forma_persona = CasosForm()
    except AttributeError as e:
                    print(e)
                
@@ -456,27 +459,22 @@ envios de correos
 '''
 @login_required
 def correo(request):
-    print(request.POST)
+    print(request.FILES)
     if request.method=='POST':
-    
+        adjunto = request.POST['adjunto']
         para = request.POST["para"]
         asunto=request.POST.get("asunto")
         mensaje=request.POST["mensaje"]
-        
         desde = settings.EMAIL_HOST_USER
         email = EmailMessage(asunto,mensaje,desde,to=[para])
-        uploaded_file = request.FILES
-        for file in uploaded_file.getlist('adjunto'):
-          
-           email.attach_file(file.name, file.read(), file.content_type)
-           print('-------------------',file.name)
-        email.fail_silenty=False
-        email.send()  
-        return redirect('busqueda')
-    else:
-        redirect('correo')
-    
-    
+        try:
+            email.attach_file('media/uploads/'+adjunto)
+            email.fail_silenty=False
+            email.send()
+            return redirect('busqueda')
+        except  FileNotFoundError:
+            return redirect('correo')
+        
     return render(request,'Gestor/correo.html')
 
 '''
@@ -489,6 +487,34 @@ def generar_report_caso(_request,id):
   context = {'caso':caso,
              'hora_actual':datetime.datetime.now()}
   html = render_to_string("Gestor/reporte_por_caso.html", context)
+
+  response = HttpResponse(content_type="application/pdf")
+  response["Content-Disposition"] = "inline; report.pdf"
+
+  
+  HTML(string=html).write_pdf(response)
+  
+@login_required
+def generar_report_graficas(_request):
+    casos=Casos.objects.all()
+    
+    html = render_to_string("analista/graficas.html")
+
+    response = HttpResponse(content_type="application/pdf")
+    response["Content-Disposition"] = "inline; report.pdf"
+
+        
+    HTML(string=html).write_pdf(response)
+
+   
+  
+    return response
+@login_required
+def generar_report_caso_general(_request):
+  casos = Casos.objects.all()
+  context = {'casos':casos,
+             'hora_actual':datetime.datetime.now()}
+  html = render_to_string("Gestor/generar_pdf_reporte_general.html", context)
 
   response = HttpResponse(content_type="application/pdf")
   response["Content-Disposition"] = "inline; report.pdf"
@@ -640,7 +666,7 @@ def reportes_general_excel(request):
     ws['R3'].border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
     ws['R3'].fill=PatternFill(start_color='66CFCC',end_color='66CFCC',fill_type='solid')
     ws['R3'].font=Font(name='Calibri',size=10,bold=True)
-    ws['R3']='Fecha de radicacion de la EPS'       
+    ws['R3']='Especialidad medica'       
     ws['S3'].alignment=Alignment(horizontal='center',vertical='center')
     ws['S3'].border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
     ws['S3'].fill=PatternFill(start_color='66CFCC',end_color='66CFCC',fill_type='solid')
@@ -660,67 +686,201 @@ def reportes_general_excel(request):
     ws['V3'].border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
     ws['V3'].fill=PatternFill(start_color='66CFCC',end_color='66CFCC',fill_type='solid')
     ws['V3'].font=Font(name='Calibri',size=10,bold=True)
-    ws['V3']='Fecha de autorizacion'
+    ws['V3']='Fecha de entrega'
     ws['W3'].alignment=Alignment(horizontal='center',vertical='center')
     ws['W3'].border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
     ws['W3'].fill=PatternFill(start_color='66CFCC',end_color='66CFCC',fill_type='solid')
     ws['W3'].font=Font(name='Calibri',size=10,bold=True)
-    ws['W3']='Fecha de entrega'
+    ws['W3']='Origen de solicitud'
     ws['X3'].alignment=Alignment(horizontal='center',vertical='center')
     ws['X3'].border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
     ws['X3'].fill=PatternFill(start_color='66CFCC',end_color='66CFCC',fill_type='solid')
     ws['X3'].font=Font(name='Calibri',size=10,bold=True)
-    ws['X3']='Origen de solicitud'
+    ws['X3']='IPS'
     ws['Y3'].alignment=Alignment(horizontal='center',vertical='center')
     ws['Y3'].border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
     ws['Y3'].fill=PatternFill(start_color='66CFCC',end_color='66CFCC',fill_type='solid')
     ws['Y3'].font=Font(name='Calibri',size=10,bold=True)
-    ws['Y3']='IPS'
+    ws['Y3']='Nombre del gestor'
     ws['Z3'].alignment=Alignment(horizontal='center',vertical='center')
     ws['Z3'].border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
     ws['Z3'].fill=PatternFill(start_color='66CFCC',end_color='66CFCC',fill_type='solid')
     ws['Z3'].font=Font(name='Calibri',size=10,bold=True)
-    ws['Z3']='Nombre del gestor'
+    ws['Z3']='Fecha de registro del seguimiento'
     ws['AA3'].alignment=Alignment(horizontal='center',vertical='center')
     ws['AA3'].border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
     ws['AA3'].fill=PatternFill(start_color='66CFCC',end_color='66CFCC',fill_type='solid')
     ws['AA3'].font=Font(name='Calibri',size=10,bold=True)
-    ws['AA3']='Fecha de registro del seguimiento'
+    ws['AA3']='Descripcion del seguimiento'
     ws['AB3'].alignment=Alignment(horizontal='center',vertical='center')
     ws['AB3'].border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
     ws['AB3'].fill=PatternFill(start_color='66CFCC',end_color='66CFCC',fill_type='solid')
     ws['AB3'].font=Font(name='Calibri',size=10,bold=True)
-    ws['AB3']='Descripcion del seguimiento'
+    ws['AB3']='Fecha de atencion de EPS' 
     ws['AC3'].alignment=Alignment(horizontal='center',vertical='center')
     ws['AC3'].border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
     ws['AC3'].fill=PatternFill(start_color='66CFCC',end_color='66CFCC',fill_type='solid')
     ws['AC3'].font=Font(name='Calibri',size=10,bold=True)
-    ws['AC3']='Fecha de atencion de EPS' 
+    ws['AC3']='Fecha de estado abierta' 
     ws['AD3'].alignment=Alignment(horizontal='center',vertical='center')
     ws['AD3'].border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
     ws['AD3'].fill=PatternFill(start_color='66CFCC',end_color='66CFCC',fill_type='solid')
     ws['AD3'].font=Font(name='Calibri',size=10,bold=True)
-    ws['AD3']='Fecha de estado abierta' 
+    ws['AD3']='Fecha de estado en proceso' 
     ws['AE3'].alignment=Alignment(horizontal='center',vertical='center')
     ws['AE3'].border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
     ws['AE3'].fill=PatternFill(start_color='66CFCC',end_color='66CFCC',fill_type='solid')
     ws['AE3'].font=Font(name='Calibri',size=10,bold=True)
-    ws['AE3']='Fecha de estado en proceso' 
+    ws['AE3']='Fecha de estado finalizado'
     ws['AF3'].alignment=Alignment(horizontal='center',vertical='center')
     ws['AF3'].border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
     ws['AF3'].fill=PatternFill(start_color='66CFCC',end_color='66CFCC',fill_type='solid')
     ws['AF3'].font=Font(name='Calibri',size=10,bold=True)
-    ws['AF3']='Fecha de estado finalizado'
+    ws['AF3']='No radicado' 
     ws['AG3'].alignment=Alignment(horizontal='center',vertical='center')
     ws['AG3'].border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
     ws['AG3'].fill=PatternFill(start_color='66CFCC',end_color='66CFCC',fill_type='solid')
     ws['AG3'].font=Font(name='Calibri',size=10,bold=True)
-    ws['AG3']='No radicado' 
-    ws['AH3'].alignment=Alignment(horizontal='center',vertical='center')
-    ws['AH3'].border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
-    ws['AH3'].fill=PatternFill(start_color='66CFCC',end_color='66CFCC',fill_type='solid')
-    ws['AH3'].font=Font(name='Calibri',size=10,bold=True)
-    ws['AH3']='Descripcion del caso'      
+    ws['AG3']='Descripcion del caso'
+    cantidad=4
+    for caso in casos:
+      
+        ws.cell(row=cantidad,column=2).alignment=Alignment(horizontal='center',vertical='center')
+        ws.cell(row=cantidad,column=2).border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
+        ws.cell(row=cantidad,column=2).font=Font(name='Calibri',size=10,bold=True)
+        ws.cell(row=cantidad,column=2).value=caso.id_caso
+        ws.cell(row=cantidad,column=3).alignment=Alignment(horizontal='center',vertical='center')
+        ws.cell(row=cantidad,column=3).border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
+        ws.cell(row=cantidad,column=3).font=Font(name='Calibri',size=10,bold=True)
+        ws.cell(row=cantidad,column=3).value=caso.id_usuario.primer_nombre + caso.id_usuario.segundo_nombre
+        ws.cell(row=cantidad,column=4).alignment=Alignment(horizontal='center',vertical='center')
+        ws.cell(row=cantidad,column=4).border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
+        ws.cell(row=cantidad,column=4).font=Font(name='Calibri',size=10,bold=True)
+        ws.cell(row=cantidad,column=4).value=caso.id_usuario.primer_apellido + caso.id_usuario.segundo_apellido
+        ws.cell(row=cantidad,column=5).alignment=Alignment(horizontal='center',vertical='center')
+        ws.cell(row=cantidad,column=5).border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
+        ws.cell(row=cantidad,column=5).font=Font(name='Calibri',size=10,bold=True)
+        ws.cell(row=cantidad,column=5).value=caso.id_usuario.id_cedula
+        ws.cell(row=cantidad,column=6).alignment=Alignment(horizontal='center',vertical='center')
+        ws.cell(row=cantidad,column=6).border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
+        ws.cell(row=cantidad,column=6).font=Font(name='Calibri',size=10,bold=True)
+        ws.cell(row=cantidad,column=6).value=caso.id_usuario.celular
+        ws.cell(row=cantidad,column=7).alignment=Alignment(horizontal='center',vertical='center')
+        ws.cell(row=cantidad,column=7).border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
+        ws.cell(row=cantidad,column=7).font=Font(name='Calibri',size=10,bold=True)
+        ws.cell(row=cantidad,column=7).value=caso.id_usuario.login_id.email
+        ws.cell(row=cantidad,column=8).alignment=Alignment(horizontal='center',vertical='center')
+        ws.cell(row=cantidad,column=8).border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
+        ws.cell(row=cantidad,column=8).font=Font(name='Calibri',size=10,bold=True)
+        ws.cell(row=cantidad,column=8).value=caso.enfermedad.nombreenfermedad
+        ws.cell(row=cantidad,column=9).alignment=Alignment(horizontal='center',vertical='center')
+        ws.cell(row=cantidad,column=9).border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
+        ws.cell(row=cantidad,column=9).font=Font(name='Calibri',size=10,bold=True)
+        ws.cell(row=cantidad,column=9).value=caso.estado.nombreestado
+        ws.cell(row=cantidad,column=10).alignment=Alignment(horizontal='center',vertical='center')
+        ws.cell(row=cantidad,column=10).border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
+        ws.cell(row=cantidad,column=10).font=Font(name='Calibri',size=10,bold=True)
+        ws.cell(row=cantidad,column=10).value=caso.id_comple_info.gestor_farma.nombrefarmacia
+        ws.cell(row=cantidad,column=11).alignment=Alignment(horizontal='center',vertical='center')
+        ws.cell(row=cantidad,column=11).border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
+        ws.cell(row=cantidad,column=11).font=Font(name='Calibri',size=10,bold=True)
+        ws.cell(row=cantidad,column=11).value=caso.id_comple_info.terapia.nombreterapia
+        ws.cell(row=cantidad,column=12).alignment=Alignment(horizontal='center',vertical='center')
+        ws.cell(row=cantidad,column=12).border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
+        ws.cell(row=cantidad,column=12).font=Font(name='Calibri',size=10,bold=True)
+        ws.cell(row=cantidad,column=12).value=caso.id_comple_info.otra_terapia
+        ws.cell(row=cantidad,column=13).alignment=Alignment(horizontal='center',vertical='center')
+        ws.cell(row=cantidad,column=13).border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
+        ws.cell(row=cantidad,column=13).font=Font(name='Calibri',size=10,bold=True)
+        ws.cell(row=cantidad,column=13).value=caso.id_comple_info.tipo_req.nombrerequerimiento
+        ws.cell(row=cantidad,column=14).alignment=Alignment(horizontal='center',vertical='center')
+        ws.cell(row=cantidad,column=14).border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
+        ws.cell(row=cantidad,column=14).font=Font(name='Calibri',size=10,bold=True)
+        ws.cell(row=cantidad,column=14).value=caso.id_comple_info.clasificacion_pbs.nombrepbs
+        ws.cell(row=cantidad,column=15).alignment=Alignment(horizontal='center',vertical='center')
+        ws.cell(row=cantidad,column=15).border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
+        ws.cell(row=cantidad,column=15).font=Font(name='Calibri',size=10,bold=True)
+        ws.cell(row=cantidad,column=15).value=caso.id_comple_info.medico_trat 
+        ws.cell(row=cantidad,column=16).alignment=Alignment(horizontal='center',vertical='center')
+        ws.cell(row=cantidad,column=16).border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
+        ws.cell(row=cantidad,column=16).font=Font(name='Calibri',size=10,bold=True)
+        ws.cell(row=cantidad,column=16).value=caso.id_comple_info.segunda_barrera
+        ws.cell(row=cantidad,column=17).alignment=Alignment(horizontal='center',vertical='center')
+        ws.cell(row=cantidad,column=17).border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
+        ws.cell(row=cantidad,column=17).font=Font(name='Calibri',size=10,bold=True)
+        ws.cell(row=cantidad,column=17).value=caso.id_comple_info.fech_rad_for_eps
+        ws.cell(row=cantidad,column=18).alignment=Alignment(horizontal='center',vertical='center')
+        ws.cell(row=cantidad,column=18).border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
+        ws.cell(row=cantidad,column=18).font=Font(name='Calibri',size=10,bold=True)
+        ws.cell(row=cantidad,column=18).value='valor'
+        ws.cell(row=cantidad,column=19).alignment=Alignment(horizontal='center',vertical='center')
+        ws.cell(row=cantidad,column=19).border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
+        ws.cell(row=cantidad,column=19).font=Font(name='Calibri',size=10,bold=True)
+        ws.cell(row=cantidad,column=19).value=caso.id_comple_info.fecha_for_medi
+        ws.cell(row=cantidad,column=20).alignment=Alignment(horizontal='center',vertical='center')
+        ws.cell(row=cantidad,column=20).border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
+        ws.cell(row=cantidad,column=20).font=Font(name='Calibri',size=10,bold=True)
+        ws.cell(row=cantidad,column=20).value=caso.id_comple_info.fecha_aut
+        ws.cell(row=cantidad,column=21).alignment=Alignment(horizontal='center',vertical='center')
+        ws.cell(row=cantidad,column=21).border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
+        ws.cell(row=cantidad,column=21).font=Font(name='Calibri',size=10,bold=True)
+        ws.cell(row=cantidad,column=21).value=caso.id_comple_info.fech_rad_aut_farm
+        ws.cell(row=cantidad,column=22).alignment=Alignment(horizontal='center',vertical='center')
+        ws.cell(row=cantidad,column=22).border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
+        ws.cell(row=cantidad,column=22).font=Font(name='Calibri',size=10,bold=True)
+        ws.cell(row=cantidad,column=22).value=caso.id_comple_info.fecha_entrega
+        ws.cell(row=cantidad,column=23).alignment=Alignment(horizontal='center',vertical='center')
+        ws.cell(row=cantidad,column=23).border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
+        ws.cell(row=cantidad,column=23).font=Font(name='Calibri',size=10,bold=True)
+        ws.cell(row=cantidad,column=23).value=caso.id_comple_info.origen_soli
+        ws.cell(row=cantidad,column=24).alignment=Alignment(horizontal='center',vertical='center')
+        ws.cell(row=cantidad,column=24).border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
+        ws.cell(row=cantidad,column=24).font=Font(name='Calibri',size=10,bold=True)
+        ws.cell(row=cantidad,column=24).value=caso.id_comple_info.ips_id_terapia.nombre
+        ws.cell(row=cantidad,column=25).alignment=Alignment(horizontal='center',vertical='center')
+        ws.cell(row=cantidad,column=25).border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
+        ws.cell(row=cantidad,column=25).font=Font(name='Calibri',size=10,bold=True)
+        ws.cell(row=cantidad,column=25).value=caso.id_gest.id_datos_us.primer_nombre
+        ws.cell(row=cantidad,column=26).alignment=Alignment(horizontal='center',vertical='center')
+        ws.cell(row=cantidad,column=26).border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
+        ws.cell(row=cantidad,column=26).font=Font(name='Calibri',size=10,bold=True)
+        ws.cell(row=cantidad,column=26).value=caso.id_seguimiento.fecharegistro
+        ws.cell(row=cantidad,column=27).alignment=Alignment(horizontal='center',vertical='center')
+        ws.cell(row=cantidad,column=27).border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
+        ws.cell(row=cantidad,column=27).font=Font(name='Calibri',size=10,bold=True)
+        ws.cell(row=cantidad,column=27).value=caso.id_seguimiento.descripcion
+        ws.cell(row=cantidad,column=28).alignment=Alignment(horizontal='center',vertical='center')
+        ws.cell(row=cantidad,column=28).border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
+        ws.cell(row=cantidad,column=28).font=Font(name='Calibri',size=10,bold=True)
+        ws.cell(row=cantidad,column=28).value=caso.fecharesgistrocaso
+        ws.cell(row=cantidad,column=28).alignment=Alignment(horizontal='center',vertical='center')
+        ws.cell(row=cantidad,column=28).border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
+        ws.cell(row=cantidad,column=28).font=Font(name='Calibri',size=10,bold=True)
+        ws.cell(row=cantidad,column=28).value=caso.fechaatencioneps
+        ws.cell(row=cantidad,column=29).alignment=Alignment(horizontal='center',vertical='center')
+        ws.cell(row=cantidad,column=29).border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
+        ws.cell(row=cantidad,column=29).font=Font(name='Calibri',size=10,bold=True)
+        ws.cell(row=cantidad,column=29).value=caso.fechaatenabierto
+        ws.cell(row=cantidad,column=30).alignment=Alignment(horizontal='center',vertical='center')
+        ws.cell(row=cantidad,column=30).border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
+        ws.cell(row=cantidad,column=30).font=Font(name='Calibri',size=10,bold=True)
+        ws.cell(row=cantidad,column=30).value=caso.fechaatenproceso
+        ws.cell(row=cantidad,column=31).alignment=Alignment(horizontal='center',vertical='center')
+        ws.cell(row=cantidad,column=31).border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
+        ws.cell(row=cantidad,column=31).font=Font(name='Calibri',size=10,bold=True)
+        ws.cell(row=cantidad,column=31).value=caso.fechaatenfinalizado
+        ws.cell(row=cantidad,column=32).alignment=Alignment(horizontal='center',vertical='center')
+        ws.cell(row=cantidad,column=32).border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
+        ws.cell(row=cantidad,column=32).font=Font(name='Calibri',size=10,bold=True)
+        ws.cell(row=cantidad,column=32).value=caso.numeroradicado
+        ws.cell(row=cantidad,column=33).alignment=Alignment(horizontal='center',vertical='center')
+        ws.cell(row=cantidad,column=33).border=Border(left=Side(border_style='thin'),right=Side(border_style='thin'),top=Side(border_style='thin'),bottom=Side(border_style='thin'))
+        ws.cell(row=cantidad,column=33).font=Font(name='Calibri',size=10,bold=True)
+        ws.cell(row=cantidad,column=33).value=caso.descripcioncaso
+        
+        cantidad+=1
+        
+     
         
     nombre_del_archivo='ReporteCaso.xlsx'
     response=HttpResponse(content_type='application/ms-excel')

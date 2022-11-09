@@ -27,7 +27,7 @@ tipo.addEventListener('change',function(e){
     if(e.target.value=='Excel'){
 $('#generar').prop('href','{% url 'excel' %}')
     }else if(e.target.value=='Pdf'){
-
+$('#generar').prop('href','{% url 'pdfgeneral' %}')
     }
 })
 </script>

@@ -29,18 +29,18 @@ class Casos(models.Model):
     id_usuario = models.ForeignKey('DatosUsuario', models.DO_NOTHING, db_column='id_usuario')
     id_gest = models.ForeignKey('GestorCaso', models.DO_NOTHING, db_column='id_gest')
     numeroradicado = models.PositiveIntegerField(db_column='numeroRadicado')  # Field name made lowercase.
-    fechaatencioneps = models.DateTimeField(db_column='fechaAtencionEps')  # Field name made lowercase.
+    fechaatencioneps = models.DateField(db_column='fechaAtencionEps')  # Field name made lowercase.
     descripcioncaso = models.TextField(db_column='descripcionCaso')  # Field name made lowercase.
   
     estado = models.ForeignKey('Estado', models.DO_NOTHING, db_column='estado')
     fecharesgistrocaso = models.DateTimeField(db_column='fechaResgistroCaso', blank=True,
                                               null=True)  # Field name made lowercase.
     enfermedad = models.ForeignKey('TipoEnfermedad', models.DO_NOTHING, db_column='enfermedad', blank=True)
-    fechaatenproceso = models.DateTimeField(db_column='fechaAtenProceso',
+    fechaatenproceso = models.DateField(db_column='fechaAtenProceso',
                                             null=True)  # Field name made lowercase.
-    fechaatenfinalizado = models.DateTimeField(db_column='fechaAtenFinalizado', 
+    fechaatenfinalizado = models.DateField(db_column='fechaAtenFinalizado', 
                                                null=True)  # Field name made lowercase.
-    fechaatenabierto = models.DateTimeField(db_column='fechaAtenAbierto', 
+    fechaatenabierto = models.DateField(db_column='fechaAtenAbierto', 
                                             null=True)  # Field name made lowercase.
     hora = models.TimeField( null=True)
     formula_medica = models.FileField(upload_to='uploads/',blank=True, null=True)
@@ -146,8 +146,8 @@ class Eps(models.Model):
 
 
 class EspecialidadMed(models.Model):
-    id_esp = models.SmallAutoField(primary_key=True)
-    nombre = models.CharField(max_length=40)
+    id_esp = models.SmallAutoField(db_column='id_esp',primary_key=True)
+    nombre = models.CharField(db_column='nombre',max_length=40)
     def __str__(self):
         return f'{self.nombre}'
 
@@ -236,11 +236,11 @@ class InfoComplementaria(models.Model):
     medico_trat = models.CharField(max_length=40)
     especialidad_med = models.ForeignKey(EspecialidadMed, models.DO_NOTHING, db_column='especialidad_med',blank=True, null=True)
     segunda_barrera = models.CharField(max_length=40)
-    fech_rad_for_eps = models.DateTimeField(db_column='fech_rad_for_EPS',blank=True, null=True)  # Field name made lowercase.
-    fecha_for_medi = models.DateTimeField(blank=True, null=True)
-    fecha_aut = models.DateTimeField(blank=True, null=True)
-    fech_rad_aut_farm = models.DateTimeField(blank=True, null=True)
-    fecha_entrega = models.DateTimeField(blank=True, null=True)
+    fech_rad_for_eps = models.DateField(db_column='fech_rad_for_EPS',blank=True, null=True)  # Field name made lowercase.
+    fecha_for_medi = models.DateField(blank=True, null=True)
+    fecha_aut = models.DateField(blank=True, null=True)
+    fech_rad_aut_farm = models.DateField(blank=True, null=True)
+    fecha_entrega = models.DateField(blank=True, null=True)
     origen_soli = models.CharField(max_length=40)
     ips_id_terapia = models.ForeignKey('Ips', models.DO_NOTHING, db_column='ips_id_terapia',blank=True, null=True)
     def __str__(self):

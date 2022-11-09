@@ -72,17 +72,32 @@
             <div>
         <label for="{{forma_persona.name}}">{{forma_persona.formula_medica.label}}</label>
         {{forma_persona.formula_medica}}
+        {% if caso.formula_medica  %}
         <a href='{{caso.formula_medica.url}}' download>{{caso.formula_medica}}</a>
+       
+        {% else  %}
+        <a href='#' download></a>
+        {% endif %}
             </div>
             <div>
         <label for="{{forma_persona.name}}">{{forma_persona.adjunto_seg.label}}</label>
         {{forma_persona.adjunto_seg}}
+        {% if caso.adjunto_seg  %}
         <a href='{{caso.adjunto_seg.url}}' download>{{caso.adjunto_seg}}</a>
+       
+        {% else  %}
+        <a href='#' download></a>
+        {% endif %}
             </div>
             <div>
         <label for="{{forma_persona.name}}">{{forma_persona.adjunto_terc.label}}</label>
         {{forma_persona.adjunto_terc}}
+        {% if caso.adjunto_seg %}
         <a href='{{caso.adjunto_seg.url}}' download>{{caso.adjunto_terc}}</a>
+       
+        {% else   %}
+        <a href='#' download></a>
+        {% endif %}
             </div>
         </div>
         <input type="submit" class="btn btn-primary  boton_submit" value="Editar caso">
