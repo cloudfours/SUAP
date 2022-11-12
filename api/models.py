@@ -33,7 +33,7 @@ class Casos(models.Model):
     descripcioncaso = models.TextField(db_column='descripcionCaso')  # Field name made lowercase.
   
     estado = models.ForeignKey('Estado', models.DO_NOTHING, db_column='estado')
-    fecharesgistrocaso = models.DateTimeField(db_column='fechaResgistroCaso', blank=True,
+    fecharesgistrocaso = models.DateField(db_column='fechaResgistroCaso', blank=True,
                                               null=True)  # Field name made lowercase.
     enfermedad = models.ForeignKey('TipoEnfermedad', models.DO_NOTHING, db_column='enfermedad', blank=True)
     fechaatenproceso = models.DateField(db_column='fechaAtenProceso',
@@ -100,7 +100,12 @@ class DatosUsuario(models.Model):
     id_grupo_etnico = models.ForeignKey('GrupoEtnico', models.DO_NOTHING, db_column='id_grupo_etnico')
     id_poblacion_especial = models.ForeignKey('PoblacionEspecial', models.DO_NOTHING, db_column='id_poblacion_especial')
     login_id = models.OneToOneField(User, on_delete=models.CASCADE,db_column='login_id')
-
+    TYPE_SELECT =(
+        (1,'Acepto Términos y condiciones y autorizacion de tratamiento de datos'),
+        (2,'No aceptar')
+        
+    )
+    trata_data= models.CharField(max_length=30,choices=TYPE_SELECT,default=None,null=True)
     def __str__(self):
         return f'{self.id_cedula}'
 

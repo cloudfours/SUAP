@@ -159,8 +159,8 @@ EMAIL_BACKEND='django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST='smtp.gmail.com'
 EMAIL_USE_TLS=True
 EMAIL_POST=587
-EMAIL_HOST_USER='kashsantxl@gmail.com'
-EMAIL_HOST_PASSWORD='xcllyovgccmcskbv'
+EMAIL_HOST_USER='mamorales812@misena.edu.co'
+EMAIL_HOST_PASSWORD='hhdwmlmkrbfpavov'
 #xcllyovgccmcskbv
 # SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 # SESSION_COOKIE_AGE = 50000 # 5 segundos para prueba

@@ -50,7 +50,7 @@
     <thead class='bg-primary bg-gradient'>
         <tr>
             <th class='text-light'>ID caso</th>
-            <th class='text-light'>Numero de identificacion</th>
+            <th class='text-light'>Numero de documento</th>
             <th class='text-light'>Nombres</th>
             <th class='text-light'>Apellidos</th>
             <th class='text-light'>Telefono</th>
@@ -131,29 +131,9 @@
 
 {% for message in messages %}
   {% if message.tags == 'success'%}
-  <script type=text/javascript>
-    $(document).ready(function(){
-        toastr.{{ message.tags }}('{{ message }}')
-     
-    })
-    toastr.options = {
-        "closeButton": false,
-        "debug": false,
-        "newestOnTop": false,
-        "progressBar": true,
-        "positionClass": "toast-top-center",
-        "preventDuplicates": false,
-        "onclick": null,
-        "showDuration": "300",
-        "hideDuration": "1000",
-        "timeOut": "5000",
-        "extendedTimeOut": "1000",
-        "showEasing": "swing",
-        "hideEasing": "linear",
-        "showMethod": "fadeIn",
-        "hideMethod": "fadeOut"
-      }   
-</script>
+  <script type='text/javascript'>
+  $.toast('Here you can put the text of the toast')
+  </script>
    {% endif %}
    {% endfor %}
 

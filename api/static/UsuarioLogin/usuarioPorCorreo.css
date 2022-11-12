@@ -5,6 +5,7 @@
     flex-direction: column;
     background-image: url("../img/imagenFondo.jpg");
     background-position: center;
+    background-size: cover;
 }
 
 .caja_hijo {

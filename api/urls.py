@@ -35,5 +35,7 @@ path('graficas/',vista_graficas,name='graficas'),
 path('reportecaso/',pagina_report,name='reporte'),
 path('reporte-genera-excel/',reportes_general_excel,name='excel'),
 path('reporte-general-pdf/',generar_report_caso_general,name='pdfgeneral'),
-path('reporte-graficas-pdf/',generar_report_graficas,name='pdf-graficas')
+path('reporte-graficas-pdf/',generar_report_graficas,name='pdf-graficas'),
+path('inidicadores/',indicadores_gestion,name='indicadores'),
+path('indicadores-calculo/',get_data,name='calculo')
 ]

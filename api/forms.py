@@ -28,12 +28,12 @@ class AsignacionTareaForm(forms.ModelForm):
          }
          widgets={
                    'id_gest':forms.Select(attrs={'class':'form-control'}),
-                  'actividad':forms.TextInput(attrs={'class':'form-control'}),
-                  'fecha':forms.DateInput(attrs={'class':'form-control datetimepicker-input','type':'datetime-local','placeholder':'ingrese fecha','required':False},format='%Y-%m-%d %H:%M'),
-                  'fech_registro':forms.DateInput(attrs={'class':'form-control datetimepicker-input','type':'datetime-local','placeholder':'ingrese fecha','required':False},format='%Y-%m-%d %H:%M'),
-                  'detalle':forms.Textarea(attrs={'class':'form-control '}),
+                  'actividad':forms.TextInput(attrs={'class':'form-control','placeholder':'Ingrese tipo de actividad'}),
+                  'fecha':forms.DateInput(attrs={'class':'form-control','type':'date','placeholder':'ingrese fecha','required':False},format='%Y-%m-%d'),
+                  'fech_registro':forms.DateInput(attrs={'class':'form-control','type':'date','placeholder':'ingrese fecha','required':False},format='%Y-%m-%d'),
+                  'detalle':forms.Textarea(attrs={'class':'form-control','placeholder':'Ingrese detalle'}),
                   'color':forms.TextInput(attrs={'class': 'form-control ','type':'color'}),
-                  'asginacion':forms.TextInput(attrs={'class':'form-control '}),
+                  'asginacion':forms.TextInput(attrs={'class':'form-control','placeholder':'Ingrese su quien lo asigna'}),
                   
                  
         }
@@ -45,16 +45,16 @@ class seguimientoFormulario(forms.ModelForm):
         model=Seguimiento
         fields=['id_seg','id_gestor','fecharegistro','descripcion']
         labels={
-            'id_seg':'seguimiento',
+            'id_seg':'Seguimiento',
             'id_gestor':'Nombre del gestor',
             'fecharegistro':'Fecha de registro',
-            'descripcion':'Descripcion'
+            'descripcion':'Descripción'
         }
         widgets={
                    'id_seg':forms.NumberInput(attrs={'class':'form-control'}),
                   'id_gestor':forms.Select(attrs={'class':'form-control'}),
                   'fecharegistro':forms.DateInput(attrs={'class':'form-control ','type':'date','placeholder':'ingrese fecha'},format='%Y-%m-%d'),
-                  'descripcion':forms.Textarea(attrs={'class':'form-control '}),
+                  'descripcion':forms.Textarea(attrs={'class':'form-control','placeholder':'Ingrese descripción del seguimiento'}),
         }
 class informacionComplementaria(forms.ModelForm):
     class Meta:
@@ -62,20 +62,20 @@ class informacionComplementaria(forms.ModelForm):
         fields = ['id_comple','gestor_farma','terapia','otra_terapia','tipo_req','clasificacion_pbs','medico_trat','especialidad_med','segunda_barrera','fech_rad_for_eps','fecha_for_medi','fecha_aut','fech_rad_aut_farm','fecha_entrega','origen_soli','ips_id_terapia']
         labels={
             'id_comple':'Complementario',
-            'gestor_farma':'Gestor farmaceutico',
+            'gestor_farma':'Gestor farmacéutico',
             'terapia':'Terapia',
             'otra_terapia':'Otra terapia',
             'tipo_req':'Tipo de requerimiento',
-            'clasificacion_pbs':'Clasificacion pbs',
+            'clasificacion_pbs':'Clasificación pbs',
             'medico_trat':'Medico tratante',
             'especialidad_med':'Especialidad Medica',
             'segunda_barrera':'Segunda barrera',
-            'fech_rad_for_eps':'Fecha de radicacion de la  EPS',
+            'fech_rad_for_eps':'Fecha de radicación de la  EPS',
             'fecha_for_medi':'fecha de la formula médica',
-            'fecha_aut':'Fecha de autorizacion',
-            'fech_rad_aut_farm':'Fecha de radicacion formula medica',
+            'fecha_aut':'Fecha de autorización',
+            'fech_rad_aut_farm':'Fecha de radicación formula medica',
             'fecha_entrega':'Fecha de entrega',
-            'origen_soli':'Origen de solicituda',
+            'origen_soli':'Origen de solicitud',
             'ips_id_terapia':'IPS'
             
         }
@@ -84,17 +84,17 @@ class informacionComplementaria(forms.ModelForm):
             'id_comple':forms.NumberInput(attrs={'class':'form-control'}),
             'gestor_farma': forms.Select(attrs={'class':'form-control'}),
             'terapia': forms.Select(attrs={'class':'form-control'}),
-            'otra_terapia':forms.TextInput(attrs={'class':'form-control'}),
+            'otra_terapia':forms.TextInput(attrs={'class':'form-control','placeholder':'Ingrese otro tipo de terapia'}),
             'tipo_req':forms.Select(attrs={'class':'form-control'}),
             'clasificacion_pbs':forms.Select(attrs={'class':'form-control'}),
-            'medico_trat':forms.TextInput(attrs={'class':'form-control'}),
+            'medico_trat':forms.TextInput(attrs={'class':'form-control','placeholder':'Ingrese su medico tratante'}),
             'especialidad_med':forms.Select(attrs={'class':'form-control '}),
             'segunda_barrera':forms.TextInput(attrs={'class':'form-control'}),
-            'fech_rad_for_eps':forms.DateInput(attrs={'class':'form-control datetimepicker-input','type':'date','placeholder':'ingrese fecha','required':False},format='%Y-%m-%d '),
-            'fecha_for_medi':forms.DateInput(attrs={'class':'form-control datetimepicker-input','type':'date','placeholder':'ingrese fecha'},format='%Y-%m-%d '),
-            'fecha_aut':forms.DateInput(attrs={'class':'form-control datetimepicker-input','type':'date','placeholder':'ingrese fecha'},format='%Y-%m-%d '),
-            'fech_rad_aut_farm':forms.DateInput(attrs={'class':'form-control datetimepicker-input','type':'date','placeholder':'ingrese fecha'},format='%Y-%m-%d '),
-            'fecha_entrega':forms.DateInput(attrs={'class':'form-control datetimepicker-input','type':'date','placeholder':'ingrese fecha'},format='%Y-%m-%d'),
+            'fech_rad_for_eps':forms.DateInput(attrs={'class':'form-control','type':'date','placeholder':'ingrese fecha','required':False},format='%Y-%m-%d'),
+            'fecha_for_medi':forms.DateInput(attrs={'class':'form-control','type':'date','placeholder':'ingrese fecha'},format='%Y-%m-%d '),
+            'fecha_aut':forms.DateInput(attrs={'class':'form-control','type':'date','placeholder':'ingrese fecha'},format='%Y-%m-%d '),
+            'fech_rad_aut_farm':forms.DateInput(attrs={'class':'form-control','type':'date','placeholder':'ingrese fecha'},format='%Y-%m-%d'),
+            'fecha_entrega':forms.DateInput(attrs={'class':'form-control','type':'date','placeholder':'ingrese fecha'},format='%Y-%m-%d'),
             'origen_soli':forms.TextInput(attrs={'class':'form-control'}),
             'ips_id_terapia':forms.Select(attrs={'class':'form-control'}),
         }
@@ -122,19 +122,19 @@ class EditarFormGestor(forms.ModelForm):
             'estado':'Estado',
             'hora':'Hora',
             'fecharesgistrocaso':'Fecha registro',
-            'fechaatenproceso':'Fecha Proceso',
-            'fechaatenfinalizado':'Fecha Finalizado',
-            'fechaatenabierto':'Fecha Abierto',
+            'fechaatenproceso':'Fecha proceso',
+            'fechaatenfinalizado':'Fecha finalizado',
+            'fechaatenabierto':'Fecha abierto',
             'id_usuario':'Usuario',
-            'numeroradicado':'Numero de radicado',
-            'fechaatencioneps':'Fecha de atencion de EPS',
-            'descripcioncaso':'Descripcion del caso',
+            'numeroradicado':'Número de radicado',
+            'fechaatencioneps':'Fecha de atención de EPS',
+            'descripcioncaso':'Descripción del caso',
             'enfermedad':'Enfermedad',
-            'formula_medica':'Agregar Formula medico',
+            'formula_medica':'Agregar fórmula médica',
         
-            'adjunto_seg':'Adjunto Segundo',
-            'adjunto_terc':'Adjunto Tercero',
-            'id_comple_info':'Información Complementaria',
+            'adjunto_seg':'Adjunto segundo',
+            'adjunto_terc':'Adjunto tercero',
+            'id_comple_info':'Información complementaria',
             'id_seguimiento':'Seguimiento',
             'id_barrera':'Barrera',
         }
@@ -147,10 +147,10 @@ class EditarFormGestor(forms.ModelForm):
             'fechaatenproceso':forms.DateInput(attrs={'class':'form-control ','type':'date','placeholder':'ingrese fecha'},format='%Y-%m-%d'),
             'fechaatenfinalizado':forms.DateInput(attrs={'class':'form-control ','type':'date','placeholder':'ingrese fecha'},format='%Y-%m-%d'),
             'fechaatenabierto':forms.DateInput(attrs={'class':'form-control','type':'date','placeholder':'ingrese fecha'},format='%Y-%m-%d'),
-            'numeroradicado':forms.NumberInput(attrs={'class':'form-control '}),
+            'numeroradicado':forms.NumberInput(attrs={'class':'form-control','readonly':'readonly'}),
             'fechaatencioneps':forms.DateInput(attrs={'class':'form-control','type':'date','placeholder':'ingrese fecha'},format='%Y-%m-%d'),
-            'descripcioncaso':forms.Textarea(attrs={'class':'form-control '}),
-            'enfermedad':forms.Select(attrs={'class':'form-control '}),
+            'descripcioncaso':forms.Textarea(attrs={'class':'form-control','placeholder':'Ingrese descripción del caso'}),
+            'enfermedad':forms.Select(attrs={'class':'form-control','placeholder':'Ingrese su enfermedad'}),
             'formula_medica':forms.FileInput(attrs={'class':'form-control','multiple':True}),
           
             'adjunto_seg':forms.FileInput(attrs={'class':'form-control','multiple':True}),
@@ -173,11 +173,11 @@ class CasosForm(forms.ModelForm):
         labels={
             # 'id_caso':'Caso',
             'id_usuario':'Usuario',
-            'numeroradicado':'Numero de radicado',
-            'fechaatencioneps':'Fecha de atencion de EPS',
-            'descripcioncaso':'Descripcion del caso',
+            'numeroradicado':'Número de radicado',
+            'fechaatencioneps':'Fecha de atención de EPS',
+            'descripcioncaso':'Descripción del caso',
             'enfermedad':'Enfermedad',
-            'formula_medica':'Agregar Formula medico',
+            'formula_medica':'Agregar fórmula médica',
             'id_barrera':'Barrera'
         }
         widgets={
@@ -186,8 +186,8 @@ class CasosForm(forms.ModelForm):
             'numeroradicado':forms.NumberInput(attrs={'class':'form-control ','readonly':'readonly'}),
             'fechaatencioneps':forms.DateTimeInput(attrs={'class':'form-control ','type':'date','placeholder':'ingrese fecha'},format='%Y-%m-%d'),
             'fecharesgistrocaso':forms.DateTimeInput(attrs={'class':'form-control ','type':'date','placeholder':'ingrese fecha'},format='%Y-%m-%d'),
-            'descripcioncaso':forms.Textarea(attrs={'class':'form-control '}),
-            'enfermedad':forms.Select(attrs={'class':'form-control '}),
+            'descripcioncaso':forms.Textarea(attrs={'class':'form-control','placeholder':'Ingrese descripción del caso'}),
+            'enfermedad':forms.Select(attrs={'class':'form-control','placeholder':'Ingrese su enfermedad'}),
             'formula_medica':forms.FileInput(attrs={'class':'form-control'}),
             'id_barrera':forms.Select(attrs={'class':'form-control'}),
              'estado':forms.Select(attrs={'class':'form-control'}),
@@ -213,44 +213,44 @@ class datosuserFormEdit(forms.ModelForm):
         fields = ['id_cedula', 'primer_nombre', 'primer_apellido', 'segundo_nombre', 'segundo_apellido', 'tipo_doc','tipo_envio','celular','direccion','id_eps','idtiporegimen','idgenero'
                    ,'cod_pais','cod_dep','cod_muni','fechanaci','ocupacion','id_grupo_etnico','id_poblacion_especial']
         labels = {
-            'id_cedula': 'Numero de documento',
+            'id_cedula': 'Número de documento',
             'primer_nombre': 'Primer nombre',
             'primer_apellido': 'Primer apellido',
             'segundo_nombre': 'Segundo nombre',
             'segundo_apellido': 'Segundo apellido',
             'tipo_doc': 'Tipo de documento',
-            'tipo_envio':'Tipo de envio',
+            'tipo_envio':'Tipo de envió',
             'celular':'Celular',
-            'direccion':'Direccion',
+            'direccion':'Dirección',
             'id_eps':'EPS',
             'idtiporegimen':'Tipo de regimen',
-            'idgenero':'Genero',
-            'cod_pais':'Pais',
+            'idgenero':'Género',
+            'cod_pais':'País',
             'cod_dep':'Departamento',
             'cod_muni':'Municipio',
             'fechanaci':'Fecha de nacimiento',
-            'ocupacion':'Ocupacion',
-            'id_grupo_etnico':'Grupo Etnico',
-            'id_poblacion_especial':'Poblacion especial'
+            'ocupacion':'Ocupación',
+            'id_grupo_etnico':'Grupo étnico',
+            'id_poblacion_especial':'Población especial'
             
         }
         widgets = {
             'id_cedula': forms.NumberInput(attrs={'class': 'form-control is-valid','readonly':'readonly'}),
             'primer_nombre': forms.TextInput(attrs={'class': 'form-control is-valid','id':'floatingInputInvalid','placeholder':'Ingrese su nombre'}),
-            'primer_apellido': forms.TextInput(attrs={'class': 'form-control is-valid'}),
-            'segundo_nombre': forms.TextInput(attrs={'class': 'form-control is-valid'}),
-            'segundo_apellido': forms.TextInput(attrs={'class': 'form-control is-valid'}),
+            'primer_apellido': forms.TextInput(attrs={'class': 'form-control is-valid','placeholder':'Ingrese su primer apellido' }),
+            'segundo_nombre': forms.TextInput(attrs={'class': 'form-control is-valid','placeholder':'Ingrese su segundo nombre'}),
+            'segundo_apellido': forms.TextInput(attrs={'class': 'form-control is-valid','placeholder':'Ingrese su segundo apellido'}),
             'tipo_doc': forms.Select(attrs={'class': 'form-select is-valid','readonly': 'readonly'}),
             'tipo_envio':forms.Select(attrs={'class': 'form-select is-valid'}),
             'celular':forms.NumberInput(attrs={'class': 'form-control is-valid','max_length':'100','placeholder':'ingrese numero de celular'}),
-            'direccion':forms.TextInput(attrs={'class': 'form-control is-valid'}),
+            'direccion':forms.TextInput(attrs={'class': 'form-control is-valid','placeholder':'Ingrese su dirección'}),
             'id_eps':forms.Select(attrs={'class': 'form-select  is-valid'}),
             'idtiporegimen':forms.Select(attrs={'class': 'form-select is-valid'}),
             'idgenero':forms.Select(attrs={'class': 'form-select is-valid'}),
             'cod_pais':forms.Select(attrs={'class': 'form-select is-valid'}),
             'cod_dep':forms.Select(attrs={'class': 'form-select is-valid'}),
             'cod_muni':forms.Select(attrs={'class': 'form-select is-valid'}),
-            'fechanaci':forms.DateInput(attrs={'class': 'form-control is-valid'},format=('%Y-%m-%d')),
+            'fechanaci':forms.DateInput(attrs={'class': 'form-control is-valid','type':'date'},format=('%Y-%m-%d')),
             'ocupacion': forms.TextInput(attrs={'class': 'form-control is-valid'}),
             'id_grupo_etnico':forms.Select(attrs={'class': 'form-select is-valid'}),
             'id_poblacion_especial':forms.Select(attrs={'class': 'form-select is-valid'})
@@ -261,22 +261,24 @@ class datosuserFormEdit(forms.ModelForm):
 class datosuserForm(forms.ModelForm):
     class Meta:
         model = DatosUsuario
-        fields = ['id_cedula', 'primer_nombre', 'primer_apellido', 'segundo_nombre', 'segundo_apellido', 'tipo_doc']
+        fields = ['id_cedula', 'primer_nombre', 'primer_apellido', 'segundo_nombre', 'segundo_apellido', 'tipo_doc','trata_data']
         labels = {
-            'id_cedula': 'Numero de documento',
+            'id_cedula': 'Número de documento',
             'primer_nombre': 'Primer nombre',
             'primer_apellido': 'Primer apellido',
             'segundo_nombre': 'Segundo nombre',
             'segundo_apellido': 'Segundo apellido',
-            'tipo_doc': 'Tipo de documento'
+            'tipo_doc': 'Tipo de documento',
+           
         }
         widgets = {
-            'id_cedula': forms.NumberInput(attrs={'class': 'form-control is-valid'}),
-            'primer_nombre': forms.TextInput(attrs={'class': 'form-control is-valid'}),
-            'primer_apellido': forms.TextInput(attrs={'class': 'form-control is-valid'}),
-            'segundo_nombre': forms.TextInput(attrs={'class': 'form-control is-valid'}),
-            'segundo_apellido': forms.TextInput(attrs={'class': 'form-control is-valid'}),
+            'id_cedula': forms.NumberInput(attrs={'class': 'form-control is-valid','placeholder':'Ingrese su numero de identificacion'}),
+            'primer_nombre': forms.TextInput(attrs={'class': 'form-control is-valid','placeholder':'Ingrese su primer nombre'}),
+            'primer_apellido': forms.TextInput(attrs={'class': 'form-control is-valid','placeholder':'Ingrese su primer apellido'}),
+            'segundo_nombre': forms.TextInput(attrs={'class': 'form-control is-valid','placeholder':'Ingrese su segundo nombre'}),
+            'segundo_apellido': forms.TextInput(attrs={'class': 'form-control is-valid','placeholder':'Ingrese su segundo apellido'}),
             'tipo_doc': forms.Select(attrs={'class': 'form-select is-valid'}),
+            'trata_data':forms.RadioSelect(attrs={'class': ''}),
         }
 
     # se hace la validacion del usuario con UnicodeUnsernameValidoe(
@@ -287,12 +289,12 @@ username_validator = UnicodeUsernameValidator()
 
 class userRegister(UserCreationForm):
     email = forms.EmailField(label=_('Correo'), max_length=50, help_text='Required. Correo invalido.',
-                             widget=(forms.TextInput(attrs={'class': 'form-control is-valid'})))
+                             widget=(forms.TextInput(attrs={'class': 'form-control is-valid','placeholder':'Ingrese su correo'})))
     password1 = forms.CharField(label=_('Contraseña'),
-                                widget=(forms.PasswordInput(attrs={'class': 'form-control is-valid'})),
+                                widget=(forms.PasswordInput(attrs={'class': 'form-control is-valid','placeholder':'Ingrese una contraseña'})),
                                 help_text=password_validation.password_validators_help_text_html())
-    password2 = forms.CharField(label=_('Contraseña  confirmation'),
-                                widget=forms.PasswordInput(attrs={'class': 'form-control is-valid'}),
+    password2 = forms.CharField(label=_('Confirme contraseña'),
+                                widget=forms.PasswordInput(attrs={'class': 'form-control is-valid','placeholder':'Confirme contraseña'}),
                                 help_text=_('Confirme contraseña'))
     username = forms.CharField(
         label=_('Usuario'),
@@ -300,7 +302,7 @@ class userRegister(UserCreationForm):
         help_text=_('Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.'),
         validators=[username_validator],
         error_messages={'unique': _("A user with that username already exists.")},
-        widget=forms.TextInput(attrs={'class': 'form-control is-valid'})
+        widget=forms.TextInput(attrs={'class': 'form-control is-valid','placeholder':'Ingrese nombre usuario'})
     )
 
     class Meta:

@@ -1,39 +1,41 @@
 
+import datetime
 import json
 import math
-import random
-from django.conf import settings
-from django.core.mail import send_mail, EmailMessage
 import os
-
-
-from reportlab.pdfgen import canvas
+import random
 from io import BytesIO
 
-from django.http import HttpResponse
-from django.core import serializers
-from api.models import *
-from django.shortcuts import get_object_or_404, render, redirect
-from django.http import HttpResponseRedirect
-
-from servidor.settings import BASE_DIR
-from .forms import datosuserForm, userRegister, datosuserFormEdit, CasosForm,EditarFormGestor,informacionComplementaria,seguimientoFormulario,AsignacionTareaForm
+from django.conf import settings
 from django.contrib import messages
-from django.urls import reverse_lazy
-from django.contrib.auth.models import User
-from django.views.generic import ListView, CreateView
-from django.db.models import When,Case,Value,F,Count,Sum
-from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.urls import reverse
-import datetime
-from django.http import JsonResponse
+from django.contrib.auth.models import User
+from django.core import serializers
 from django.core.files.storage import FileSystemStorage
+from django.core.mail import EmailMessage, send_mail
+from django.db.models import Case, Count, F, Q, Sum, Value, When,DurationField, ExpressionWrapper,Func,IntegerField
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse, reverse_lazy
+from django.views.generic import CreateView, ListView
+from reportlab.pdfgen import canvas
+
+from api.automatizacion_tareas import generar_email_aut
+from api.models import *
+from servidor.settings import BASE_DIR
+
+from .forms import (AsignacionTareaForm, CasosForm, EditarFormGestor,
+                    datosuserForm, datosuserFormEdit,
+                    informacionComplementaria, seguimientoFormulario,
+                    userRegister)
+
 global usuario
 from django.template.loader import render_to_string
-from weasyprint import HTML
 from openpyxl import Workbook
-from openpyxl.styles import Alignment,Border,Font,PatternFill,Side
+from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
+from weasyprint import HTML
+
 
 @login_required
 def perfilUsuario(request):
@@ -222,13 +224,13 @@ def ajax_eliminar(request):
 @login_required
 def editarCrudGestor(request,id):
    try:
-           
+       
         infocom = InfoComplementaria.objects.all().last()
         segui = Seguimiento.objects.all().last()
         caso=Casos.objects.get(pk=id)
         if request.method == 'GET':
                 initial_data = {'id_seguimiento':segui,'id_comple_info':infocom}  
-                forma_persona = EditarFormGestor(instance=caso,initial=initial_data)
+                forma_persona = EditarFormGestor(instance=caso)
              
         else:
                
@@ -237,9 +239,18 @@ def editarCrudGestor(request,id):
                
                 # files=request.FILES.getlist('formula_medica')
                 if forma_persona.is_valid(): 
-                    forma_persona.save()
-                    messages.add_message(request, messages.SUCCESS, message='Se ha editado con exito')
-                    return redirect('busqueda')
+                    if caso.estado==request.POST.get('estado'):
+                     
+                        forma_persona.save()
+                    
+                        messages.add_message(request, messages.SUCCESS, message='Se ha editado con exito')
+                        return redirect('busqueda')
+                    elif  caso.estado!=request.POST['estado']:
+                        generar_email_aut(caso.id_usuario.login_id.email,request.POST['estado'])
+                        forma_persona.save()
+                    
+                        messages.add_message(request, messages.SUCCESS, message='Se ha editado con exito')
+                        return redirect('busqueda')
                 else:
          
                  forma_persona = CasosForm()
@@ -267,6 +278,7 @@ def registrarCasoGestor(request):
                     return redirect('registrarCasoGestor')
                 else:
                     forma_persona.save()
+                    messages.add_message(request, messages.SUCCESS,message='ha creado un caso')
                     return redirect('busqueda')
             else:
                 messages.add_message(request, messages.ERROR,message='Ingrese informacion complementaria y de seguimiento')
@@ -493,7 +505,7 @@ def generar_report_caso(_request,id):
 
   
   HTML(string=html).write_pdf(response)
-  
+  return response
 @login_required
 def generar_report_graficas(_request):
     casos=Casos.objects.all()
@@ -1014,20 +1026,53 @@ def vista_graficas(request):
                    
                                                     })
 
+class TimeStampDiff(Func):
+    class PrettyStringFormatting(dict):
+        def __missing__(self, key):
+            return '%(' + key + ')s'
 
+    def __init__(self, *expressions, **extra):
+        unit = extra.pop('unit', 'day')
+        self.template = self.template % self.PrettyStringFormatting({"unit": unit})
+        super().__init__(*expressions, **extra)
+
+    function = 'TIMESTAMPDIFF'
+    template = "%(function)s(%(unit)s, %(expressions)s)"
 @login_required
 def get_data(request):
-    proceso=[]
-    labels=[]
-    query= Casos.objects.values('estado__nombreestado').filter(estado__nombreestado='abierto').annotate(cant_estado=Count('estado'))
-    for valor in query:
-        proceso.append(valor['estado__nombreestado'])
-        labels.append(valor['cant_estado'])
-    print(proceso)
-    print(labels)
+
+    lista=[]
+    casosregistrados= Casos.objects.values('id_caso').aggregate(total=Count('id_caso'))
+    cantidadusuarios=DatosUsuario.objects.values('id_cedula').aggregate(total=Count('id_cedula'))
+    casosresueltos = Casos.objects.values('id_caso').filter(estado__nombreestado='finalizado').aggregate(total=Count('id_caso'))
+    casos_activos_proceso=Casos.objects.values('estado').filter(estado__nombreestado='proceso').aggregate(valor=Count('id_caso'))
+    casos_activos_abiertos=Casos.objects.values('estado').filter(estado__nombreestado='abierto').aggregate(valor=Count('id_caso'))
+    cantidad_activos=casos_activos_proceso['valor'] + casos_activos_abiertos['valor']
+    fechafinal = Casos.objects.values('id_caso').annotate(cantida_dias=TimeStampDiff(F('fechaatenfinalizado') ,F('fechaatenabierto'),output_field=IntegerField()))
+    sum=0
+    for x in fechafinal:
+        lista.append(x['cantida_dias'])
+
+    # for i in lista:
+    #    sum+=i
+      
+
+    promedio_respuesta_dias=round((sum/30)*100)
+    
     data={
-        'proceso':proceso,
-        'labels':labels
+      
+        'casosregistradostotal':casosregistrados,
+        'cantusers':cantidadusuarios,
+        'resueltos':casosresueltos,
+        'activos':cantidad_activos,
+        'promedio_respuesta_dias':33
     }
 
     return JsonResponse(data)
+
+@login_required
+def indicadores_gestion(request):
+    
+    return render(request,'Gestor/indicadores.html')
+  
+    
