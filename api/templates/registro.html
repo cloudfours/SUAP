@@ -26,16 +26,38 @@
             <div class="d-flex flex-wrapd flex-row w-100 ">
 <div class="container-sm d-flex  flex-wrap row" id="forms">
            <div class="container-sm  w-100  d-flex flex-column col">
- {% for field in form %}
-              <label  for="{{ field.name }}">{{ field.label }}</label>
-              {{ field }}
-  {% endfor %}
+  
+ <label for="{{form.name}}">{{form.id_cedula.label}}</label>
+ {{form.id_cedula}}
+ <label for="{{form.name}}">{{form.primer_nombre.label}}</label>
+ {{form.primer_nombre}}
+ <label for="{{form.name}}">{{form.primer_apellido.label}}</label>
+ {{form.primer_apellido}}
+ <label for="{{form.name}}">{{form.tipo_doc.label}}</label>
+ {{form.tipo_doc}}
+ <label for="{{form2.name}}">{{form2.email.label}}</label>
+ {{form2.email}}
+ 
+ 
 </div>
                 <div class="container-sm  w-100 d-flex flex-column col">
-                          {% for field in form2 %}
-                        <label  for="{{ field.name }}">{{ field.label }}</label>
-                 {{ field }}
-                          {% endfor %}
+                        
+                          <label for="{{form.name}}">{{form.segundo_nombre.label}}</label>
+                          {{form.segundo_nombre}}
+                          <label for="{{form.name}}">{{form.segundo_apellido.label}}</label>
+                          {{form.segundo_apellido}}
+                          <label for="{{form2.name}}">{{form2.username.label}}</label>
+                          {{form2.username}}
+                          <label for="{{form2.name}}">{{form2.password1.label}}</label>
+                          {{form2.password1}}
+                          <label for="{{form2.name}}">{{form2.password2.label}}</label>
+                          {{form2.password2}}
+    <ul>               
+ <li>8 o más caracteres</li>
+ <li>Un caracter en mayuscula</li>
+ <li>Un caracter en minuscula</li>
+<li>Un numero</li>
+    </ul>               
                 </div>
 
             </div>
@@ -43,6 +65,8 @@
 
 
             <div class="d-flex justify-content-center flex-column align-items-center">
+                
+ {{form.trata_data}}
             <input type="submit" class="btn btn-primary active boton-ubicacion rounded-pill text-center" id="usuarioIdentificacion" value='Registrarse'/>
             <img src="{% static "./img/intro.jfif" %}"class="introimage">
 </div>

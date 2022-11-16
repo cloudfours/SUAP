@@ -11,7 +11,7 @@ from django.conf.urls.static import static
 from servidor import settings
 
 handler404=page_not_found
-
+handler500=page_error
 app_name = 'api'
 urlpatterns = [
     path('admin/',admin.site.urls,name='administrador'),

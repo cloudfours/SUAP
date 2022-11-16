@@ -1,5 +1,5 @@
 {% extends 'informacion_paciente.html' %}
-
+{% load static %}
 {% block content %}
 <div class="caja_form">
     <form method="POST" class="form_caso" enctype="multipart/form-data" name='editar'>
@@ -105,7 +105,22 @@
     </div> 
     </form>
     </div>
-
+    {% for message in messages %}
+        {% if message.tags == 'error'%}
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="{% static "../static/js/jquery.toast.js" %}"></script>
+    <script type='text/javascript'>
+        $.toast({
+            heading: 'Error',
+            text: '{{message}}',
+            showHideTransition: 'fade',
+            icon: 'error'
+        })
+    </script>
+     {% endif %}
+     {% endfor %}
+  
 {% endblock %}
 
 {% comment %} {% if messages %}

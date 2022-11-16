@@ -1,39 +1,41 @@
 
+import datetime
 import json
 import math
-import random
-from django.conf import settings
-from django.core.mail import send_mail, EmailMessage
 import os
-
-
-from reportlab.pdfgen import canvas
+import random
 from io import BytesIO
 
-from django.http import HttpResponse
-from django.core import serializers
-from api.models import *
-from django.shortcuts import get_object_or_404, render, redirect
-from django.http import HttpResponseRedirect
-
-from servidor.settings import BASE_DIR
-from .forms import datosuserForm, userRegister, datosuserFormEdit, CasosForm,EditarFormGestor,informacionComplementaria,seguimientoFormulario,AsignacionTareaForm
+from django.conf import settings
 from django.contrib import messages
-from django.urls import reverse_lazy
-from django.contrib.auth.models import User
-from django.views.generic import ListView, CreateView
-from django.db.models import When,Case,Value,F,Count,Sum
-from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.urls import reverse
-import datetime
-from django.http import JsonResponse
+from django.contrib.auth.models import User
+from django.core import serializers
 from django.core.files.storage import FileSystemStorage
+from django.core.mail import EmailMessage, send_mail
+from django.db.models import Case, Count, F, Q, Sum, Value, When,DurationField, ExpressionWrapper,Func,IntegerField
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse, reverse_lazy
+from django.views.generic import CreateView, ListView
+from reportlab.pdfgen import canvas
+
+from api.automatizacion_tareas import generar_email_aut
+from api.models import *
+from servidor.settings import BASE_DIR
+
+from .forms import (AsignacionTareaForm, CasosForm, EditarFormGestor,
+                    datosuserForm, datosuserFormEdit,
+                    informacionComplementaria, seguimientoFormulario,
+                    userRegister)
+
 global usuario
 from django.template.loader import render_to_string
-from weasyprint import HTML
 from openpyxl import Workbook
-from openpyxl.styles import Alignment,Border,Font,PatternFill,Side
+from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
+from weasyprint import HTML
+
 
 @login_required
 def perfilUsuario(request):
@@ -59,6 +61,7 @@ def editarUser(request, id):
 
             if persona_form.is_valid():
                 persona_form.save()
+                messages.add_message(request, messages.SUCCESS, message='Se ha editado con exito')
                 return redirect('perfil')
             else:
                 messages.add_message(
@@ -131,9 +134,10 @@ def logear(request):
 
 
 def log_out(request):
+    
     logout(request)
     messages.add_message(request, messages.SUCCESS, f'ha vuelto al inicio')
-    return redirect(reverse('login'))
+    return redirect('login')
 
 
 def perfiluser(request):
@@ -156,6 +160,7 @@ def registrarCaso(request):
         else:
             if forma_persona.is_valid():
                 forma_persona.save()
+                messages.add_message(request, messages.SUCCESS, message='Se ha editado con exito')
                 return redirect('perfil')
     else:
             initial_data = {'id_usuario':datos_usuario.id_cedula,'estado':1,'fecharesgistrocaso':datetime.datetime.now(),'numeroradicado':numeroradicado}
@@ -166,8 +171,8 @@ def registrarCaso(request):
 def page_not_found(request,exception):
     return render(request, '404.html')
     
-def page(request,exception):
-    return render(request,'505.html')
+def page_error(request):
+    return render(request,'505.html',status=500)
 @login_required
 def seguimiento(request):
     datos_usuario=DatosUsuario.objects.get(login_id=request.user.id)
@@ -215,20 +220,20 @@ def ajax_eliminar(request):
 
     Casos.objects.filter(id_caso=id_caso).update(estado_pendiente='0')
   
-   
+    messages.add_message(request, messages.SUCCESS, message='Se ha elimino con exito')
     response={}
     return JsonResponse(response)
 
 @login_required
 def editarCrudGestor(request,id):
    try:
-           
+       
         infocom = InfoComplementaria.objects.all().last()
         segui = Seguimiento.objects.all().last()
         caso=Casos.objects.get(pk=id)
         if request.method == 'GET':
-                initial_data = {'id_seguimiento':segui,'id_comple_info':infocom}  
-                forma_persona = EditarFormGestor(instance=caso,initial=initial_data)
+              
+                forma_persona = EditarFormGestor(instance=caso)
              
         else:
                
@@ -237,12 +242,15 @@ def editarCrudGestor(request,id):
                
                 # files=request.FILES.getlist('formula_medica')
                 if forma_persona.is_valid(): 
-                    forma_persona.save()
-                    messages.add_message(request, messages.SUCCESS, message='Se ha editado con exito')
-                    return redirect('busqueda')
+              
+                        generar_email_aut(caso.id_usuario.login_id.email,caso.estado.idestado,caso.id_caso)
+                        forma_persona.save()
+                    
+                        messages.add_message(request, messages.SUCCESS, message='Se ha editado con exito')
+                        return redirect('busqueda')
                 else:
-         
-                 forma_persona = CasosForm()
+                 initial_data = {'id_seguimiento':segui,'id_comple_info':infocom}  
+                 forma_persona = CasosForm(initial=initial_data)
    except AttributeError as e:
                    print(e)
                
@@ -267,6 +275,7 @@ def registrarCasoGestor(request):
                     return redirect('registrarCasoGestor')
                 else:
                     forma_persona.save()
+                    messages.add_message(request, messages.SUCCESS,message='ha creado un caso')
                     return redirect('busqueda')
             else:
                 messages.add_message(request, messages.ERROR,message='Ingrese informacion complementaria y de seguimiento')
@@ -288,6 +297,7 @@ def informacionComplementarias(request):
             return redirect('registrarCasoGestor')
         
     else:
+        messages.add_message(request, messages.ERROR,message='Ingrese informacion complemtaria de nuevo')
         forma_persona=informacionComplementaria()
     return render(request,'Gestor/informacionComplementaria.html',{'forma_persona':forma_persona})
 @login_required           
@@ -302,9 +312,11 @@ def info_co_post_ajax(request):
            forma_persona=informacionComplementaria(request.POST)
            if forma_persona.is_valid():
                forma_persona=forma_persona.save()
+               messages.add_message(request,messages.SUCCESS,message='Se aguardo con exito')
                serializar=serializers.serialize('json',[forma_persona,])
                return JsonResponse({'exito':serializar},status=200)
            else:
+               messages.add_message(request, messages.ERROR,message='Ingrese informacion complemtaria de nuevo')
                return JsonResponse({'error':serializar},status=400)
     return JsonResponse({"error": ""}, status=400)
 @login_required
@@ -314,8 +326,10 @@ def seguimientoGestor(request):
         seguimientoForm=seguimientoFormulario(request.POST)
         if seguimientoForm.is_valid():
             seguimientoForm= seguimientoForm.save()
+            messages.add_message(request,messages.SUCCESS,message='Se aguardo con exito')
             return redirect('registrarCasoGestor')
         else:
+            messages.add_message(request, messages.ERROR,message='Ingrese informacion seguimiento de nuevo')
             seguimientoForm=seguimientoFormulario()
     return render(request,'Gestor/seguimientoGestor.html',{'seguimientoForm':seguimientoForm})
 
@@ -333,10 +347,11 @@ def segui_co_post_ajax(request):
            if segui_form.is_valid():
            
                segui_form=segui_form.save()
+               messages.add_message(request,messages.SUCCESS,message='Se aguardo con exito')
                segui=serializers.serialize('json',[segui_form,])
                return JsonResponse({'exito':segui},status=200)
            else:
-            
+               messages.add_message(request, messages.ERROR,message='Ingrese informacion seguimiento de nuevo')
                return JsonResponse({'error':segui},status=400)
     return JsonResponse({"error": ""}, status=400)
 @login_required
@@ -399,8 +414,10 @@ def guardar(request):
             actividad = AsignacionTareaForm(request.POST)
             if actividad.is_valid():
                 actividad = actividad.save()
+                messages.add_message(request, messages.INFO, message='Se ha guardado con exito')
                 return redirect('actividades')
             else:
+                 messages.add_message(request, messages.ERROR, message='LLENE LOS CAMPOS FALTANTES')
                  actividad = AsignacionTareaForm()
       return render(request,'Gestor/datercrud/creartarea.html',{'actividad':actividad})
 
@@ -419,7 +436,7 @@ def editaractividad(request,id):
         actividad=AsignacionTareaForm(request.POST,instance=mostratinfodetalle)
         if actividad.is_valid():
             actividad = actividad.save()
-            messages.add_message(request, messages.SUCCESS, message='Se ha editado con exito')
+            messages.add_message(request, messages.INFO, message='Se ha editado con exito')
             return redirect('actividades')
         else:
               messages.add_message(request, messages.ERROR, message='LLENE LOS CAMPOS FALTANTES')
@@ -444,11 +461,11 @@ def actividadCrudDelete(request,id):
 
 @login_required
 def ajax_eliminaractividad(request):
-    id = request.POST.get('id')
-
-    AsignacionTarea.objects.filter(id=id).update(estado_pendiente='0')
+    id_actividad = request.POST.get('id')
+    
+    AsignacionTarea.objects.filter(id=id_actividad).update(estado_pendiente='0')
   
-   
+    messages.add_message(request, messages.INFO, message='Se elimino actividad')
     response={}
     return JsonResponse(response)
 
@@ -471,8 +488,10 @@ def correo(request):
             email.attach_file('media/uploads/'+adjunto)
             email.fail_silenty=False
             email.send()
+            messages.add_message(request, messages.SUCCESS, message='Se envio correo')
             return redirect('busqueda')
-        except  FileNotFoundError:
+        except  FileNotFoundError as e:
+            messages.add_message(request, messages.ERROR, message=f'El achivo debe estar en el mismo directorio {e}')
             return redirect('correo')
         
     return render(request,'Gestor/correo.html')
@@ -493,7 +512,7 @@ def generar_report_caso(_request,id):
 
   
   HTML(string=html).write_pdf(response)
-  
+  return response
 @login_required
 def generar_report_graficas(_request):
     casos=Casos.objects.all()
@@ -1014,20 +1033,60 @@ def vista_graficas(request):
                    
                                                     })
 
+class TimeStampDiff(Func):
+    class PrettyStringFormatting(dict):
+        def __missing__(self, key):
+            return '%(' + key + ')s'
 
+    def __init__(self, *expressions, **extra):
+        unit = extra.pop('unit', 'day')
+        self.template = self.template % self.PrettyStringFormatting({"unit": unit})
+        super().__init__(*expressions, **extra)
+
+    function = 'TIMESTAMPDIFF'
+    template = "%(function)s(%(unit)s, %(expressions)s)"
 @login_required
 def get_data(request):
-    proceso=[]
-    labels=[]
-    query= Casos.objects.values('estado__nombreestado').filter(estado__nombreestado='abierto').annotate(cant_estado=Count('estado'))
-    for valor in query:
-        proceso.append(valor['estado__nombreestado'])
-        labels.append(valor['cant_estado'])
-    print(proceso)
-    print(labels)
+
+    lista=[]
+    casosregistrados= Casos.objects.values('id_caso').aggregate(total=Count('id_caso'))
+    cantidadusuarios=DatosUsuario.objects.values('id_cedula').aggregate(total=Count('id_cedula'))
+    casosresueltos = Casos.objects.values('id_caso').filter(estado__nombreestado='finalizado').aggregate(total=Count('id_caso'))
+    casos_activos_proceso=Casos.objects.values('estado').filter(estado__nombreestado='proceso').aggregate(valor=Count('id_caso'))
+    casos_activos_abiertos=Casos.objects.values('estado').filter(estado__nombreestado='abierto').aggregate(valor=Count('id_caso'))
+    cantidad_activos=casos_activos_proceso['valor'] + casos_activos_abiertos['valor']
+    fechafinal = Casos.objects.values('id_caso').annotate(cantida_dias=Sum(TimeStampDiff(F('fechaatenfinalizado') ,F('fechaatenabierto'),output_field=IntegerField())))
+    list_new=[]
+    sum=0
+    for x in fechafinal:
+        lista.append(x['cantida_dias'])
+    
+    for i in lista:
+        if i !=None:
+            list_new.append(i)
+
+    for x in list_new:
+          sum+=x
+    print(list_new)
+    
+      
+
+    promedio_respuesta_dias=round((sum/30)*100)
+    
     data={
-        'proceso':proceso,
-        'labels':labels
+      
+        'casosregistradostotal':casosregistrados,
+        'cantusers':cantidadusuarios,
+        'resueltos':casosresueltos,
+        'activos':cantidad_activos,
+        'promedio_respuesta_dias':promedio_respuesta_dias
     }
 
     return JsonResponse(data)
+
+@login_required
+def indicadores_gestion(request):
+    
+    return render(request,'Gestor/indicadores.html')
+  
+    

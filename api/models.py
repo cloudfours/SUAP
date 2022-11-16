@@ -33,15 +33,15 @@ class Casos(models.Model):
     descripcioncaso = models.TextField(db_column='descripcionCaso')  # Field name made lowercase.
   
     estado = models.ForeignKey('Estado', models.DO_NOTHING, db_column='estado')
-    fecharesgistrocaso = models.DateTimeField(db_column='fechaResgistroCaso', blank=True,
+    fecharesgistrocaso = models.DateField(db_column='fechaResgistroCaso', blank=True,default='0000-00-00',
                                               null=True)  # Field name made lowercase.
     enfermedad = models.ForeignKey('TipoEnfermedad', models.DO_NOTHING, db_column='enfermedad', blank=True)
-    fechaatenproceso = models.DateField(db_column='fechaAtenProceso',
+    fechaatenproceso = models.DateField(db_column='fechaAtenProceso',default='0000-00-00',
                                             null=True)  # Field name made lowercase.
     fechaatenfinalizado = models.DateField(db_column='fechaAtenFinalizado', 
-                                               null=True)  # Field name made lowercase.
+                                               null=True,default='0000-00-00')  # Field name made lowercase.
     fechaatenabierto = models.DateField(db_column='fechaAtenAbierto', 
-                                            null=True)  # Field name made lowercase.
+                                            null=True,default='0000-00-00')# Field name made lowercase.
     hora = models.TimeField( null=True)
     formula_medica = models.FileField(upload_to='uploads/',blank=True, null=True)
 
@@ -100,7 +100,7 @@ class DatosUsuario(models.Model):
     id_grupo_etnico = models.ForeignKey('GrupoEtnico', models.DO_NOTHING, db_column='id_grupo_etnico')
     id_poblacion_especial = models.ForeignKey('PoblacionEspecial', models.DO_NOTHING, db_column='id_poblacion_especial')
     login_id = models.OneToOneField(User, on_delete=models.CASCADE,db_column='login_id')
-
+   
     def __str__(self):
         return f'{self.id_cedula}'
 
@@ -188,8 +188,8 @@ class AsignacionTarea(models.Model):
     asginacion = models.CharField(max_length=255,blank=True,null=True)
     actividad = models.CharField(max_length=40, blank=True, null=True)
     detalle= models.TextField(db_column='detalle',default='')
-    fecha = models.DateTimeField()
-    fech_registro = models.DateTimeField()
+    fecha = models.DateField()
+    fech_registro = models.DateField()
     color = models.CharField(max_length=7, default="#FFFFFF")
     class Estado_activo_actividad(models.TextChoices):
             activo='1',_('activo')
@@ -199,6 +199,8 @@ class AsignacionTarea(models.Model):
     def toJSON(self):
         item = model_to_dict(self)
         return item
+    def __str__(self):
+        return f'{self.id}'
 class GestorFarmacia(models.Model):
     id_far = models.AutoField(primary_key=True)
     nombrefarmacia = models.CharField(db_column='nombreFarmacia', max_length=40)  # Field name made lowercase.

@@ -116,6 +116,29 @@ margin-top: 25px;
     margin-top: 83px;
     justify-content: space-between;
 }
+.indicadores-g2{
+    display: flex;
+    align-items: center;
+    flex-wrap:wrap;
+    width: 855px;
+    height: 524px;
+    margin-left: 251px;
+    margin-top: 83px;
+    justify-content: space-around;
+    background-color: #ffffff;
+}
+.indicador{
+    width: 265px;
+    height: 191px;
+    border: 1px solid #54a9e6;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:space-around;
+}
+.text-h6{
+    text-shadow:1px 1px #e8e7e7;
+}
 @media screen and (max-width: 768px){
 .icono_caja{
     left: 458px;

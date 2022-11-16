@@ -1,0 +1,46 @@
+{% extends 'informacion_paciente.html' %}
+{% block content %}
+<div class='indicadores-g2'>
+<div  class='indicador shadow-sm p-3 mb-5 bg-body rounded'>
+<h6 class='text-h6'><strong>Casos registrados</strong></h6>
+<h1 id='total_casos' class='text-info'></h1>
+</div>
+<div class='indicador shadow-sm p-3 mb-5 bg-body rounded'>
+    <h6 class='text-h6'><strong>Usuarios</strong></h6>
+    <h1 id='total_users' class='text-info'></h1>
+</div>
+<div  class='indicador shadow-sm p-3 mb-5 bg-body rounded'>
+    <h6 class='text-h6'><strong>Casos Resueltos</strong></h6>
+    <h1 id='total_casos_resueltos' class='text-info'></h1>
+</div>
+<div c class='indicador shadow-sm p-3 mb-5 bg-body rounded'>
+    <h6 class='text-h6'><strong>Casos Activos</strong></h6>
+    <h1 id='cantidad_activos' class='text-info'></h1>
+</div>
+<div  class='indicador shadow-sm p-3 mb-5 bg-body rounded'>
+    <h6 class='text-h6'><strong>Tiempo de Respuesta</strong></h6>
+    <h1 id='respuestas_dias' class='text-info'></h1>
+    <h6 class='text-h6'><strong>Dias en promedio</strong></h6>
+</div>
+<div  class='indicador shadow-sm p-3 mb-5 bg-body rounded'>
+    <h6 class='text-h6'><strong>Resolutividad</strong></h6>
+    <h1 id='' class='text-info'>90%</h1>
+</div>
+</div>
+{% endblock %}
+{% block js %}
+<script type='text/javascript'>
+    const conexion = async()=>{
+        let response= await fetch('../indicadores-calculo')
+        let data =await response.json()
+        console.log(data)
+        const total_casos = document.querySelector('#total_casos').innerHTML=data.casosregistradostotal.total
+        const total_users = document.querySelector('#total_users').innerHTML=data.cantusers.total
+        const total_casos_resueltos=document.querySelector('#total_casos_resueltos').innerHTML=data.resueltos.total
+        const cantidad_activos = document.querySelector('#cantidad_activos').innerHTML=data.activos
+        const respuestas_dias = document.querySelector('#respuestas_dias').innerHTML=data.promedio_respuesta_dias
+    } 
+    conexion()
+
+</script>
+{% endblock %}

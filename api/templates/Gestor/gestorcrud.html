@@ -50,7 +50,7 @@
     <thead class='bg-primary bg-gradient'>
         <tr>
             <th class='text-light'>ID caso</th>
-            <th class='text-light'>Numero de identificacion</th>
+            <th class='text-light'>Numero de documento</th>
             <th class='text-light'>Nombres</th>
             <th class='text-light'>Apellidos</th>
             <th class='text-light'>Telefono</th>
@@ -105,23 +105,7 @@
      {% endfor %}
    
     </tbody>
-    <tfoot>
-        <tr>
-            <th>ID caso</th>
-            <th>Numero de identificacion</th>
-            <th>Nombres</th>
-            <th>Apellidos</th>
-            <th>Telefono</th>
-            <th>Correos</th>
-            <th>Enfermedad</th>
-            <th>EPS</th>
-            <th>Estado actual</th>
-            <th>Detalle caso</th>
-            <th>Seguimiento</th>
-            <th>Reporte</th>
-            <th>Opciones</th>
-        </tr>
-    </tfoot>
+   
 </table>
 </div>
 
@@ -131,29 +115,26 @@
 
 {% for message in messages %}
   {% if message.tags == 'success'%}
-  <script type=text/javascript>
-    $(document).ready(function(){
-        toastr.{{ message.tags }}('{{ message }}')
-     
+  
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="{% static "../static/js/jquery.toast.js" %}"></script>
+  <script type='text/javascript'>
+    $.toast({
+        heading: 'Success',
+        text: '{{message}}',
+        showHideTransition: 'slide',
+        icon: 'success'
     })
-    toastr.options = {
-        "closeButton": false,
-        "debug": false,
-        "newestOnTop": false,
-        "progressBar": true,
-        "positionClass": "toast-top-center",
-        "preventDuplicates": false,
-        "onclick": null,
-        "showDuration": "300",
-        "hideDuration": "1000",
-        "timeOut": "5000",
-        "extendedTimeOut": "1000",
-        "showEasing": "swing",
-        "hideEasing": "linear",
-        "showMethod": "fadeIn",
-        "hideMethod": "fadeOut"
-      }   
-</script>
+  </script>
+  {% elif message.tags == 'information' %}
+  <script type='text/javascript'>
+    $.toast({
+        heading: 'Information',
+        text: '{{message}}',
+        showHideTransition: 'slide',
+        icon: 'success'
+    })
+  </script>
    {% endif %}
    {% endfor %}
 
