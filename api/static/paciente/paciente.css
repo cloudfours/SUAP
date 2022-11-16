@@ -46,7 +46,7 @@ margin-top: 87px;
     margin-left: 5px;
     transform: translateX(10px);
     cursor: pointer;
-    position: fixed;
+    position: relative;
 
 }
 .menu__side{
@@ -142,6 +142,7 @@ h4{
 .icono_despegable_caja i{
     color: white;
 }
+
 p{
     margin-bottom: 0rem;
 }

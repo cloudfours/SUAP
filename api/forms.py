@@ -20,7 +20,7 @@ class AsignacionTareaForm(forms.ModelForm):
              'id_gest':'Nombre del gestor',
              'actividad':'Actividad',
              'detalle':'Detalle de la actividad',
-             'fecha':'Fecha',
+             'fecha':'Fecha programada',
              'fech_registro':'Fecha de registro',
              'color':'Color:',
              'asginacion':'Quien lo asigna'
@@ -261,7 +261,7 @@ class datosuserFormEdit(forms.ModelForm):
 class datosuserForm(forms.ModelForm):
     class Meta:
         model = DatosUsuario
-        fields = ['id_cedula', 'primer_nombre', 'primer_apellido', 'segundo_nombre', 'segundo_apellido', 'tipo_doc','trata_data']
+        fields = ['id_cedula', 'primer_nombre', 'primer_apellido', 'segundo_nombre', 'segundo_apellido', 'tipo_doc']
         labels = {
             'id_cedula': 'Número de documento',
             'primer_nombre': 'Primer nombre',

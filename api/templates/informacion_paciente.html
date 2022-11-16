@@ -16,10 +16,10 @@
 {% endblock %}
 {% block menu_icono %}
 <dv class='icono_caja'>
-<div class="btn-group">
-    <button class="btn btn-primary dropdown-toggle h-100 w-100 border-0  bg-transparent" type="button" data-bs-toggle="dropdown" data-bs-auto-close="inside" aria-expanded="false">
+<div class="btn-group",role='usuario'>
+    <button class="btn btn-primary dropdown-toggle h-100 w-100 border-0  bg-transparent" id='menu_user' type="button" data-bs-toggle="dropdown" data-bs-auto-close="inside" aria-expanded="false">
       {% if user.is_authenticated %}
-      <i class="fa-solid fa-user"></i>  {{user.username}}
+      <i class="fa-solid fa-user m-2" role='usuario' aria-label='usuario' id='user'></i>{{user.username}}
       {% endif %}
     </button>
     <ul class="dropdown-menu w-75">
@@ -40,7 +40,7 @@
                 <div class="menu__side" id="side">
                     <div class="name_page">
                         <i class="fa-solid fa-house-chimney-medical" title="titulo"></i>
-                        <h4 class="titulo_fundacion">Fundación  retorno</h4>
+                        <h4 class="titulo_fundacion" id='titulo'>Fundación  retorno</h4>
                     </div>
                     <div class="menu_option">
                         <a href="{% url 'perfil' %}" class="text-decoration-none">
@@ -92,7 +92,7 @@
                 <div class="menu__side" id="side">
                     <div class="name_page">
                         <i class="fa-solid fa-house-chimney-medical" title="titulo"></i>
-                        <h4 class="titulo_fundacion">Fundación retorno</h4>
+                        <h4 class="titulo_fundacion" id='titulo'>Fundación retorno</h4>
                     </div>
                     <div class="menu_option">
                         <a  href="{% url 'perfil' %}" class="selected text-decoration-none">
@@ -120,7 +120,7 @@
                 <div class="menu__side" id="side">
                     <div class="name_page">
                         <i class="fa-solid fa-house-chimney-medical" title="titulo"></i>
-                        <h4 class="titulo_fundacion">Fundación retorno</h4>
+                        <h4 class="titulo_fundacion" id='titulo'>Fundación retorno</h4>
                     </div>
                     <div class="menu_option">
                         <a href="{% url 'perfil' %}" class="selected text-decoration-none">
@@ -276,7 +276,22 @@
     </div>
 
   </main>
-
+  {% for message in messages %}
+  {% if message.tags == 'success'%}
+  
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+  <script src="{% static "../static/js/jquery.toast.js" %}"></script>
+  <script type='text/javascript'>
+    $.toast({
+        heading: 'Success',
+        text: '{{message}}',
+        showHideTransition: 'slide',
+        icon: 'success',
+        position: 'top-right',
+    })
+  </script>
+   {% endif %}
+   {% endfor %}
 {% endblock %}
 {% block modal%}
 <div class="modal fade" id="editar" role="dialog"  tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
