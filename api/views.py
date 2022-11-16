@@ -171,8 +171,8 @@ def registrarCaso(request):
 def page_not_found(request,exception):
     return render(request, '404.html')
     
-def page(request,exception):
-    return render(request,'505.html')
+def page_error(request):
+    return render(request,'505.html',status=500)
 @login_required
 def seguimiento(request):
     datos_usuario=DatosUsuario.objects.get(login_id=request.user.id)
