@@ -7,7 +7,7 @@ from django.forms import model_to_dict
 class Analista(models.Model):
     analista_id = models.SmallAutoField(primary_key=True)
     id_datos_us = models.ForeignKey('DatosUsuario', models.DO_NOTHING, db_column='id_datos_us')
-    id_correo = models.ForeignKey('MensajesCorreo', models.DO_NOTHING, db_column='id_correo')
+
 
  
 
@@ -33,15 +33,15 @@ class Casos(models.Model):
     descripcioncaso = models.TextField(db_column='descripcionCaso')  # Field name made lowercase.
   
     estado = models.ForeignKey('Estado', models.DO_NOTHING, db_column='estado')
-    fecharesgistrocaso = models.DateField(db_column='fechaResgistroCaso', blank=True,default='0000-00-00',
+    fecharesgistrocaso = models.DateField(db_column='fechaResgistroCaso', blank=True,
                                               null=True)  # Field name made lowercase.
     enfermedad = models.ForeignKey('TipoEnfermedad', models.DO_NOTHING, db_column='enfermedad', blank=True)
-    fechaatenproceso = models.DateField(db_column='fechaAtenProceso',default='0000-00-00',
+    fechaatenproceso = models.DateField(db_column='fechaAtenProceso',
                                             null=True)  # Field name made lowercase.
     fechaatenfinalizado = models.DateField(db_column='fechaAtenFinalizado', 
-                                               null=True,default='0000-00-00')  # Field name made lowercase.
+                                               null=True,)  # Field name made lowercase.
     fechaatenabierto = models.DateField(db_column='fechaAtenAbierto', 
-                                            null=True,default='0000-00-00')# Field name made lowercase.
+                                            null=True,)# Field name made lowercase.
     hora = models.TimeField( null=True)
     formula_medica = models.FileField(upload_to='uploads/',blank=True, null=True)
 
@@ -55,7 +55,8 @@ class Casos(models.Model):
         activo='1',_('activo')
         inactivo='0',_('inactivo')
     estado_pendiente=models.CharField(max_length=8,choices=Estado_activo.choices,default=Estado_activo.activo)
-    
+    def clean(self):
+         self.descripcioncaso=self.descripcioncaso.capitalize()
 
 
 
@@ -69,10 +70,6 @@ class ClasificacionPbs(models.Model):
 
 
 
-class DatosAnalisis(models.Model):
-    id_analista = models.ForeignKey(Analista, models.DO_NOTHING, db_column='id_analista')
-    id_caso = models.ForeignKey(Casos, models.DO_NOTHING, db_column='id_caso', blank=True, null=True)
-    informe = models.SmallIntegerField(blank=True, null=True)
 
     
 
@@ -100,7 +97,12 @@ class DatosUsuario(models.Model):
     id_grupo_etnico = models.ForeignKey('GrupoEtnico', models.DO_NOTHING, db_column='id_grupo_etnico')
     id_poblacion_especial = models.ForeignKey('PoblacionEspecial', models.DO_NOTHING, db_column='id_poblacion_especial')
     login_id = models.OneToOneField(User, on_delete=models.CASCADE,db_column='login_id')
-   
+    def clean(self):
+         self.primer_nombre=self.primer_nombre.capitalize()
+         self.primer_apellido=self.primer_apellido.capitalize()
+         self.segundo_nombre=self.segundo_nombre.capitalize()
+         self.segundo_apellido=self.segundo_apellido.capitalize()
+         self.ocupacion=self.ocupacion.capitalize()
     def __str__(self):
         return f'{self.id_cedula}'
 
@@ -113,7 +115,8 @@ class Departamento(models.Model):
     
     def __str__(self):
         return f'{self.cod_dep} - {self.nombre}'
-
+    def clean(self):
+        self.nombre=self.nombre.capitalize()
 
 class Enuesta(models.Model):
     idencuesta = models.SmallAutoField(primary_key=True)
@@ -133,7 +136,8 @@ class EnvioAlertas(models.Model):
     def __str__(self):
         return f'{self.tipoenvio}'
 
- 
+    def clean(self):
+        self.tipoenvio=self.tipoenvio.capitalize()
 
 
 class Eps(models.Model):
@@ -143,14 +147,16 @@ class Eps(models.Model):
     
     def __str__(self):
         return f'{self.cod_eps} {self.nombre}'
-
+    def clean(self):
+        self.nombre=self.nombre.capitalize()
 
 class EspecialidadMed(models.Model):
     id_esp = models.SmallAutoField(db_column='id_esp',primary_key=True)
     nombre = models.CharField(db_column='nombre',max_length=40)
     def __str__(self):
         return f'{self.nombre}'
-
+    def clean(self):
+        self.nombre=self.nombre.capitalize()
 
 
 
@@ -160,7 +166,8 @@ class Estado(models.Model):
     
     def __str__(self):
         return f'{self.nombreestado}'
-
+    def clean(self):
+        self.nombreestado=self.nombreestado.capitalize()
    
 
 
@@ -171,13 +178,14 @@ class Genero(models.Model):
   
     def __str__(self):
         return f'{self.idgenero} - {self.nombregenero}'
+    
 
 
 class GestorCaso(models.Model):
     id_gest = models.SmallAutoField(db_column='Id_gest', primary_key=True)  # Field name made lowercase.
     cantcasos = models.SmallIntegerField(db_column='cantCasos', blank=True, null=True)  # Field name made lowercase.
     id_datos_us = models.ForeignKey(DatosUsuario, models.DO_NOTHING, db_column='id_datos_us', blank=True, null=True)
-    id_correo = models.ForeignKey('MensajesCorreo', models.DO_NOTHING, db_column='id_correo', blank=True, null=True)
+   
 
     def __str__(self):
         return f'{self.id_datos_us.primer_nombre}'
@@ -190,12 +198,15 @@ class AsignacionTarea(models.Model):
     detalle= models.TextField(db_column='detalle',default='')
     fecha = models.DateField()
     fech_registro = models.DateField()
-    color = models.CharField(max_length=7, default="#FFFFFF")
     class Estado_activo_actividad(models.TextChoices):
             activo='1',_('activo')
             inactivo='0',_('inactivo')
     estado_pendiente=models.CharField(max_length=8,choices=Estado_activo_actividad.choices,default=Estado_activo_actividad.activo, blank=True,null=True)
-
+    class prioridad(models.TextChoices):
+        activo='Alta',_('Alta')
+        inactivo='Media',_('Media')
+        baja='Baja',_('Baja')
+    prioridad=models.CharField(max_length=10,choices=prioridad.choices,default=prioridad.baja, blank=True,null=True)
     def toJSON(self):
         item = model_to_dict(self)
         return item
@@ -206,7 +217,8 @@ class GestorFarmacia(models.Model):
     nombrefarmacia = models.CharField(db_column='nombreFarmacia', max_length=40)  # Field name made lowercase.
     def __str__(self):
         return f'{self.nombrefarmacia}'
-
+    def clean(self):
+        self.nombrefarmacia=self.nombrefarmacia.capitalize()
 
 
 
@@ -217,7 +229,8 @@ class GrupoEtnico(models.Model):
     
     def __str__(self) -> str:
         return f'{self.nombreetnico}'
-
+    def clean(self):
+        self.nombreetnico=self.nombreetnico.capitalize()
 
 class IndicadoresGestion(models.Model):
     id_ind_ges = models.PositiveSmallIntegerField()
@@ -248,7 +261,10 @@ class InfoComplementaria(models.Model):
     def __str__(self):
         return f'{self.id_comple}'
 
-    
+    def clean(self):
+        self.otra_terapia=self.otra_terapia.capitalize()
+        self.origen_soli=self.origen_soli.capitalize()
+        self.medico_trat=self.medico_trat.capitalize()
 
 
 class Ips(models.Model):
@@ -256,18 +272,12 @@ class Ips(models.Model):
     nombre = models.CharField(max_length=40)
     def __str__(self):
         return f'{self.nombre}'
-
+    def clean(self):
+        self.nombre=self.nombre.capitalize()
   
 
 
-class MensajesCorreo(models.Model):
-    id_correo = models.SmallAutoField(primary_key=True)
-    recibido = models.TextField(blank=True, null=True)
-    enviados = models.CharField(max_length=40, blank=True, null=True)
-    asunto = models.CharField(max_length=50, blank=True, null=True)
-    mensaje = models.TextField(blank=True, null=True)
-    para = models.TextField(blank=True, null=True)
-    adjunto = models.FileField(upload_to='uploads/% Y/% m/% d/')
+
 
 
 
@@ -280,13 +290,14 @@ class Municipio(models.Model):
 
     def __str__(self):
         return f'{self.cod_municipio} {self.nombremunicipio}'
-
+    def clean(self):
+        self.nombremunicipio=self.nombremunicipio.capitalize()
 
 class PacienteUsuario(models.Model):
     id_paciente = models.SmallAutoField(primary_key=True)
     numusu = models.SmallIntegerField(db_column='numUsu', blank=True, null=True)  # Field name made lowercase.
     id_dat_us = models.ForeignKey(DatosUsuario, models.DO_NOTHING, db_column='id_dat_us', blank=True, null=True)
-    id_correo = models.ForeignKey(MensajesCorreo, models.DO_NOTHING, db_column='id_correo', blank=True, null=True)
+
 
 
 
@@ -300,7 +311,8 @@ class Pais(models.Model):
         ""
         ""
         return f'{self.cod_pais} {self.nombrepais}'
-
+    def clean(self):
+        self.nombre=self.nombrepais.capitalize()
 
 class PoblacionEspecial(models.Model):
     id_pb_esp = models.PositiveIntegerField(primary_key=True)
@@ -311,7 +323,8 @@ class PoblacionEspecial(models.Model):
     
     def __str__(self)->str:
         return f'{self.id_pb_esp} {self.nombrepoblacionesp}'
-
+    def clean(self):
+        self.nombrepoblacionesp=self.nombrepoblacionesp.capitalize()
 
 class Regimen(models.Model):
     cod_regimen = models.PositiveIntegerField(primary_key=True)
@@ -320,7 +333,8 @@ class Regimen(models.Model):
  
     def __str__(self):
         return f'{self.cod_regimen} - {self.nombreregimen}'
-
+    def clean(self):
+        self.nombreregimen = self.nombreregimen.capitalize()
 
 class TipoDocumento(models.Model):
     id_doc = models.AutoField(primary_key=True)
@@ -330,11 +344,8 @@ class TipoDocumento(models.Model):
 
     def __str__(self):
         return f'{self.nombredocumento}'
-
-
-class Reportes(models.Model):
-    id_caso = models.ForeignKey(Casos, models.DO_NOTHING, db_column='id_caso')
-    reporte = models.FileField(upload_to='uploads/% Y/% m/% d/')
+    def clean(self):
+        self.nombredocumento=self.nombredocumento.capitalize()
 
 
 
@@ -348,7 +359,8 @@ class Seguimiento(models.Model):
     
     def __str__(self):
         return f'{self.id_seg}'
-
+    def clean(self):
+       self.descripcion=self.descripcion.capitalize()
     
 
 
@@ -357,7 +369,8 @@ class Terapia(models.Model):
     nombreterapia = models.CharField(db_column='nombreTerapia', max_length=40)  # Field name made lowercase.
     def __str__(self):
         return f'{self.nombreterapia}'
-
+    def clean(self):
+        self.nombreterapia=self.nombreterapia.capitalize()
 
 
 
@@ -367,7 +380,8 @@ class TipReq(models.Model):
     def __str__(self):
         return f'{self.nombrerequerimiento}'
 
-
+    def clean(self):
+        self.nombrerequerimiento=self.nombrerequerimiento.capitalize()
 
 
 class TipoEnfermedad(models.Model):
@@ -377,14 +391,8 @@ class TipoEnfermedad(models.Model):
 
     def __str__(self):
         return f'{self.nombreenfermedad}'
-
-
-class VisualizacionCasoHistorial(models.Model):
-    idcaso = models.ForeignKey(Casos, models.DO_NOTHING, db_column='idCaso')  # Field name made lowercase.
-    estado_caso = models.CharField(max_length=40, blank=True, null=True)
-    id_usuario = models.ForeignKey(DatosUsuario, models.DO_NOTHING, db_column='id_usuario')
+    def clean(self):
+        self.nombreenfermedad=self.nombreenfermedad.capitalize()
 
 
 
-    def __str__(self):
-        return f'id caso: {self.idcaso} estado caso{self.estado_caso} id_usuario {self.id_usuario}'

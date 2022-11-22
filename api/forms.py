@@ -15,14 +15,14 @@ class AsignacionTareaForm(forms.ModelForm):
      class Meta:
    
          model=AsignacionTarea
-         fields=['id_gest','actividad','detalle','fecha','fech_registro','color','asginacion']
+         fields=['id_gest','actividad','detalle','fecha','fech_registro','prioridad','asginacion']
          labels={
              'id_gest':'Nombre del gestor',
              'actividad':'Actividad',
              'detalle':'Detalle de la actividad',
              'fecha':'Fecha programada',
              'fech_registro':'Fecha de registro',
-             'color':'Color:',
+             'prioridad':'Prioridad:',
              'asginacion':'Quien lo asigna'
              
          }
@@ -32,7 +32,7 @@ class AsignacionTareaForm(forms.ModelForm):
                   'fecha':forms.DateInput(attrs={'class':'form-control','type':'date','placeholder':'ingrese fecha','required':False},format='%Y-%m-%d'),
                   'fech_registro':forms.DateInput(attrs={'class':'form-control','type':'date','placeholder':'ingrese fecha','required':False},format='%Y-%m-%d'),
                   'detalle':forms.Textarea(attrs={'class':'form-control','placeholder':'Ingrese detalle'}),
-                  'color':forms.TextInput(attrs={'class': 'form-control ','type':'color'}),
+                  'prioridad':forms.RadioSelect(),
                   'asginacion':forms.TextInput(attrs={'class':'form-control','placeholder':'Ingrese su quien lo asigna'}),
                   
                  
@@ -88,7 +88,7 @@ class informacionComplementaria(forms.ModelForm):
             'tipo_req':forms.Select(attrs={'class':'form-control'}),
             'clasificacion_pbs':forms.Select(attrs={'class':'form-control'}),
             'medico_trat':forms.TextInput(attrs={'class':'form-control','placeholder':'Ingrese su medico tratante'}),
-            'especialidad_med':forms.Select(attrs={'class':'form-control '}),
+            'especialidad_med':forms.Select(attrs={'class':'form-control','required':True }),
             'segunda_barrera':forms.TextInput(attrs={'class':'form-control'}),
             'fech_rad_for_eps':forms.DateInput(attrs={'class':'form-control','type':'date','placeholder':'ingrese fecha','required':False},format='%Y-%m-%d'),
             'fecha_for_medi':forms.DateInput(attrs={'class':'form-control','type':'date','placeholder':'ingrese fecha'},format='%Y-%m-%d '),
@@ -108,7 +108,8 @@ class EditarFormGestor(forms.ModelForm):
         self.fields['formula_medica'].required=False
         self.fields['adjunto_seg'].required=False
         self.fields['adjunto_terc'].required=False
-       
+
+     
     class Meta:
         model=Casos
        
@@ -164,6 +165,7 @@ class EditarFormGestor(forms.ModelForm):
 class CasosForm(forms.ModelForm):
     def __init__(self,*args,**kwargs):
         super().__init__(*args,**kwargs)
+    
      
     class Meta:
         model=Casos
@@ -184,11 +186,11 @@ class CasosForm(forms.ModelForm):
             # 'id_caso':forms.NumberInput(attrs={'class':'form-control'}),
             'id_usuario':forms.Select(attrs={'class':'form-control'}),
             'numeroradicado':forms.NumberInput(attrs={'class':'form-control ','readonly':'readonly'}),
-            'fechaatencioneps':forms.DateTimeInput(attrs={'class':'form-control ','type':'date','placeholder':'ingrese fecha'},format='%Y-%m-%d'),
-            'fecharesgistrocaso':forms.DateTimeInput(attrs={'class':'form-control ','type':'date','placeholder':'ingrese fecha'},format='%Y-%m-%d'),
+            'fechaatencioneps':forms.DateInput(attrs={'class':'form-control ','type':'date','placeholder':'ingrese fecha'}),
+            'fecharesgistrocaso':forms.DateInput(attrs={'class':'form-control ','type':'date','placeholder':'ingrese fecha'},format='%Y-%m-%d'),
             'descripcioncaso':forms.Textarea(attrs={'class':'form-control','placeholder':'Ingrese descripción del caso'}),
             'enfermedad':forms.Select(attrs={'class':'form-control','placeholder':'Ingrese su enfermedad'}),
-            'formula_medica':forms.FileInput(attrs={'class':'form-control'}),
+            'formula_medica':forms.FileInput(attrs={'class':'form-control','lang':"es"}),
             'id_barrera':forms.Select(attrs={'class':'form-control'}),
              'estado':forms.Select(attrs={'class':'form-control'}),
         }

@@ -6,6 +6,7 @@
     background-image: url("../img/imagenFondo.jpg");
     background-position: center;
     background-size: cover;
+    margin-top: 60px;
 }
 
 .caja_hijo {

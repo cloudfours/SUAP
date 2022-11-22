@@ -11,3 +11,13 @@
     margin-top: 83px;
     justify-content: space-between;
 }
+@media screen and (max-width:1024px){
+    .caja_calendario{
+    width: 825px;
+    }
+}
+@media screen and (max-width:480px){
+    .caja_calendario{
+        width: 355px;
+        }
+}

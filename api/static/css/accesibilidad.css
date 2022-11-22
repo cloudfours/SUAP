@@ -2,6 +2,7 @@
     position: relative;
     top: 83px;
     left: 1136px;
+    font-size: 25px;
 }
 .accesibilidad_color{
     background-color: #91B8FF;
@@ -11,4 +12,19 @@
 
 .b{
     color:aqua
+}
+@media screen and (max-width:768px) {
+    .pos{
+        left: 111px;
+       
+    }
+}
+@media screen and (max-width:1024px) {
+.pos{
+    left:94px
+    
+}
+}
+@media screen and (max-width:480px){
+    
 }
