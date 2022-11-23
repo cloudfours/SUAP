@@ -150,7 +150,7 @@ aqui empieza el crud del paciente
 def registrarCaso(request):
     datos_usuario =  DatosUsuario.objects.get(login_id=request.user.id)
     caso = Casos.objects.filter(id_usuario = datos_usuario.id_cedula).select_related('estado').filter(estado__idestado=Case(When(estado__nombreestado='abierto',then=Value(1)),When(estado__nombreestado='proceso',then=Value(2)))).count()
- 
+    today=datetime.date.today().isoformat()
  
     numeroradicado = math.floor(random.random()* 1000)
     forma_persona = CasosForm(request.POST, request.FILES)
@@ -162,10 +162,10 @@ def registrarCaso(request):
         else:
             if forma_persona.is_valid():
                 forma_persona.save()
-                messages.add_message(request, messages.SUCCESS, message='Se ha editado con exito')
+                messages.add_message(request, messages.SUCCESS, message='Se ha guardado con exito')
                 return redirect('perfil')
     else:
-            initial_data = {'id_usuario':datos_usuario.id_cedula,'estado':1,'fecharesgistrocaso': datetime.datetime.now(),'numeroradicado':numeroradicado}
+            initial_data = {'id_usuario':datos_usuario.id_cedula,'estado':1,'fecharesgistrocaso': today,'numeroradicado':numeroradicado}
             forma_persona = CasosForm(initial=initial_data)
     return render(request, 'registrarCaso.html', {'forma_persona': forma_persona})
 
@@ -232,35 +232,40 @@ def ajax_eliminar(request):
 def editarCrudGestor(request,id):
    try:
        
-        infocom = InfoComplementaria.objects.all().last()
-        segui = Seguimiento.objects.all().last()
+    
+      
         caso=Casos.objects.get(pk=id)
    
         if request.method == 'GET':
 
                 forma_persona = EditarFormGestor(instance=caso)
-             
+                info_com=informacionComplementaria(instance=caso.id_comple_info)
+                segui=seguimientoFormulario(instance=caso.id_seguimiento)
         else:
                
                 forma_persona = EditarFormGestor(request.POST,request.FILES,instance=caso)
-               
+                info_com=informacionComplementaria(request.POST,instance=caso.id_comple_info)
+                segui=seguimientoFormulario(request.POST,instance=caso.id_seguimiento)
                
                 # files=request.FILES.getlist('formula_medica')
-                if forma_persona.is_valid(): 
+                if forma_persona.is_valid() and info_com.is_valid() and segui.is_valid(): 
               
                         generar_email_aut(caso.id_usuario.login_id.email,caso.estado.idestado,caso.id_caso)
+                        forma_persona=forma_persona.save(commit=False)
+                        forma_persona.id_comple_info=info_com.save()
+                        forma_persona.id_seguimiento=segui.save()
                         forma_persona.save()
-                    
                         messages.add_message(request, messages.SUCCESS, message='Se ha editado con exito')
                         return redirect('busqueda')
                 else:
                  
-                 forma_persona = CasosForm()
+                 forma_persona = EditarFormGestor()
+                 
    except AttributeError as e:
                    print(e)
                
      
-   return render(request,'Gestor/editarCasoGestor.html',{'forma_persona':forma_persona,'caso':caso})
+   return render(request,'Gestor/editarCasoGestor.html',{'forma_persona':forma_persona,'caso':caso,'info_com':info_com,'segui':segui})
 
 @login_required
 def registrarCasoGestor(request):
@@ -317,7 +322,7 @@ def info_co_post_ajax(request):
            forma_persona=informacionComplementaria(request.POST)
            if forma_persona.is_valid():
                forma_persona=forma_persona.save()
-               messages.add_message(request,messages.SUCCESS,message='Se aguardo con exito')
+               messages.add_message(request,messages.SUCCESS,message='Se guardo con exito')
                serializar=serializers.serialize('json',[forma_persona,])
                return JsonResponse({'exito':serializar},status=200)
            else:
