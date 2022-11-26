@@ -5,9 +5,19 @@
     display: flex;
     align-items: center;
     flex-direction: column;
-    width: 1100px;
+    width: 1132px;
     height: 500px;
     margin-left: 177px;
     margin-top: 83px;
     justify-content: space-between;
+}
+@media screen and (max-width:1024px){
+    .caja_calendario{
+    width: 825px;
+    }
+}
+@media screen and (max-width:480px){
+    .caja_calendario{
+        width: 355px;
+        }
 }

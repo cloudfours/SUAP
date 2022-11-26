@@ -58,10 +58,6 @@
           
           
     </div>
-    <input type="button" class="btn btn-primary w-50 h-50 boton" data-bs-toggle="modal" data-bs-target="#exampleModal"
-    onclick="abrir_moda_info('{% url 'infocreareditar' %}')"value='Informacion complementaria'/> 
-    <input type="button" class="btn btn-primary w-50 h-50 boton" data-bs-toggle="modal" data-bs-target="#exampleModal"
-    onclick="abrir_moda_segui('{% url 'seguicreareditar' %}')"value='Seguimiento del caso'/>
     <div class="files-editar">
         <div>
         <label for="{{forma_persona.name}}">{{forma_persona.numeroradicado.label}}</label>
@@ -100,6 +96,26 @@
         {% endif %}
             </div>
         </div>
+        <div class='info_mas'>
+        <div class='caja_caso_inputs'>
+            <h3>informacion complementaria</h3>
+        {% for field in info_com %}
+        
+        <label  for="{{ field.name }}">{{ field.label }}</label>
+        {{ field }}
+  
+          {% endfor %}
+        </div>
+        <div class='caja_caso_inputs'>
+            <h3>Seguimiento</h3>
+          {% for field in segui %}
+        
+          <label  for="{{ field.name }}">{{ field.label }}</label>
+          {{ field }}
+    
+            {% endfor %}
+        </div>
+    </div>
         <input type="submit" class="btn btn-primary  boton_submit" value="Editar caso">
        
     </div> 

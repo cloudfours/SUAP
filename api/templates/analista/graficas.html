@@ -106,7 +106,7 @@
 <input type='button' class="btn btn-primary" aria-label=".form-select-sm example" id='estado_enferDia'  value='Enfermedad o diagnostico'/>
   </div>
   <div class='caja_busqueda'>
-    <input type='button' class="btn btn-primary" aria-label=".form-select-sm example" id='estado_med'  value='Por pbs'/>
+    <input type='button' class="btn btn-primary" aria-label=".form-select-sm example" id='estado_med'  value='Por Pbs'/>
       </div>
       <div class='caja_busqueda'>
         <input type='button' class="btn btn-primary" aria-label=".form-select-sm example" id='estado_barre'  value='Barrera de acceso'/>
@@ -930,12 +930,12 @@ Charte =new Chart(ctxx,pizza)
                 label: 'casos por Municipio',
                 data: {{labelsmuni|safe}},
                 backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(255, 159, 64, 0.2)'
+                    '#FDD835',
+                    '#6D4C41',
+                    '#009688',
+                    '#81C784',
+                    '#5C6BC0',
+                    '#4527A0'
                 ],
                 label: 'casos por Municipio',
                 borderColor: [
@@ -977,10 +977,12 @@ Charte =new Chart(ctxx,pizza)
           label: 'estados por Municipio',
           data: {{labelsmuni|safe}},
           backgroundColor: [
-            'rgba(255, 99, 132, 0.5)',
-            'rgba(54, 162, 235, 0.2)',
-            'rgba(255, 206, 86, 0.2)',
-            'rgba(75, 192, 192, 0.2)'
+          '#FDD835',
+          '#6D4C41',
+          '#009688',
+          '#81C784',
+          '#5C6BC0',
+          '#4527A0'
           ],
           borderColor: [
             'rgba(255,99,132,1)',
@@ -1013,10 +1015,12 @@ Charte =new Chart(ctxx,pizza)
           label: 'estados por Municipio',
           data: {{labelsmuni|safe}},
           backgroundColor: [
-            'rgba(255, 99, 132, 0.5)',
-            'rgba(54, 162, 235, 0.2)',
-            'rgba(255, 206, 86, 0.2)',
-            'rgba(75, 192, 192, 0.2)'
+          '#FDD835',
+          '#6D4C41',
+          '#009688',
+          '#81C784',
+          '#5C6BC0',
+          '#4527A0'
           ],
           borderColor: [
             'rgba(255,99,132,1)',
@@ -1182,12 +1186,10 @@ estado_enferDia.addEventListener('click', actualizar_enfer)
                   label: 'casos por enfermedad',
                   data: {{labelsenfer|safe}},
                   backgroundColor: [
-                      'rgba(255, 99, 132, 0.2)',
-                      'rgba(54, 162, 235, 0.2)',
-                      'rgba(255, 206, 86, 0.2)',
-                      'rgba(75, 192, 192, 0.2)',
-                      'rgba(153, 102, 255, 0.2)',
-                      'rgba(255, 159, 64, 0.2)'
+                  "#f38b4a",
+                  "#56d798",
+                  "#ff8397",
+                  "#6970d5"
                   ],
                   label: 'casos por enfermedad',
                   borderColor: [
@@ -1229,10 +1231,10 @@ estado_enferDia.addEventListener('click', actualizar_enfer)
             label: 'estados por caso',
             data: {{labelsenfer|safe}},
             backgroundColor: [
-              'rgba(255, 99, 132, 0.5)',
-              'rgba(54, 162, 235, 0.2)',
-              'rgba(255, 206, 86, 0.2)',
-              'rgba(75, 192, 192, 0.2)'
+            "#f38b4a",
+            "#56d798",
+            "#ff8397",
+            "#6970d5"
             ],
             borderColor: [
               'rgba(255,99,132,1)',
@@ -1265,10 +1267,10 @@ estado_enferDia.addEventListener('click', actualizar_enfer)
           label: 'estados por genero',
           data: {{labelsenfer|safe}},
           backgroundColor: [
-            'rgba(255, 99, 132, 0.5)',
-            'rgba(54, 162, 235, 0.2)',
-            'rgba(255, 206, 86, 0.2)',
-            'rgba(75, 192, 192, 0.2)'
+          "#f38b4a",
+          "#56d798",
+          "#ff8397",
+          "#6970d5"
           ],
           borderColor: [
             'rgba(255,99,132,1)',
@@ -1316,12 +1318,12 @@ estado_enferDia.addEventListener('click', actualizar_enfer)
                   label: 'casos por medicamento',
                   data: {{labelsmedic|safe}},
                   backgroundColor: [
-                      'rgba(255, 99, 132, 0.2)',
-                      'rgba(54, 162, 235, 0.2)',
-                      'rgba(255, 206, 86, 0.2)',
-                      'rgba(75, 192, 192, 0.2)',
-                      'rgba(153, 102, 255, 0.2)',
-                      'rgba(255, 159, 64, 0.2)'
+                  "#f38b4a",
+                  "#56d798",
+                  "#ff8397",
+                  "#6970d5",
+                  "#F4D03F ",
+                  '#A569BD'
                   ],
                   label: 'casos por medicamento',
                   borderColor: [
@@ -1363,10 +1365,12 @@ estado_enferDia.addEventListener('click', actualizar_enfer)
             label: 'estados por medicamentos',
             data: {{labelsmedic|safe}},
             backgroundColor: [
-              'rgba(255, 99, 132, 0.5)',
-              'rgba(54, 162, 235, 0.2)',
-              'rgba(255, 206, 86, 0.2)',
-              'rgba(75, 192, 192, 0.2)'
+            "#f38b4a",
+            "#56d798",
+            "#ff8397",
+            "#6970d5",
+            "#F4D03F "
+
             ],
             borderColor: [
               'rgba(255,99,132,1)',
@@ -1399,10 +1403,11 @@ estado_enferDia.addEventListener('click', actualizar_enfer)
           label: 'estados por medicamentos',
           data: {{labelsmedic|safe}},
           backgroundColor: [
-            'rgba(255, 99, 132, 0.5)',
-            'rgba(54, 162, 235, 0.2)',
-            'rgba(255, 206, 86, 0.2)',
-            'rgba(75, 192, 192, 0.2)'
+          "#f38b4a",
+            "#56d798",
+            "#ff8397",
+            "#6970d5",
+            "#F4D03F "
           ],
           borderColor: [
             'rgba(255,99,132,1)',
