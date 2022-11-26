@@ -157,7 +157,7 @@ def registrarCaso(request):
     if request.method == 'POST':
         print(request.POST)
         if caso>=1:
-               messages.add_message(request, messages.ERROR,message='No puede crear otro caso hasta que este finalice')
+               messages.add_message(request, messages.INFO,message='No puede crear otro caso hasta que este finalice')
                return redirect('caso') 
         else:
             if forma_persona.is_valid():
@@ -250,10 +250,11 @@ def editarCrudGestor(request,id):
                 # files=request.FILES.getlist('formula_medica')
                 if forma_persona.is_valid() and info_com.is_valid() and segui.is_valid(): 
               
-                        generar_email_aut(caso.id_usuario.login_id.email,caso.estado.idestado,caso.id_caso)
+                       
                         forma_persona=forma_persona.save(commit=False)
                         forma_persona.id_comple_info=info_com.save()
                         forma_persona.id_seguimiento=segui.save()
+                        generar_email_aut(caso.id_usuario.login_id.email,caso.estado.idestado,caso.id_caso)
                         forma_persona.save()
                         messages.add_message(request, messages.SUCCESS, message='Se ha editado con exito')
                         return redirect('busqueda')

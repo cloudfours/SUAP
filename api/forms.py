@@ -237,7 +237,7 @@ class datosuserFormEdit(forms.ModelForm):
             
         }
         widgets = {
-            'id_cedula': forms.NumberInput(attrs={'class': 'form-control is-valid','readonly':'readonly','pattern':"^[0-9]",'min':"1"}),
+            'id_cedula': forms.NumberInput(attrs={'class': 'form-control is-valid','readonly':'readonly','min':"1"}),
             'primer_nombre': forms.TextInput(attrs={'class': 'form-control is-valid','id':'floatingInputInvalid','placeholder':'Ingrese su nombre'}),
             'primer_apellido': forms.TextInput(attrs={'class': 'form-control is-valid','placeholder':'Ingrese su primer apellido' }),
             'segundo_nombre': forms.TextInput(attrs={'class': 'form-control is-valid','placeholder':'Ingrese su segundo nombre'}),
@@ -275,7 +275,7 @@ class datosuserForm(forms.ModelForm):
         }
         widgets = {
             'id_cedula': forms.NumberInput(attrs={'class': 'form-control is-valid','placeholder':'Ingrese su numero de identificacion'}),
-            'primer_nombre': forms.TextInput(attrs={'class': 'form-control is-valid','placeholder':'Ingrese su primer nombre','pattern':"[a-z]"}),
+            'primer_nombre': forms.TextInput(attrs={'class': 'form-control is-valid','placeholder':'Ingrese su primer nombre'}),
             'primer_apellido': forms.TextInput(attrs={'class': 'form-control is-valid','placeholder':'Ingrese su primer apellido'}),
             'segundo_nombre': forms.TextInput(attrs={'class': 'form-control is-valid','placeholder':'Ingrese su segundo nombre'}),
             'segundo_apellido': forms.TextInput(attrs={'class': 'form-control is-valid','placeholder':'Ingrese su segundo apellido'}),
@@ -310,9 +310,9 @@ class userRegister(UserCreationForm):
     class Meta:
         model = User
         fields = ('username', 'email', 'password1', 'password2',)
-    def clean_email(self):
-        email = self.cleaned_data.get('email')
-        qs = User.objects.filter(email=email)
-        if qs.exists():
-            raise forms.ValidationError("La direccion email ya existe")
-        return email
+    # def clean_email(self):
+    #     email = self.cleaned_data.get('email')
+    #     qs = User.objects.filter(email=email)
+    #     if qs.exists():
+    #         raise forms.ValidationError("La direccion email ya existe")
+    #     return email

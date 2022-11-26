@@ -97,12 +97,6 @@ class DatosUsuario(models.Model):
     id_grupo_etnico = models.ForeignKey('GrupoEtnico', models.DO_NOTHING, db_column='id_grupo_etnico')
     id_poblacion_especial = models.ForeignKey('PoblacionEspecial', models.DO_NOTHING, db_column='id_poblacion_especial')
     login_id = models.OneToOneField(User, on_delete=models.CASCADE,db_column='login_id')
-    def clean(self):
-         self.primer_nombre=self.primer_nombre.capitalize()
-         self.primer_apellido=self.primer_apellido.capitalize()
-         self.segundo_nombre=self.segundo_nombre.capitalize()
-         self.segundo_apellido=self.segundo_apellido.capitalize()
-         self.ocupacion=self.ocupacion.capitalize()
     def __str__(self):
         return f'{self.id_cedula}'
 
