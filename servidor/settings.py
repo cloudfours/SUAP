@@ -86,10 +86,10 @@ DATABASES = {
     'default': {
        'ENGINE': 'django.db.backends.mysql',
         'NAME': 'fundacion_retorno',
-        'USER': 'root',
-        'PASSWORD': '1007648218',
-        'HOST': 'localhost',
-        'PORT': '3306',
+        'USER': 'angelsx',
+        'PASSWORD': '1007648218s',
+        'HOST': 'angelsx.mysql.pythonanywhere-services.com',
+        
 
     }
 }
