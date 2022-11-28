@@ -1,4 +1,0 @@
-{
-    "appService.defaultWebAppToDeploy": "/subscriptions/cecd8050-9bfe-431b-8c5a-c25ecc822395/AppServices/subscriptions/cecd8050-9bfe-431b-8c5a-c25ecc822395/resourceGroups/appsvc_linux_centralus/providers/Microsoft.Web/sites/suap",
-    "appService.deploySubpath": "."
-}
