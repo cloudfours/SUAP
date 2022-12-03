@@ -493,9 +493,10 @@ def correo(request):
         adjunto = request.FILES['adjunto']
         filestorege=FileSystemStorage(base_url='/media/',location='/media/')
         nombre=unidecode.unidecode(adjunto.name.replace(' ','_'))
-        file = filestorege.save(adjunto.name,adjunto)
+        file = filestorege.save(nombre,adjunto)
         file_url=filestorege.url(file)
-        
+        filep=unidecode.unidecode(file_url)
+        print(filep)
         para = request.POST["para"]
         asunto=request.POST.get("asunto")
         mensaje=request.POST["mensaje"]
