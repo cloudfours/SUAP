@@ -20,10 +20,11 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, ListView
 from reportlab.pdfgen import canvas
-
+import unidecode
 from api.automatizacion_tareas import generar_email_aut
 from api.models import *
 from servidor.settings import BASE_DIR
+import urllib
 
 from .forms import (AsignacionTareaForm, CasosForm, EditarFormGestor,
                     datosuserForm, datosuserFormEdit,
@@ -487,22 +488,30 @@ envios de correos
 '''
 @login_required
 def correo(request):
-    print(request.FILES)
+   
     if request.method=='POST':
-        adjunto = request.POST['adjunto']
+        adjunto = request.FILES['adjunto']
+        filestorege=FileSystemStorage(base_url='/media/',location='/media/')
+        nombre=unidecode.unidecode(adjunto.name.replace(' ','_'))
+        file = filestorege.save(nombre,adjunto)
+        file_url=filestorege.url(file)
+        filep=unidecode.unidecode(file_url)
+        print(filep)
         para = request.POST["para"]
         asunto=request.POST.get("asunto")
         mensaje=request.POST["mensaje"]
         desde = settings.EMAIL_HOST_USER
         email = EmailMessage(asunto,mensaje,desde,to=[para])
+        
         try:
-            email.attach_file('media/uploads/'+adjunto)
+            email.attach_file(file_url)
             email.fail_silenty=False
             email.send()
             messages.add_message(request, messages.SUCCESS, message='Se envio correo')
             return redirect('busqueda')
         except  FileNotFoundError as e:
             messages.add_message(request, messages.ERROR, message=f'El achivo debe estar en el mismo directorio {e}')
+            
             return redirect('correo')
         
     return render(request,'Gestor/correo.html')
