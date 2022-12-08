@@ -3,8 +3,11 @@ $(document).ready(function () {
         "language": {
             "url": "//cdn.datatables.net/plug-ins/1.10.15/i18n/Spanish.json"
         },
-        responsive:true
+        responsive: true,
+      
     })
+ 
+    new $.fn.dataTable.FixedHeader( table );
     $('#example').DataTable();
     $('#caso').keyup(function () {
         table.column($(this).data('index')).search(this.value).draw();
