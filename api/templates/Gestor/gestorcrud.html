@@ -47,7 +47,7 @@
     </div>
     </div>
 
-    <table id="example" class="table table-bordered display  responsive" style="width:100%">
+    <table id="example" class="table table-bordered display nowrap" style="width:100%">
     <thead class='bg-primary bg-gradient'>
         <tr>
             <th class='text-light'>ID caso</th>
@@ -80,21 +80,21 @@
             <td>{{caso.id_usuario.id_eps.nombre}}</td>
             <td>{{caso.estado.nombreestado}}</td>
              {% if  caso.id_comple_info is None or caso.id_seguimiento is None %}
-             <td><button type='button' class='bg-transparent w-25'><i class="fa-solid fa-file icons_tabla"></i></button></td>
-             <td><button  type='button'   class='bg-transparent w-25' ><i class="fa-solid fa-right-to-bracket icons_tabla"></i></button></td>            
+             <td><button type='button' class='bg-transparent w-25'><i class="fa-solid fa-file icons_tabla" data-toggle="tooltip" title="Editar Informacion complementaria" id='example'></i></button></td>
+             <td><button  type='button'   class='bg-transparent w-25' ><i class="fa-solid fa-right-to-bracket icons_tabla" title="Editar seguimiento"></i></button></td>            
 
             {% elif not caso.id_seguimiento  is None or caso.id_comple.info is None %}
 
-            <td><button type='button' class='bg-transparent w-25'  onclick="abrir_moda_info('{% url 'editarInfo' caso.id_comple_info %}')"><i class="fa-solid fa-file icons_tabla"></i></button></td>
-            <td><button  type='button'   class='bg-transparent w-25' onclick="abrir_moda_segui('{% url 'editarsegui' caso.id_seguimiento %}')"><i class="fa-solid fa-right-to-bracket icons_tabla"></i></button></td>
+            <td><button type='button' class='bg-transparent w-25'  onclick="abrir_moda_info('{% url 'editarInfo' caso.id_comple_info %}')" ><i class="fa-solid fa-file icons_tabla"data-toggle="tooltip" title="Editar Informacion complementaria" id='example'></i></button></td>
+            <td><button  type='button'   class='bg-transparent w-25' onclick="abrir_moda_segui('{% url 'editarsegui' caso.id_seguimiento %}')"title="Editar seguimiento"><i class="fa-solid fa-right-to-bracket icons_tabla"></i></button></td>
 
             {% endif %}
-            <td><a href="{% url 'reportcaso' caso.id_caso %}" target="_blank"><i class="fa-solid fa-file-pdf  icons_tabla"></i></a></td>
-            <td><a href='{% url 'editarGestor' caso.id_caso %}'><i class="fa-solid fa-square-pen  icons_tabla"></i></a>
+            <td><a href="{% url 'reportcaso' caso.id_caso %}" target="_blank"><i class="fa-solid fa-file-pdf  icons_tabla" title='Reporte'></i></a></td>
+            <td><a href='{% url 'editarGestor' caso.id_caso %}'><i class="fa-solid fa-square-pen  icons_tabla" title='Editar caso'></i></a>
          
          
                
-                <button type='button'  class='bg-transparent w-25' onclick="abrir_moda_delete('{% url 'eliminar' caso.id_caso %}')"><i class="fa-solid fa-trash-can  icons_tabla"></i></button>
+                <button type='button'  class='bg-transparent w-25' onclick="abrir_moda_delete('{% url 'eliminar' caso.id_caso %}')"><i class="fa-solid fa-trash-can  icons_tabla" data-toggle="tooltip" title="Eliminar" id='eliminar'></i></button>
           
                   
             </td>
@@ -164,7 +164,11 @@
 {% block js %}
     <script type="text/javascript">
         
-            
+        $(document).ready(function(){
+            $('#eliminar').tooltip({ placement: 'top'})
+        })
+ 
+      
         function abrir_moda_delete(url) {
             var e;
   
@@ -188,8 +192,9 @@
          }
  
       
-   
+         
         </script>
+        
 {% endblock %}
 
 

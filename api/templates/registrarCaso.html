@@ -67,22 +67,14 @@
       position:'top-right'
   })
 </script>
-{% elif message.tag == 'error' %}
+  {% elif message.tags == 'warning' %}
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="{% static "../static/js/jquery.toast.js" %}"></script>
 <script type='text/javascript'>
     $.toast({
-        heading: 'error',
+        heading: 'Warning',
         text: '{{message}}',
-        showHideTransition: 'slide',
-        icon: 'error',
-        position:'top-right'
-    })
-  </script>
-  {% elif message.tag == 'warning' %}
-<script type='text/javascript'>
-    $.toast({
-      heading: 'Warning',
-        text: '{{message}}',
-        showHideTransition: 'slide',
+        showHideTransition: 'plain',
         icon: 'warning',
         position:'top-right'
     })

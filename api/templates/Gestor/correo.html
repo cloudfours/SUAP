@@ -38,7 +38,9 @@
       position:'top-right'
   })
 </script>
-{% elif message.tag == 'error' %}
+{% elif message.tags == 'error' %}
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="{% static "../static/js/jquery.toast.js" %}"></script>
 <script type='text/javascript'>
     $.toast({
         heading: 'Error',

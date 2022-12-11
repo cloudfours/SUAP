@@ -268,7 +268,7 @@ span {
 }
 @media screen and (max-width:480px){
     .caja_tabla_busqueda{
-        width: 352px;
+        width: 311px;
         height: 1023px;
     }
     .tabla_busqueda{

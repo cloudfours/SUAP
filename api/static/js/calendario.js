@@ -12,7 +12,7 @@ $(document).ready(function () {
     
     })
   $('#calendar').DataTable();
-
+  new $.fn.dataTable.FixedHeader( table );
 
 
 })

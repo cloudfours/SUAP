@@ -11,10 +11,20 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
 </head>
 
 <body class="centrar">
+    <div class="dropdown po">
+        <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-patch-question-fill"></i> Ayuda
+        </button>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" target='blank' href='https://drive.google.com/file/d/1nwJy2zj1V0PMY66j-twEjOEsDXvcmi7C/view?usp=sharing' type="button">Manual usuario</a></li>
+          <li><a class="dropdown-item" target='blank' href='https://drive.google.com/file/d/1ENanw3F9uRv1scaeb14FuGYBlPJsxpKX/view?usp=share_link' type="button">Ayuda audiovisual</a></li>
+          
+        </ul>
+      </div>
     {% if messages %}
     {%for message in messages%}
    <!-- Modal -->
